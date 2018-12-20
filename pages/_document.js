@@ -16,11 +16,12 @@ export default class MyDocument extends Document {
 
   render() {
     return (
-      <html>
+      <html style={{ height: '100%', width: '100%' }}>
         <Head>
           {this.props.styleTags}
+
         </Head>
-        <body>
+        <body style={{ margin: 0, height: '100%', width: '100%' }}>
           <Main />
           <NextScript />
         </body>

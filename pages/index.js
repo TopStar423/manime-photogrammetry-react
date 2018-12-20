@@ -1,6 +1,8 @@
 import Link from 'next/link';
 import Layout from '../components/Layout';
 import fetch from 'isomorphic-unfetch';
+import Amplify from '../components/Aws.js';
+// import { withAuthenticator } from 'aws-amplify-react';
 
 const PostLink = (props) => (
   <li>
@@ -11,18 +13,7 @@ const PostLink = (props) => (
 );
 
 const Index = (props) => (
-  <Layout>
-    <h1>Shows</h1>
-    <ul>
-      {props.shows.map(({show}) => (
-        <li key={show.id}>
-          <Link as={`/p/${show.id}`} href={`/post?id=${show.id}`}>
-            <a>{show.name}</a>
-          </Link>
-        </li>
-      ))}
-    </ul>
-
+  <Layout before={false}>
     <p>Index</p>
     <ul>
       <PostLink id="hello" title="Hello"/>
@@ -31,6 +22,18 @@ const Index = (props) => (
     </ul>
   </Layout>
 );
+
+// <h1>Shows</h1>
+// <ul>
+//   {props.shows.map(({show}) => (
+//     <li key={show.id}>
+//       <Link as={`/p/${show.id}`} href={`/post?id=${show.id}`}>
+//         <a>{show.name}</a>
+//       </Link>
+//     </li>
+//   ))}
+// </ul>
+
 
 Index.getInitialProps = async function() {
   const res = await fetch('https://api.tvmaze.com/search/shows?q=batman');

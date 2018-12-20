@@ -1,25 +1,90 @@
+import { space, width, fontSize, color, height, justifyContent, alignItems, display } from 'styled-system';
+import styled, { ThemeProvider } from 'styled-components';
+import { theme } from '../utils/theme';
+
 import Header from './Header';
-import { Row, Column } from './Responsive';
+import Sidebar from './Sidebar';
 
-const Layout = (props) => (
-  <div style={{styles}}>
-    <Header />
-    {props.children}
-    <Row>
-      <Column xs='12' sm='6' md='8' >
-        md: 8 - sm: 6 - xs: 12
-      </Column>
-      <Column xs='6' md='4' backgroundColor="#0000ff">
-        md: 4 - xs: 6
-      </Column>
-    </Row>
-  </div>
-);
+const Container = styled.div`
+  display: flex;
+  flex-direction: row;
+  margin: 0;
+  padding: 0;
+  height: ${props => props.height}px;
+`;
 
-const styles = {
-  margin: 20,
-  padding: 20,
-  border: '1px solid #DDD'
+const Box = styled.div`
+  ${space}
+  ${width}
+  ${fontSize}
+  ${color}
+  ${height}
+  ${justifyContent}
+  ${display}
+  ${alignItems}
+  position: ${props => props.position}
+`;
+
+// const LayoutJsx = ({ before, ...props }) => (
+//   <ThemeProvider theme={theme}>
+//     <Container>
+//       { !before &&
+//         <Box width={1/5} height={1}>
+//           Sidemenu
+//         </Box>
+//       }
+//       <Box width={1}>
+//         <Box width={1} bg='blacks.7' color='white' height={2} display='flex' alignItems='center'>
+//           Orders
+//         </Box>
+//         {props.children}
+//       </Box>
+//     </Container>
+//   </ThemeProvider>
+// );
+
+class Layout extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = { width: 0, height: 0 };
+    this.updateWindowDimensions = this.updateWindowDimensions.bind(this);
+  }
+
+  componentDidMount() {
+    this.updateWindowDimensions();
+    window.addEventListener('resize', this.updateWindowDimensions);
+  }
+
+  componentWillUnmount() {
+    window.removeEventListener('resize', this.updateWindowDimensions);
+  }
+
+  updateWindowDimensions() {
+    this.setState({ width: window.innerWidth, height: window.innerHeight });
+  }
+  render() {
+    const { before, ...props } = this.props;
+    return (
+      <ThemeProvider theme={theme}>
+        <Container height={this.state.height}>
+          { !before &&
+            <Box width={1/5} height='100%'>
+              Sidemenu
+            </Box>
+          }
+
+          <Box width={1} height='100%'>
+            <Box width={1} bg='blacks.7' color='white' height={2} display='flex' alignItems='center'>
+              Orders
+            </Box>
+            {props.children}
+          </Box>
+
+
+        </Container>
+      </ThemeProvider>
+    );
+  }
 }
 
 export default Layout;

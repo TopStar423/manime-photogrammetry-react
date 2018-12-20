@@ -1,7 +1,7 @@
 export const theme = {
   breakpoints: [720, 840, 960, 1024, 1280, 1440],
   space: [0, 4, 8, 16, 32, 64, 128, 256, 512],
-  fontSizes: [12, 14, 16, 20, 24, 36, 48, 80, 96],
+  fontSizes: [8, 10, 12, 14, 16, 20, 24, 36, 48, 80, 96],
   fontWeights: [100, 200, 300, 400, 500, 600, 700, 800, 900],
   lineHeights: {
     solid: 1,
@@ -74,4 +74,10 @@ export const theme = {
       'rgba(255,255,255,.9)',
     ],
   },
+  shadows: [
+    '0 1px 3px 0 rgba(0,0,0,0.05)',
+    '0 1px 3px 0 rgba(0,0,0,0.10)',
+    '0 1px 3px 0 rgba(0,0,0,0.15)',
+    '0 1px 3px 0 rgba(0,0,0,0.20)',
+  ]
 };

@@ -1,8 +1,9 @@
 import Link from 'next/link';
 import Layout from '../components/Layout';
 import fetch from 'isomorphic-unfetch';
-import Amplify from '../components/Aws.js';
+import Amplify from '../components/Aws';
 // import { withAuthenticator } from 'aws-amplify-react';
+import BoardBody from '../components/BoardBody';
 
 const PostLink = (props) => (
   <li>
@@ -14,14 +15,17 @@ const PostLink = (props) => (
 
 const Index = (props) => (
   <Layout before={false}>
-    <p>Index</p>
-    <ul>
-      <PostLink id="hello" title="Hello"/>
-      <PostLink id="learn" title="Learn"/>
-      <PostLink id="deploy" title="Deploy"/>
-    </ul>
+    <BoardBody></BoardBody>
   </Layout>
 );
+
+
+// <p>Index</p>
+// <ul>
+//   <PostLink id="hello" title="Hello"/>
+//   <PostLink id="learn" title="Learn"/>
+//   <PostLink id="deploy" title="Deploy"/>
+// </ul>
 
 // <h1>Shows</h1>
 // <ul>

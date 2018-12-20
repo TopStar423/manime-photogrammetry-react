@@ -15,7 +15,7 @@
       "static/runtime/webpack.js",
       "static/runtime/main.js"
     ],
-    "/post": [
+    "/auth": [
       "static/runtime/webpack.js",
       "static/runtime/main.js"
     ],

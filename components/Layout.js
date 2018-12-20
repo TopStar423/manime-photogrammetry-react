@@ -1,8 +1,7 @@
-import { space, width, fontSize, color, height, justifyContent, alignItems, display } from 'styled-system';
+import { space, width, fontSize, color, height, justifyContent, alignItems, display, fontFamily, fontWeight } from 'styled-system';
 import styled, { ThemeProvider } from 'styled-components';
 import { theme } from '../utils/theme';
 
-import Header from './Header';
 import Sidebar from './Sidebar';
 
 const Container = styled.div`
@@ -22,7 +21,22 @@ const Box = styled.div`
   ${justifyContent}
   ${display}
   ${alignItems}
-  position: ${props => props.position}
+  ${fontFamily}
+  ${fontWeight}
+  position: ${props => props.position};
+`;
+
+const MenuItem = styled(Box)`
+  font-family: sans-serif;
+  font-weight: 200;
+  background: transparent;
+  &:hover {
+    background: rgba(255,255,255,.1);
+  }
+`;
+
+const Header = styled(Box)`
+  box-shadow: 0 1px 3px 0 rgba(0,0,0,0.15);
 `;
 
 // const LayoutJsx = ({ before, ...props }) => (
@@ -68,15 +82,29 @@ class Layout extends React.Component {
       <ThemeProvider theme={theme}>
         <Container height={this.state.height}>
           { !before &&
-            <Box width={1/5} height='100%'>
-              Sidemenu
+            <Box width={1/4} py={2} height='100%' bg='blacks.11'>
+              <MenuItem py={1} px={3} color='whites.11' fontSize={1}>
+                ORDERS
+              </MenuItem>
+              <MenuItem py={1} px={3} color='whites.11' fontSize={1}>
+                NAIL PRODUCTS
+              </MenuItem>
+              <MenuItem py={1} px={3} color='whites.11' fontSize={1}>
+                NAIL CATEGORIES
+              </MenuItem>
+              <MenuItem py={1} px={3} color='whites.11' fontSize={1}>
+                GROUP ORDERS
+              </MenuItem>
+              <MenuItem py={1} px={3} color='whites.11' fontSize={1}>
+                ORDER REVIEWS
+              </MenuItem>
             </Box>
           }
 
-          <Box width={1} height='100%'>
-            <Box width={1} bg='blacks.7' color='white' height={2} display='flex' alignItems='center'>
-              Orders
-            </Box>
+          <Box width={1} height='100%' bg='whites.7'>
+            <Header width={1} bg='whites.9' color='blacks.2' height={2} display='flex' alignItems='center'>
+
+            </Header>
             {props.children}
           </Box>
 

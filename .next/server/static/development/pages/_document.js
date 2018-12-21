@@ -153,7 +153,8 @@ function (_Document) {
       return react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("html", {
         style: {
           height: '100%',
-          width: '100%'
+          width: '100%',
+          overflow: 'hidden'
         }
       }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(next_document__WEBPACK_IMPORTED_MODULE_1__["Head"], null, this.props.styleTags), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("body", {
         style: {

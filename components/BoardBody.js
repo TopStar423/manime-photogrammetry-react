@@ -1,7 +1,15 @@
 import styled, { ThemeProvider } from 'styled-components';
 import { theme } from '../utils/theme';
-import Row from './Row';
+import Box from './Box';
+import { RowJsx, RowItem } from './Row';
 import { API } from 'aws-amplify';
+
+const BoardBody = styled.div`
+  overflow-x: auto;
+  overflow-y: auto;
+  background-color: #fafafa;
+  flex: 1 0 100%;
+`;
 
 class BoardJsx extends React.Component {
   constructor(props) {
@@ -44,15 +52,96 @@ class BoardJsx extends React.Component {
 
   render() {
     return (
-      <div>
+      <BoardBody>
+        <Box display='flex' flexDirection='row' p={2} m={3}>
+          <RowItem mx={2} description={true} fontSize={1}>Group Order ID</RowItem>
+          <RowItem mx={2} description={true} fontSize={1}>Order ID</RowItem>
+          <RowItem mx={2} description={true} fontSize={1}>Nail Product ID</RowItem>
+          <RowItem mx={2} description={true} fontSize={1}>Nail Length</RowItem>
+          <RowItem mx={2} description={true} fontSize={1}>Nail Shape</RowItem>
+          <RowItem mx={2} description={true} fontSize={1}>Order Status</RowItem>
+          <RowItem mx={2} description={true} fontSize={1}>Date Created</RowItem>
+        </Box>
+
         {
           this.state.orders.map((order) =>
-            <Row key={order.orderid}>
-              {order.orderid}
-            </Row>
+            <RowJsx key={order.orderid}>
+              <RowItem mx={2} fontSize={1}>{order.grouporderid}</RowItem>
+              <RowItem mx={2} fontSize={1}>{order.orderid}</RowItem>
+              <RowItem mx={2} fontSize={1}>{order.nailproductid}</RowItem>
+              <RowItem mx={2} fontSize={1}>{order.naillength}</RowItem>
+              <RowItem mx={2} fontSize={1}>{order.nailshape}</RowItem>
+              <RowItem mx={2} fontSize={1}>{order.orderstatus}</RowItem>
+              <RowItem mx={2} fontSize={1}>{order.datecreated}</RowItem>
+            </RowJsx>
           )
         }
-      </div>
+        {
+          this.state.orders.map((order) =>
+            <RowJsx key={order.orderid}>
+              <RowItem mx={2} fontSize={1}>{order.grouporderid}</RowItem>
+              <RowItem mx={2} fontSize={1}>{order.orderid}</RowItem>
+              <RowItem mx={2} fontSize={1}>{order.nailproductid}</RowItem>
+              <RowItem mx={2} fontSize={1}>{order.naillength}</RowItem>
+              <RowItem mx={2} fontSize={1}>{order.nailshape}</RowItem>
+              <RowItem mx={2} fontSize={1}>{order.orderstatus}</RowItem>
+              <RowItem mx={2} fontSize={1}>{order.datecreated}</RowItem>
+            </RowJsx>
+          )
+        }
+        {
+          this.state.orders.map((order) =>
+            <RowJsx key={order.orderid}>
+              <RowItem mx={2} fontSize={1}>{order.grouporderid}</RowItem>
+              <RowItem mx={2} fontSize={1}>{order.orderid}</RowItem>
+              <RowItem mx={2} fontSize={1}>{order.nailproductid}</RowItem>
+              <RowItem mx={2} fontSize={1}>{order.naillength}</RowItem>
+              <RowItem mx={2} fontSize={1}>{order.nailshape}</RowItem>
+              <RowItem mx={2} fontSize={1}>{order.orderstatus}</RowItem>
+              <RowItem mx={2} fontSize={1}>{order.datecreated}</RowItem>
+            </RowJsx>
+          )
+        }
+        {
+          this.state.orders.map((order) =>
+            <RowJsx key={order.orderid}>
+              <RowItem mx={2} fontSize={1}>{order.grouporderid}</RowItem>
+              <RowItem mx={2} fontSize={1}>{order.orderid}</RowItem>
+              <RowItem mx={2} fontSize={1}>{order.nailproductid}</RowItem>
+              <RowItem mx={2} fontSize={1}>{order.naillength}</RowItem>
+              <RowItem mx={2} fontSize={1}>{order.nailshape}</RowItem>
+              <RowItem mx={2} fontSize={1}>{order.orderstatus}</RowItem>
+              <RowItem mx={2} fontSize={1}>{order.datecreated}</RowItem>
+            </RowJsx>
+          )
+        }
+        {
+          this.state.orders.map((order) =>
+            <RowJsx key={order.orderid}>
+              <RowItem mx={2} fontSize={1}>{order.grouporderid}</RowItem>
+              <RowItem mx={2} fontSize={1}>{order.orderid}</RowItem>
+              <RowItem mx={2} fontSize={1}>{order.nailproductid}</RowItem>
+              <RowItem mx={2} fontSize={1}>{order.naillength}</RowItem>
+              <RowItem mx={2} fontSize={1}>{order.nailshape}</RowItem>
+              <RowItem mx={2} fontSize={1}>{order.orderstatus}</RowItem>
+              <RowItem mx={2} fontSize={1}>{order.datecreated}</RowItem>
+            </RowJsx>
+          )
+        }
+        {
+          this.state.orders.map((order) =>
+            <RowJsx key={order.orderid}>
+              <RowItem mx={2} fontSize={1}>{order.grouporderid}</RowItem>
+              <RowItem mx={2} fontSize={1}>{order.orderid}</RowItem>
+              <RowItem mx={2} fontSize={1}>{order.nailproductid}</RowItem>
+              <RowItem mx={2} fontSize={1}>{order.naillength}</RowItem>
+              <RowItem mx={2} fontSize={1}>{order.nailshape}</RowItem>
+              <RowItem mx={2} fontSize={1}>{order.orderstatus}</RowItem>
+              <RowItem mx={2} fontSize={1}>{order.datecreated}</RowItem>
+            </RowJsx>
+          )
+        }
+      </BoardBody>
     );
   }
 };

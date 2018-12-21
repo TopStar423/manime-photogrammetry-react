@@ -16,7 +16,7 @@ export default class MyDocument extends Document {
 
   render() {
     return (
-      <html style={{ height: '100%', width: '100%' }}>
+      <html style={{ height: '100%', width: '100%', overflow: 'hidden' }}>
         <Head>
           {this.props.styleTags}
         </Head>

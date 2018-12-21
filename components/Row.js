@@ -1,37 +1,39 @@
 import { space, width, fontSize, color, height, justifyContent, alignItems, display, fontFamily, fontWeight, boxShadow } from 'styled-system';
-import styled, { ThemeProvider } from 'styled-components';
-import { theme } from '../utils/theme';
+import styled from 'styled-components';
+import Box from './Box';
 
-const Box = styled.div`
-  ${space}
-  ${width}
-  ${fontSize}
-  ${color}
-  ${height}
-  ${justifyContent}
-  ${display}
-  ${alignItems}
-  ${fontFamily}
-  ${fontWeight}
-  ${boxShadow}
-  position: ${props => props.position};
-`;
-
+// Row and RowItem margins connected
 const Row = styled(Box)`
   display: flex;
   align-items: center;
-  font-family: sans-serif;
-  font-weight: 200;
-  background: transparent;
+  background: #fff;
+  flex: 1 0 ${(props) => {
+    const index = props.m-1;
+    let margin = 0;
+    if(index >= 0 && index < props.theme.space.length)
+      margin = props.theme.space[props.m-1];
+    return props.children.length * (200 + margin);
+  }}px;
   &:hover {
-    background: rgba(255,255,255,.1);
+    box-shadow: 0 5px 10px 0 rgba(0,0,0,0.06);
+    transform: translateY(-1px);
   }
 `;
 
-const RowJsx = ({ before, ...props }) => (
-  <Row fontSize={2} p={2} m={3} boxShadow={1} height={1}>
-    {props.children}
-  </Row>
-);
+export const RowItem = styled(Box)`
+  white-space: nowrap;
+  overflow: hidden;
+  font-family: sans-serif;
+  font-weight: ${(props) => props.description ? 400 : 200};
+  flex: 0 0 200px;
+  &:hover {
+  }
+`;
 
-export default RowJsx;
+export const RowJsx = ({ before, ...props }) => (
+  <Box display='flex'>
+    <Row p={2} m={3} boxShadow={1} height={1}>
+      {props.children}
+    </Row>
+  </Box>
+);

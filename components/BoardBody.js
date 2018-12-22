@@ -1,21 +1,49 @@
 import styled, { ThemeProvider } from 'styled-components';
 import { theme } from '../utils/theme';
 import Box from './Box';
-import { RowJsx, RowItem } from './Row';
+import { RowJsx as Row, RowItemJsx as RowItem, MX_ROW, ML_ROW_ITEM, ROW_ITEM_WIDTH } from './Row';
 import { API } from 'aws-amplify';
 
+const COLUMN_DESCRIPTION = ['Group Order ID', 'Order ID', 'Nail Product ID', 'Nail Length', 'Nail Shape', 'Order Status', 'Date Created'];
+
 const BoardBody = styled.div`
+  display: flex;
+  flex: 1 0 auto;
+  flex-direction: column;
   overflow-x: auto;
-  overflow-y: auto;
   background-color: #fafafa;
+`;
+
+// BoardBodyContents needs table prop
+const BoardBodyContainer = styled(Box)`
+  display: flex;
+  flex-direction: column;
   flex: 1 0 100%;
+  width: ${(props) => {
+    const numColumns = props.table.length;
+    const width = (props.theme.space[MX_ROW] * 2) + ((props.theme.space[ML_ROW_ITEM] + ROW_ITEM_WIDTH) * numColumns);
+    return width;
+  }}px;
+  background-color: transparent;
+`;
+
+const BoardBodyContents = styled(Box)`
+  display: flex;
+  flex-direction: column;
+  flex: 1 0 auto;
+  height: 1px;
+  min-height: 1px;
+  overflow-y: auto;
+  overflow-x: hidden;
+  width: 100%;
 `;
 
 class BoardJsx extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      orders: []
+      orders: [],
+      numColumns: 0
     };
   }
 
@@ -50,100 +78,65 @@ class BoardJsx extends React.Component {
   // orderstatus: "Order Received"
   // userid: null
 
-  render() {
-    return (
-      <BoardBody>
-        <Box display='flex' flexDirection='row' p={2} m={3}>
-          <RowItem mx={2} description={true} fontSize={1}>Group Order ID</RowItem>
-          <RowItem mx={2} description={true} fontSize={1}>Order ID</RowItem>
-          <RowItem mx={2} description={true} fontSize={1}>Nail Product ID</RowItem>
-          <RowItem mx={2} description={true} fontSize={1}>Nail Length</RowItem>
-          <RowItem mx={2} description={true} fontSize={1}>Nail Shape</RowItem>
-          <RowItem mx={2} description={true} fontSize={1}>Order Status</RowItem>
-          <RowItem mx={2} description={true} fontSize={1}>Date Created</RowItem>
-        </Box>
+  // flexDirection='row' p='24px' position='absolute' bg='#fafafa'
 
-        {
-          this.state.orders.map((order) =>
-            <RowJsx key={order.orderid}>
-              <RowItem mx={2} fontSize={1}>{order.grouporderid}</RowItem>
-              <RowItem mx={2} fontSize={1}>{order.orderid}</RowItem>
-              <RowItem mx={2} fontSize={1}>{order.nailproductid}</RowItem>
-              <RowItem mx={2} fontSize={1}>{order.naillength}</RowItem>
-              <RowItem mx={2} fontSize={1}>{order.nailshape}</RowItem>
-              <RowItem mx={2} fontSize={1}>{order.orderstatus}</RowItem>
-              <RowItem mx={2} fontSize={1}>{order.datecreated}</RowItem>
-            </RowJsx>
-          )
-        }
-        {
-          this.state.orders.map((order) =>
-            <RowJsx key={order.orderid}>
-              <RowItem mx={2} fontSize={1}>{order.grouporderid}</RowItem>
-              <RowItem mx={2} fontSize={1}>{order.orderid}</RowItem>
-              <RowItem mx={2} fontSize={1}>{order.nailproductid}</RowItem>
-              <RowItem mx={2} fontSize={1}>{order.naillength}</RowItem>
-              <RowItem mx={2} fontSize={1}>{order.nailshape}</RowItem>
-              <RowItem mx={2} fontSize={1}>{order.orderstatus}</RowItem>
-              <RowItem mx={2} fontSize={1}>{order.datecreated}</RowItem>
-            </RowJsx>
-          )
-        }
-        {
-          this.state.orders.map((order) =>
-            <RowJsx key={order.orderid}>
-              <RowItem mx={2} fontSize={1}>{order.grouporderid}</RowItem>
-              <RowItem mx={2} fontSize={1}>{order.orderid}</RowItem>
-              <RowItem mx={2} fontSize={1}>{order.nailproductid}</RowItem>
-              <RowItem mx={2} fontSize={1}>{order.naillength}</RowItem>
-              <RowItem mx={2} fontSize={1}>{order.nailshape}</RowItem>
-              <RowItem mx={2} fontSize={1}>{order.orderstatus}</RowItem>
-              <RowItem mx={2} fontSize={1}>{order.datecreated}</RowItem>
-            </RowJsx>
-          )
-        }
-        {
-          this.state.orders.map((order) =>
-            <RowJsx key={order.orderid}>
-              <RowItem mx={2} fontSize={1}>{order.grouporderid}</RowItem>
-              <RowItem mx={2} fontSize={1}>{order.orderid}</RowItem>
-              <RowItem mx={2} fontSize={1}>{order.nailproductid}</RowItem>
-              <RowItem mx={2} fontSize={1}>{order.naillength}</RowItem>
-              <RowItem mx={2} fontSize={1}>{order.nailshape}</RowItem>
-              <RowItem mx={2} fontSize={1}>{order.orderstatus}</RowItem>
-              <RowItem mx={2} fontSize={1}>{order.datecreated}</RowItem>
-            </RowJsx>
-          )
-        }
-        {
-          this.state.orders.map((order) =>
-            <RowJsx key={order.orderid}>
-              <RowItem mx={2} fontSize={1}>{order.grouporderid}</RowItem>
-              <RowItem mx={2} fontSize={1}>{order.orderid}</RowItem>
-              <RowItem mx={2} fontSize={1}>{order.nailproductid}</RowItem>
-              <RowItem mx={2} fontSize={1}>{order.naillength}</RowItem>
-              <RowItem mx={2} fontSize={1}>{order.nailshape}</RowItem>
-              <RowItem mx={2} fontSize={1}>{order.orderstatus}</RowItem>
-              <RowItem mx={2} fontSize={1}>{order.datecreated}</RowItem>
-            </RowJsx>
-          )
-        }
-        {
-          this.state.orders.map((order) =>
-            <RowJsx key={order.orderid}>
-              <RowItem mx={2} fontSize={1}>{order.grouporderid}</RowItem>
-              <RowItem mx={2} fontSize={1}>{order.orderid}</RowItem>
-              <RowItem mx={2} fontSize={1}>{order.nailproductid}</RowItem>
-              <RowItem mx={2} fontSize={1}>{order.naillength}</RowItem>
-              <RowItem mx={2} fontSize={1}>{order.nailshape}</RowItem>
-              <RowItem mx={2} fontSize={1}>{order.orderstatus}</RowItem>
-              <RowItem mx={2} fontSize={1}>{order.datecreated}</RowItem>
-            </RowJsx>
-          )
-        }
+  render() {
+    let table = COLUMN_DESCRIPTION;
+    return (
+      <BoardBody width={1}>
+        <BoardBodyContainer table={table}>
+          <Row table={table} description>
+            { table.map((item) => <RowItem>{item}</RowItem>) }
+          </Row>
+          <BoardBodyContents>
+
+            {
+              this.state.orders.map((order) =>
+                <Row table={table}>
+                  <RowItem>{order.grouporderid}</RowItem>
+                  <RowItem>{order.orderid}</RowItem>
+                  <RowItem>{order.nailproductid}</RowItem>
+                  <RowItem>{order.naillength}</RowItem>
+                  <RowItem>{order.nailshape}</RowItem>
+                  <RowItem>{order.orderstatus}</RowItem>
+                  <RowItem>{order.datecreated}</RowItem>
+                </Row>
+              )
+            }
+
+          </BoardBodyContents>
+        </BoardBodyContainer>
       </BoardBody>
     );
   }
 };
+
+// <Box height='100px' display='flex' flexDirection='row'>
+//   <Box flex='0 0 auto' height='100%' border='1px solid' width='250px'></Box>
+//   <Box flex='0 0 auto' height='100%' border='1px solid' width='250px'></Box>
+//   <Box flex='0 0 auto' height='100%' border='1px solid' width='250px'></Box>
+//   <Box flex='0 0 auto' height='100%' border='1px solid' width='250px'></Box>
+//   <Box flex='0 0 auto' height='100%' border='1px solid' width='250px'></Box>
+//   <Box flex='0 0 auto' height='100%' border='1px solid' width='250px'></Box>
+//   <Box flex='0 0 auto' height='100%' border='1px solid' width='250px'></Box>
+// </Box>
+
+// <Box display='flex' flexDirection='row' p={2} m={3}>
+//   { table.map((item) => <RowItem mx={2} description={true} fontSize={1}>{item}</RowItem>) }
+// </Box>
+
+//   {
+//     this.state.orders.map((order) =>
+//       <RowJsx key={order.orderid}>
+//         <RowItem mx={2} fontSize={1}>{order.grouporderid}</RowItem>
+//         <RowItem mx={2} fontSize={1}>{order.orderid}</RowItem>
+//         <RowItem mx={2} fontSize={1}>{order.nailproductid}</RowItem>
+//         <RowItem mx={2} fontSize={1}>{order.naillength}</RowItem>
+//         <RowItem mx={2} fontSize={1}>{order.nailshape}</RowItem>
+//         <RowItem mx={2} fontSize={1}>{order.orderstatus}</RowItem>
+//         <RowItem mx={2} fontSize={1}>{order.datecreated}</RowItem>
+//       </RowJsx>
+//     )
+//   }
 
 export default BoardJsx;

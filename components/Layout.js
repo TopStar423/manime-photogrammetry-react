@@ -9,6 +9,7 @@ const Container = styled.div`
   margin: 0;
   padding: 0;
   height: ${props => props.height}px;
+  width: ${props => props.width}px;
 `;
 
 const MenuItem = styled(Box)`
@@ -63,9 +64,10 @@ class Layout extends React.Component {
   }
   render() {
     const { before, ...props } = this.props;
+    const width = this.state.width;
     return (
       <ThemeProvider theme={theme}>
-        <Container height={this.state.height}>
+        <Container height={this.state.height} width={this.state.width}>
           { !before &&
             <Box minWidth={[150, 200]} height='100%' bg='blacks.11'>
               <Box py={2}>
@@ -87,8 +89,7 @@ class Layout extends React.Component {
               </Box>
             </Box>
           }
-
-          <Box width={1} height='100%' bg='whites.7' display='flex' flexDirection='column'>
+          <Box width={[width-150, width-200]} height='100%' bg='whites.7' display='flex' flexDirection='column'>
             <Header width={1} bg='whites.9' color='blacks.2' height={2} display='flex' flex='0 0 auto' alignItems='center'>
             </Header>
             {props.children}

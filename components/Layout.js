@@ -1,3 +1,4 @@
+import Link from 'next/link';
 import styled, { ThemeProvider } from 'styled-components';
 import { theme } from '../utils/theme';
 import Box from './Box';
@@ -71,9 +72,16 @@ class Layout extends React.Component {
           { !before &&
             <Box minWidth={[150, 200]} height='100%' bg='blacks.11'>
               <Box py={2}>
-                <MenuItem py={1} px={3} color='whites.11' fontSize={1}>
-                  ORDERS
-                </MenuItem>
+                <Link as={`/d/orders`} href={`/data?id=orders`}>
+                  <MenuItem py={1} px={3} color='whites.11' fontSize={1}>
+                    ORDERS
+                  </MenuItem>
+                </Link>
+                <Link as={`/d/users`} href={`/data?id=users`}>
+                  <MenuItem py={1} px={3} color='whites.11' fontSize={1}>
+                    USERS
+                  </MenuItem>
+                </Link>
                 <MenuItem py={1} px={3} color='whites.11' fontSize={1}>
                   NAIL PRODUCTS
                 </MenuItem>

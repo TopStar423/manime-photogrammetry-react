@@ -2,7 +2,7 @@ import Link from 'next/link';
 import Layout from '../components/Layout';
 import fetch from 'isomorphic-unfetch';
 import Amplify from '../components/Aws';
-// import { withAuthenticator } from 'aws-amplify-react';
+import BoardBody from '../components/BoardBody';
 
 const PostLink = (props) => (
   <li>
@@ -12,8 +12,9 @@ const PostLink = (props) => (
   </li>
 );
 
-const Index = (props) => (
+const Data = (props) => (
   <Layout before={false}>
+    <BoardBody {...props}></BoardBody>
   </Layout>
 );
 
@@ -37,15 +38,10 @@ const Index = (props) => (
 // </ul>
 
 
-Index.getInitialProps = async function() {
-  const res = await fetch('https://api.tvmaze.com/search/shows?q=batman');
-  const data = await res.json();
-
-  console.log(`Show data fetched. Count: ${data.length}`);
-
-  return {
-    shows: data
-  };
+Data.getInitialProps = async function(context) {
+  const { id } = context.query;
+  // console.log(`ID: ${id}`);
+  return { id };
 }
 
-export default Index;
+export default Data;

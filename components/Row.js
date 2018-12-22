@@ -37,8 +37,8 @@ const Row = styled(Box)`
     return width;
   }}px;
   &:hover {
-    box-shadow: 0 5px 10px 0 rgba(0,0,0,0.06);
-    transform: translateY(-1px);
+    box-shadow: ${(props) => !props.description ? '0 5px 10px 0 rgba(0,0,0,0.06)' : 'none'};
+    transform: ${(props) =>  !props.description ? 'translateY(-1px)' : 'none'};
   }
 `;
 

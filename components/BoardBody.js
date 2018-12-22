@@ -46,9 +46,33 @@ class BoardJsx extends React.Component {
       numColumns: 0
     };
   }
-
   componentDidMount() {
-    this.getOrders('c7938ff0-f832-11e8-ae6e-ff8724e0fb43');
+    this._mounted = true;
+  }
+
+  componentDidUpdate(prevProps) {
+    if (this.props.id !== prevProps.id) {
+      // this.getOrders('c7938ff0-f832-11e8-ae6e-ff8724e0fb43');
+      this.getData(this.props.id);
+    }
+  }
+
+  componentWillUnmount() {
+    this._mounted = false;
+  }
+
+  getData = (tableName) => {
+    let userInit = {
+      headers: { 'Content-Type': 'application/json' }
+    }
+    API.get('LambdaRDS', `/${tableName}/read`, userInit).then(ordersResponse => {
+      if(ordersResponse && ordersResponse.rows && this._mounted) {
+        this.setState({ orders: ordersResponse.rows });
+        console.log(ordersResponse.rows)
+      }
+    }).catch((err) => {
+      console.log(err.stack);
+    });
   }
 
   getOrders = (groupOrderId) => {
@@ -64,7 +88,7 @@ class BoardJsx extends React.Component {
       console.log(err.stack);
     });
   }
-
+  // ORDERS
   // comments: ""
   // datecreated: "2018-11-05T02:09:21.000Z"
   // deliverydate: "2004-10-19T08:23:54.000Z"
@@ -78,7 +102,25 @@ class BoardJsx extends React.Component {
   // orderstatus: "Order Received"
   // userid: null
 
-  // flexDirection='row' p='24px' position='absolute' bg='#fafafa'
+  // USERS
+  // credits: null
+  // datecreated: null
+  // datelastlogin: null
+  // description: null
+  // email: "ahnguye@ucdavis.edu"
+  // firstname: "Andre22"
+  // fitted: null
+  // lastname: null
+  // leftfingerscurvature: null
+  // leftfingerspicture: null
+  // leftthumbpicture: null
+  // profilepicture: null
+  // rightfingerscurvature: null
+  // rightfingerspicture: null
+  // rightthumbpicture: null
+  // subscription: null
+  // totalorders: null
+  // userid: "us-west-2:ea2e2490-ebfe-4ce3-8e92-e7ed80623abe"
 
   render() {
     let table = COLUMN_DESCRIPTION;

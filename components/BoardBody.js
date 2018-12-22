@@ -4,7 +4,8 @@ import Box from './Box';
 import { RowJsx as Row, RowItemJsx as RowItem, MX_ROW, ML_ROW_ITEM, ROW_ITEM_WIDTH } from './Row';
 import { API } from 'aws-amplify';
 
-const COLUMN_DESCRIPTION = ['Group Order ID', 'Order ID', 'Nail Product ID', 'Nail Length', 'Nail Shape', 'Order Status', 'Date Created'];
+const ORDERS_COLUMN_DESCRIPTION = ['Group Order ID', 'Order ID', 'Nail Product ID', 'Nail Length', 'Nail Shape', 'Order Status', 'Date Created'];
+const USERS_COLUMN_DESCRIPTION = ['User ID', 'First Name', 'Last Name', 'Email', 'Total Orders', 'Fitted', 'Date Created', 'Date Last Login', 'Description', 'Subscription'];
 
 const BoardBody = styled.div`
   display: flex;
@@ -123,7 +124,7 @@ class BoardJsx extends React.Component {
   // userid: "us-west-2:ea2e2490-ebfe-4ce3-8e92-e7ed80623abe"
 
   render() {
-    let table = COLUMN_DESCRIPTION;
+    let table = this.props.id == 'orders' ? ORDERS_COLUMN_DESCRIPTION : USERS_COLUMN_DESCRIPTION;
     return (
       <BoardBody width={1}>
         <BoardBodyContainer table={table}>
@@ -131,17 +132,32 @@ class BoardJsx extends React.Component {
             { table.map((item) => <RowItem>{item}</RowItem>) }
           </Row>
           <BoardBodyContents>
-
-            {
-              this.state.orders.map((order) =>
+            { this.props.id == 'orders' &&
+              this.state.orders.map((item) =>
                 <Row table={table}>
-                  <RowItem>{order.grouporderid}</RowItem>
-                  <RowItem>{order.orderid}</RowItem>
-                  <RowItem>{order.nailproductid}</RowItem>
-                  <RowItem>{order.naillength}</RowItem>
-                  <RowItem>{order.nailshape}</RowItem>
-                  <RowItem>{order.orderstatus}</RowItem>
-                  <RowItem>{order.datecreated}</RowItem>
+                  <RowItem>{item.grouporderid}</RowItem>
+                  <RowItem>{item.orderid}</RowItem>
+                  <RowItem>{item.nailproductid}</RowItem>
+                  <RowItem>{item.naillength}</RowItem>
+                  <RowItem>{item.nailshape}</RowItem>
+                  <RowItem>{item.orderstatus}</RowItem>
+                  <RowItem>{item.datecreated}</RowItem>
+                </Row>
+              )
+            }
+            { this.props.id == 'users' &&
+              this.state.orders.map((item) =>
+                <Row table={table}>
+                  <RowItem>{item.userid}</RowItem>
+                  <RowItem>{item.firstname}</RowItem>
+                  <RowItem>{item.lastname}</RowItem>
+                  <RowItem>{item.email}</RowItem>
+                  <RowItem>{item.totalorders}</RowItem>
+                  <RowItem>{item.fitted ? 'Fitted' : 'Not Fitted'}</RowItem>
+                  <RowItem>{item.datecreated}</RowItem>
+                  <RowItem>{item.datelastlogin}</RowItem>
+                  <RowItem>{item.description}</RowItem>
+                  <RowItem>{item.subscription}</RowItem>
                 </Row>
               )
             }

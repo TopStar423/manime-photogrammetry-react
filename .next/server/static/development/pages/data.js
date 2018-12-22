@@ -190,7 +190,8 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
 
 
 
-var COLUMN_DESCRIPTION = ['Group Order ID', 'Order ID', 'Nail Product ID', 'Nail Length', 'Nail Shape', 'Order Status', 'Date Created'];
+var ORDERS_COLUMN_DESCRIPTION = ['Group Order ID', 'Order ID', 'Nail Product ID', 'Nail Length', 'Nail Shape', 'Order Status', 'Date Created'];
+var USERS_COLUMN_DESCRIPTION = ['User ID', 'First Name', 'Last Name', 'Email', 'Total Orders', 'Fitted', 'Date Created', 'Date Last Login', 'Description', 'Subscription'];
 var BoardBody = styled_components__WEBPACK_IMPORTED_MODULE_1___default.a.div.withConfig({
   displayName: "BoardBody",
   componentId: "sc-1mlz8qv-0"
@@ -319,7 +320,7 @@ function (_React$Component) {
     // totalorders: null
     // userid: "us-west-2:ea2e2490-ebfe-4ce3-8e92-e7ed80623abe"
     value: function render() {
-      var table = COLUMN_DESCRIPTION;
+      var table = this.props.id == 'orders' ? ORDERS_COLUMN_DESCRIPTION : USERS_COLUMN_DESCRIPTION;
       return react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(BoardBody, {
         width: 1
       }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(BoardBodyContainer, {
@@ -329,10 +330,14 @@ function (_React$Component) {
         description: true
       }, table.map(function (item) {
         return react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_Row__WEBPACK_IMPORTED_MODULE_4__["RowItemJsx"], null, item);
-      })), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(BoardBodyContents, null, this.state.orders.map(function (order) {
+      })), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(BoardBodyContents, null, this.props.id == 'orders' && this.state.orders.map(function (item) {
         return react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_Row__WEBPACK_IMPORTED_MODULE_4__["RowJsx"], {
           table: table
-        }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_Row__WEBPACK_IMPORTED_MODULE_4__["RowItemJsx"], null, order.grouporderid), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_Row__WEBPACK_IMPORTED_MODULE_4__["RowItemJsx"], null, order.orderid), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_Row__WEBPACK_IMPORTED_MODULE_4__["RowItemJsx"], null, order.nailproductid), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_Row__WEBPACK_IMPORTED_MODULE_4__["RowItemJsx"], null, order.naillength), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_Row__WEBPACK_IMPORTED_MODULE_4__["RowItemJsx"], null, order.nailshape), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_Row__WEBPACK_IMPORTED_MODULE_4__["RowItemJsx"], null, order.orderstatus), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_Row__WEBPACK_IMPORTED_MODULE_4__["RowItemJsx"], null, order.datecreated));
+        }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_Row__WEBPACK_IMPORTED_MODULE_4__["RowItemJsx"], null, item.grouporderid), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_Row__WEBPACK_IMPORTED_MODULE_4__["RowItemJsx"], null, item.orderid), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_Row__WEBPACK_IMPORTED_MODULE_4__["RowItemJsx"], null, item.nailproductid), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_Row__WEBPACK_IMPORTED_MODULE_4__["RowItemJsx"], null, item.naillength), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_Row__WEBPACK_IMPORTED_MODULE_4__["RowItemJsx"], null, item.nailshape), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_Row__WEBPACK_IMPORTED_MODULE_4__["RowItemJsx"], null, item.orderstatus), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_Row__WEBPACK_IMPORTED_MODULE_4__["RowItemJsx"], null, item.datecreated));
+      }), this.props.id == 'users' && this.state.orders.map(function (item) {
+        return react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_Row__WEBPACK_IMPORTED_MODULE_4__["RowJsx"], {
+          table: table
+        }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_Row__WEBPACK_IMPORTED_MODULE_4__["RowItemJsx"], null, item.userid), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_Row__WEBPACK_IMPORTED_MODULE_4__["RowItemJsx"], null, item.firstname), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_Row__WEBPACK_IMPORTED_MODULE_4__["RowItemJsx"], null, item.lastname), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_Row__WEBPACK_IMPORTED_MODULE_4__["RowItemJsx"], null, item.email), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_Row__WEBPACK_IMPORTED_MODULE_4__["RowItemJsx"], null, item.totalorders), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_Row__WEBPACK_IMPORTED_MODULE_4__["RowItemJsx"], null, item.fitted ? 'Fitted' : 'Not Fitted'), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_Row__WEBPACK_IMPORTED_MODULE_4__["RowItemJsx"], null, item.datecreated), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_Row__WEBPACK_IMPORTED_MODULE_4__["RowItemJsx"], null, item.datelastlogin), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_Row__WEBPACK_IMPORTED_MODULE_4__["RowItemJsx"], null, item.description), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_Row__WEBPACK_IMPORTED_MODULE_4__["RowItemJsx"], null, item.subscription));
       }))));
     }
   }]);

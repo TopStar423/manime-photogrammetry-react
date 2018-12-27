@@ -40,6 +40,24 @@ Amplify.configure({
                 endpoint: "https://2ehwnnicy0.execute-api.us-west-1.amazonaws.com/default",
                 service: "lambda",
                 region: "us-west-1"
+            },
+            {
+                name: "LambdaRDSClient",
+                endpoint: "https://2ehwnnicy0.execute-api.us-west-1.amazonaws.com/development",
+                service: "lambda",
+                region: "us-west-1"
+            },
+            {
+                name: "LambdaRDSClientNoncritical",
+                endpoint: "https://seet0wnvr7.execute-api.us-west-1.amazonaws.com/default",
+                service: "lambda",
+                region: "us-west-1"
+            },
+            {
+                name: "LambdaRDSCompany",
+                endpoint: "https://bems9o4jfe.execute-api.us-west-1.amazonaws.com/default",
+                service: "lambda",
+                region: "us-west-1"
             }
         ]
     }

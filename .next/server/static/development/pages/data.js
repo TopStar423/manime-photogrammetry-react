@@ -88,7 +88,7 @@ module.exports =
 /******/
 /******/
 /******/ 	// Load entry module and return exports
-/******/ 	return __webpack_require__(__webpack_require__.s = 4);
+/******/ 	return __webpack_require__(__webpack_require__.s = 3);
 /******/ })
 /************************************************************************/
 /******/ ({
@@ -136,6 +136,21 @@ aws_amplify__WEBPACK_IMPORTED_MODULE_0___default.a.configure({
     }, {
       name: "LambdaRDS",
       endpoint: "https://2ehwnnicy0.execute-api.us-west-1.amazonaws.com/default",
+      service: "lambda",
+      region: "us-west-1"
+    }, {
+      name: "LambdaRDSClient",
+      endpoint: "https://2ehwnnicy0.execute-api.us-west-1.amazonaws.com/development",
+      service: "lambda",
+      region: "us-west-1"
+    }, {
+      name: "LambdaRDSClientNoncritical",
+      endpoint: "https://seet0wnvr7.execute-api.us-west-1.amazonaws.com/default",
+      service: "lambda",
+      region: "us-west-1"
+    }, {
+      name: "LambdaRDSCompany",
+      endpoint: "https://bems9o4jfe.execute-api.us-west-1.amazonaws.com/default",
       service: "lambda",
       region: "us-west-1"
     }]
@@ -190,8 +205,16 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
 
 
 
-var ORDERS_COLUMN_DESCRIPTION = ['Group Order ID', 'Order ID', 'Nail Product ID', 'Nail Length', 'Nail Shape', 'Order Status', 'Date Created'];
+var ORDERS_COLUMN_DESCRIPTION = ['Order ID', 'Group Order ID', 'Nail Product ID', 'Nail Length', 'Nail Shape', 'Order Status', 'Date Created'];
+var GROUP_ORDERS_COLUMN_DESCRIPTION = ['Group Order ID', 'User ID', 'Group Order Status', 'Insurance', 'Shipping Address', 'Subtotal', 'Taxes'];
 var USERS_COLUMN_DESCRIPTION = ['User ID', 'First Name', 'Last Name', 'Email', 'Total Orders', 'Fitted', 'Date Created', 'Date Last Login', 'Description', 'Subscription'];
+var ORDER_REVIEWS_COLUMN_DESCRIPTION = ['Review ID', 'Order ID', 'Finger Name', 'Review Description', 'Category 1', 'Category 2', 'Category 3'];
+var SHIPPING_ADDRESSES_COLUMN_DESCRIPTION = ['Shipping Address ID', 'User ID', 'Name', 'Address Line 1', 'Address Line 2', 'City', 'Zip Code', 'State', 'Country', 'Latitude', 'Longitude'];
+var PAYMENTS_COLUMN_DESCRIPTION = ['Payment ID', 'User ID', 'Name', 'Last 4', 'Refunded', 'Paid', 'Address Line 1', 'Address Line 2', 'City', 'Zip Code', 'State', 'Country'];
+var DESIGNERS_COLUMN_DESCRIPTION = ['Designer ID', 'First Name', 'Last Name', 'Total Reviews', 'Total Designs', 'Profile Picture', 'Description', 'Location', 'Url 1', 'Url 2', 'Url 3', 'Url 4', 'Url 5', 'Url 6'];
+var NAIL_PRODUCTS_COLUMN_DESCRIPTION = ['Nail Product ID', 'Date Created', 'Description', 'Designer ID', 'Name', 'Price', 'Total Hates', 'Total Likes', 'Total Manime', 'Total Purchases', 'Visible', 'Pic Url 1', 'Pic Url 2', 'Pic Url 3', 'Pic Url 4', 'Pic Url 5'];
+var NAIL_CATEGORIES_COLUMN_DESCRIPTION = ['Category ID', 'Category Name'];
+var NAIL_PRODUCT_CATEGORIES_COLUMN_DESCRIPTION = ['Nail Product ID', 'Category ID'];
 var BoardBody = styled_components__WEBPACK_IMPORTED_MODULE_1___default.a.div.withConfig({
   displayName: "BoardBody",
   componentId: "sc-1mlz8qv-0"
@@ -222,33 +245,14 @@ function (_React$Component) {
 
     _this = _possibleConstructorReturn(this, _getPrototypeOf(BoardJsx).call(this, props));
 
-    _defineProperty(_assertThisInitialized(_assertThisInitialized(_this)), "getData", function (tableName) {
+    _defineProperty(_assertThisInitialized(_assertThisInitialized(_this)), "getData", function (endpoint, tableName) {
       var userInit = {
         headers: {
           'Content-Type': 'application/json'
         }
       };
-      aws_amplify__WEBPACK_IMPORTED_MODULE_5__["API"].get('LambdaRDS', "/".concat(tableName, "/read"), userInit).then(function (ordersResponse) {
+      aws_amplify__WEBPACK_IMPORTED_MODULE_5__["API"].get(endpoint, "/".concat(tableName, "/read"), userInit).then(function (ordersResponse) {
         if (ordersResponse && ordersResponse.rows && _this._mounted) {
-          _this.setState({
-            orders: ordersResponse.rows
-          });
-
-          console.log(ordersResponse.rows);
-        }
-      }).catch(function (err) {
-        console.log(err.stack);
-      });
-    });
-
-    _defineProperty(_assertThisInitialized(_assertThisInitialized(_this)), "getOrders", function (groupOrderId) {
-      var userInit = {
-        headers: {
-          'Content-Type': 'application/json'
-        }
-      };
-      aws_amplify__WEBPACK_IMPORTED_MODULE_5__["API"].get('LambdaRDS', "/orders/read/".concat(groupOrderId), userInit).then(function (ordersResponse) {
-        if (ordersResponse && ordersResponse.rows) {
           _this.setState({
             orders: ordersResponse.rows
           });
@@ -276,8 +280,10 @@ function (_React$Component) {
     key: "componentDidUpdate",
     value: function componentDidUpdate(prevProps) {
       if (this.props.id !== prevProps.id) {
-        // this.getOrders('c7938ff0-f832-11e8-ae6e-ff8724e0fb43');
-        this.getData(this.props.id);
+        var id = this.props.id;
+        var endpoint = 'LambdaRDSCompany';
+        if (id == 'orders' || id == 'grouporders' || id == 'users') endpoint = 'LambdaRDSClient';else if (id == 'shippingaddresses' || id == 'revieworders' || id == 'payments') endpoint = 'LambdaRDSClientNoncritical';
+        this.getData(endpoint, this.props.id);
       }
     }
   }, {
@@ -320,7 +326,7 @@ function (_React$Component) {
     // totalorders: null
     // userid: "us-west-2:ea2e2490-ebfe-4ce3-8e92-e7ed80623abe"
     value: function render() {
-      var table = this.props.id == 'orders' ? ORDERS_COLUMN_DESCRIPTION : USERS_COLUMN_DESCRIPTION;
+      var table = this.props.id == 'orders' ? ORDERS_COLUMN_DESCRIPTION : this.props.id == 'grouporders' ? GROUP_ORDERS_COLUMN_DESCRIPTION : this.props.id == 'users' ? USERS_COLUMN_DESCRIPTION : this.props.id == 'revieworders' ? ORDER_REVIEWS_COLUMN_DESCRIPTION : this.props.id == 'shippingaddresses' ? SHIPPING_ADDRESSES_COLUMN_DESCRIPTION : this.props.id == 'payments' ? PAYMENTS_COLUMN_DESCRIPTION : this.props.id == 'designers' ? DESIGNERS_COLUMN_DESCRIPTION : this.props.id == 'nailproducts' ? NAIL_PRODUCTS_COLUMN_DESCRIPTION : this.props.id == 'categories' ? NAIL_CATEGORIES_COLUMN_DESCRIPTION : this.props.id == 'nailproductstocategory' ? NAIL_PRODUCT_CATEGORIES_COLUMN_DESCRIPTION : [];
       return react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(BoardBody, {
         width: 1
       }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(BoardBodyContainer, {
@@ -333,11 +339,43 @@ function (_React$Component) {
       })), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(BoardBodyContents, null, this.props.id == 'orders' && this.state.orders.map(function (item) {
         return react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_Row__WEBPACK_IMPORTED_MODULE_4__["RowJsx"], {
           table: table
-        }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_Row__WEBPACK_IMPORTED_MODULE_4__["RowItemJsx"], null, item.grouporderid), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_Row__WEBPACK_IMPORTED_MODULE_4__["RowItemJsx"], null, item.orderid), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_Row__WEBPACK_IMPORTED_MODULE_4__["RowItemJsx"], null, item.nailproductid), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_Row__WEBPACK_IMPORTED_MODULE_4__["RowItemJsx"], null, item.naillength), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_Row__WEBPACK_IMPORTED_MODULE_4__["RowItemJsx"], null, item.nailshape), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_Row__WEBPACK_IMPORTED_MODULE_4__["RowItemJsx"], null, item.orderstatus), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_Row__WEBPACK_IMPORTED_MODULE_4__["RowItemJsx"], null, item.datecreated));
+        }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_Row__WEBPACK_IMPORTED_MODULE_4__["RowItemJsx"], null, item.orderid), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_Row__WEBPACK_IMPORTED_MODULE_4__["RowItemJsx"], null, item.grouporderid), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_Row__WEBPACK_IMPORTED_MODULE_4__["RowItemJsx"], null, item.nailproductid), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_Row__WEBPACK_IMPORTED_MODULE_4__["RowItemJsx"], null, item.naillength), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_Row__WEBPACK_IMPORTED_MODULE_4__["RowItemJsx"], null, item.nailshape), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_Row__WEBPACK_IMPORTED_MODULE_4__["RowItemJsx"], null, item.orderstatus), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_Row__WEBPACK_IMPORTED_MODULE_4__["RowItemJsx"], null, item.datecreated));
+      }), this.props.id == 'grouporders' && this.state.orders.map(function (item) {
+        return react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_Row__WEBPACK_IMPORTED_MODULE_4__["RowJsx"], {
+          table: table
+        }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_Row__WEBPACK_IMPORTED_MODULE_4__["RowItemJsx"], null, item.grouporderid), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_Row__WEBPACK_IMPORTED_MODULE_4__["RowItemJsx"], null, item.userid), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_Row__WEBPACK_IMPORTED_MODULE_4__["RowItemJsx"], null, item.grouporderstatus), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_Row__WEBPACK_IMPORTED_MODULE_4__["RowItemJsx"], null, item.insurance), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_Row__WEBPACK_IMPORTED_MODULE_4__["RowItemJsx"], null, item.shippingaddress), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_Row__WEBPACK_IMPORTED_MODULE_4__["RowItemJsx"], null, item.subtotal), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_Row__WEBPACK_IMPORTED_MODULE_4__["RowItemJsx"], null, item.taxes));
       }), this.props.id == 'users' && this.state.orders.map(function (item) {
         return react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_Row__WEBPACK_IMPORTED_MODULE_4__["RowJsx"], {
           table: table
         }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_Row__WEBPACK_IMPORTED_MODULE_4__["RowItemJsx"], null, item.userid), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_Row__WEBPACK_IMPORTED_MODULE_4__["RowItemJsx"], null, item.firstname), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_Row__WEBPACK_IMPORTED_MODULE_4__["RowItemJsx"], null, item.lastname), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_Row__WEBPACK_IMPORTED_MODULE_4__["RowItemJsx"], null, item.email), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_Row__WEBPACK_IMPORTED_MODULE_4__["RowItemJsx"], null, item.totalorders), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_Row__WEBPACK_IMPORTED_MODULE_4__["RowItemJsx"], null, item.fitted ? 'Fitted' : 'Not Fitted'), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_Row__WEBPACK_IMPORTED_MODULE_4__["RowItemJsx"], null, item.datecreated), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_Row__WEBPACK_IMPORTED_MODULE_4__["RowItemJsx"], null, item.datelastlogin), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_Row__WEBPACK_IMPORTED_MODULE_4__["RowItemJsx"], null, item.description), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_Row__WEBPACK_IMPORTED_MODULE_4__["RowItemJsx"], null, item.subscription));
+      }), this.props.id == 'revieworders' && this.state.orders.map(function (item) {
+        return react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_Row__WEBPACK_IMPORTED_MODULE_4__["RowJsx"], {
+          table: table
+        }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_Row__WEBPACK_IMPORTED_MODULE_4__["RowItemJsx"], null, item.reviewid), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_Row__WEBPACK_IMPORTED_MODULE_4__["RowItemJsx"], null, item.orderid), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_Row__WEBPACK_IMPORTED_MODULE_4__["RowItemJsx"], null, item.fingername), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_Row__WEBPACK_IMPORTED_MODULE_4__["RowItemJsx"], null, item.reviewdescription), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_Row__WEBPACK_IMPORTED_MODULE_4__["RowItemJsx"], null, item.category1), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_Row__WEBPACK_IMPORTED_MODULE_4__["RowItemJsx"], null, item.category2), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_Row__WEBPACK_IMPORTED_MODULE_4__["RowItemJsx"], null, item.category3));
+      }), this.props.id == 'shippingaddresses' && this.state.orders.map(function (item) {
+        return react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_Row__WEBPACK_IMPORTED_MODULE_4__["RowJsx"], {
+          table: table
+        }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_Row__WEBPACK_IMPORTED_MODULE_4__["RowItemJsx"], null, item.shippingaddressid));
+      }), this.props.id == 'payments' && this.state.orders.map(function (item) {
+        return react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_Row__WEBPACK_IMPORTED_MODULE_4__["RowJsx"], {
+          table: table
+        }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_Row__WEBPACK_IMPORTED_MODULE_4__["RowItemJsx"], null, item.paymentid));
+      }), this.props.id == 'designers' && this.state.orders.map(function (item) {
+        return react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_Row__WEBPACK_IMPORTED_MODULE_4__["RowJsx"], {
+          table: table
+        }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_Row__WEBPACK_IMPORTED_MODULE_4__["RowItemJsx"], null, item.designerid));
+      }), this.props.id == 'nailproducts' && this.state.orders.map(function (item) {
+        return react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_Row__WEBPACK_IMPORTED_MODULE_4__["RowJsx"], {
+          table: table
+        }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_Row__WEBPACK_IMPORTED_MODULE_4__["RowItemJsx"], null, item.nailproductid), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_Row__WEBPACK_IMPORTED_MODULE_4__["RowItemJsx"], null, item.datecreated), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_Row__WEBPACK_IMPORTED_MODULE_4__["RowItemJsx"], null, item.description), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_Row__WEBPACK_IMPORTED_MODULE_4__["RowItemJsx"], null, item.designerid), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_Row__WEBPACK_IMPORTED_MODULE_4__["RowItemJsx"], null, item.name), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_Row__WEBPACK_IMPORTED_MODULE_4__["RowItemJsx"], null, item.price), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_Row__WEBPACK_IMPORTED_MODULE_4__["RowItemJsx"], null, item.totalhates), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_Row__WEBPACK_IMPORTED_MODULE_4__["RowItemJsx"], null, item.totallikes), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_Row__WEBPACK_IMPORTED_MODULE_4__["RowItemJsx"], null, item.totalmanime), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_Row__WEBPACK_IMPORTED_MODULE_4__["RowItemJsx"], null, item.totalpurchases), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_Row__WEBPACK_IMPORTED_MODULE_4__["RowItemJsx"], null, item.visible), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_Row__WEBPACK_IMPORTED_MODULE_4__["RowItemJsx"], null, item.picuri1), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_Row__WEBPACK_IMPORTED_MODULE_4__["RowItemJsx"], null, item.picuri2), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_Row__WEBPACK_IMPORTED_MODULE_4__["RowItemJsx"], null, item.picuri3), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_Row__WEBPACK_IMPORTED_MODULE_4__["RowItemJsx"], null, item.picuri4), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_Row__WEBPACK_IMPORTED_MODULE_4__["RowItemJsx"], null, item.picuri5));
+      }), this.props.id == 'categories' && this.state.orders.map(function (item) {
+        return react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_Row__WEBPACK_IMPORTED_MODULE_4__["RowJsx"], {
+          table: table
+        }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_Row__WEBPACK_IMPORTED_MODULE_4__["RowItemJsx"], null, item.categoryid), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_Row__WEBPACK_IMPORTED_MODULE_4__["RowItemJsx"], null, item.name));
+      }), this.props.id == 'nailproductstocategory' && this.state.orders.map(function (item) {
+        return react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_Row__WEBPACK_IMPORTED_MODULE_4__["RowJsx"], {
+          table: table
+        }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_Row__WEBPACK_IMPORTED_MODULE_4__["RowItemJsx"], null, item.nailproductid), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_Row__WEBPACK_IMPORTED_MODULE_4__["RowItemJsx"], null, item.categoryid));
       }))));
     }
   }]);
@@ -542,36 +580,80 @@ function (_React$Component) {
         py: 1,
         px: 3,
         color: "whites.11",
-        fontSize: 1
+        fontSize: 0
       }, "ORDERS")), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(next_link__WEBPACK_IMPORTED_MODULE_1___default.a, {
+        as: "/d/grouporders",
+        href: "/data?id=grouporders"
+      }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(MenuItem, {
+        py: 1,
+        px: 3,
+        color: "whites.11",
+        fontSize: 0
+      }, "GROUP ORDERS")), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(next_link__WEBPACK_IMPORTED_MODULE_1___default.a, {
         as: "/d/users",
         href: "/data?id=users"
       }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(MenuItem, {
         py: 1,
         px: 3,
         color: "whites.11",
-        fontSize: 1
-      }, "USERS")), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(MenuItem, {
+        fontSize: 0
+      }, "USERS")), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(next_link__WEBPACK_IMPORTED_MODULE_1___default.a, {
+        as: "/d/revieworders",
+        href: "/data?id=revieworders"
+      }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(MenuItem, {
         py: 1,
         px: 3,
         color: "whites.11",
-        fontSize: 1
-      }, "NAIL PRODUCTS"), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(MenuItem, {
+        fontSize: 0
+      }, "ORDER REVIEWS")), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(next_link__WEBPACK_IMPORTED_MODULE_1___default.a, {
+        as: "/d/shippingaddresses",
+        href: "/data?id=shippingaddresses"
+      }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(MenuItem, {
         py: 1,
         px: 3,
         color: "whites.11",
-        fontSize: 1
-      }, "NAIL CATEGORIES"), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(MenuItem, {
+        fontSize: 0
+      }, "SHIPPING ADDRESSES")), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(next_link__WEBPACK_IMPORTED_MODULE_1___default.a, {
+        as: "/d/payments",
+        href: "/data?id=payments"
+      }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(MenuItem, {
         py: 1,
         px: 3,
         color: "whites.11",
-        fontSize: 1
-      }, "GROUP ORDERS"), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(MenuItem, {
+        fontSize: 0
+      }, "PAYMENTS")), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(next_link__WEBPACK_IMPORTED_MODULE_1___default.a, {
+        as: "/d/designers",
+        href: "/data?id=designers"
+      }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(MenuItem, {
         py: 1,
         px: 3,
         color: "whites.11",
-        fontSize: 1
-      }, "ORDER REVIEWS"))), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_Box__WEBPACK_IMPORTED_MODULE_4__["default"], {
+        fontSize: 0
+      }, "DESIGNERS")), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(next_link__WEBPACK_IMPORTED_MODULE_1___default.a, {
+        as: "/d/nailproducts",
+        href: "/data?id=nailproducts"
+      }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(MenuItem, {
+        py: 1,
+        px: 3,
+        color: "whites.11",
+        fontSize: 0
+      }, "NAIL PRODUCTS")), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(next_link__WEBPACK_IMPORTED_MODULE_1___default.a, {
+        as: "/d/categories",
+        href: "/data?id=categories"
+      }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(MenuItem, {
+        py: 1,
+        px: 3,
+        color: "whites.11",
+        fontSize: 0
+      }, "NAIL CATEGORIES")), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(next_link__WEBPACK_IMPORTED_MODULE_1___default.a, {
+        as: "/d/nailproductstocategory",
+        href: "/data?id=nailproductstocategory"
+      }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(MenuItem, {
+        py: 1,
+        px: 3,
+        color: "whites.11",
+        fontSize: 0
+      }, "NAIL PRODUCT CATEGORIES")))), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_Box__WEBPACK_IMPORTED_MODULE_4__["default"], {
         width: [width - 150, width - 200],
         height: "100%",
         bg: "whites.7",
@@ -820,7 +902,7 @@ __webpack_require__.r(__webpack_exports__);
 var theme = {
   breakpoints: [720, 840, 960, 1024, 1280, 1440],
   space: [0, 4, 8, 16, 32, 64, 128, 256, 512],
-  fontSizes: [8, 10, 12, 14, 16, 20, 24, 36, 48, 80, 96],
+  fontSizes: [9, 10, 12, 14, 16, 20, 24, 36, 48, 80, 96],
   fontWeights: [100, 200, 300, 400, 500, 600, 700, 800, 900],
   lineHeights: {
     solid: 1,
@@ -863,7 +945,7 @@ var theme = {
 
 /***/ }),
 
-/***/ 4:
+/***/ 3:
 /*!*****************************!*\
   !*** multi ./pages/data.js ***!
   \*****************************/

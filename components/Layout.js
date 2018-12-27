@@ -72,28 +72,64 @@ class Layout extends React.Component {
           { !before &&
             <Box minWidth={[150, 200]} height='100%' bg='blacks.11'>
               <Box py={2}>
+
+
                 <Link as={`/d/orders`} href={`/data?id=orders`}>
-                  <MenuItem py={1} px={3} color='whites.11' fontSize={1}>
+                  <MenuItem py={1} px={3} color='whites.11' fontSize={0}>
                     ORDERS
                   </MenuItem>
                 </Link>
+                <Link as={`/d/grouporders`} href={`/data?id=grouporders`}>
+                  <MenuItem py={1} px={3} color='whites.11' fontSize={0}>
+                    GROUP ORDERS
+                  </MenuItem>
+                </Link>
                 <Link as={`/d/users`} href={`/data?id=users`}>
-                  <MenuItem py={1} px={3} color='whites.11' fontSize={1}>
+                  <MenuItem py={1} px={3} color='whites.11' fontSize={0}>
                     USERS
                   </MenuItem>
                 </Link>
-                <MenuItem py={1} px={3} color='whites.11' fontSize={1}>
-                  NAIL PRODUCTS
-                </MenuItem>
-                <MenuItem py={1} px={3} color='whites.11' fontSize={1}>
-                  NAIL CATEGORIES
-                </MenuItem>
-                <MenuItem py={1} px={3} color='whites.11' fontSize={1}>
-                  GROUP ORDERS
-                </MenuItem>
-                <MenuItem py={1} px={3} color='whites.11' fontSize={1}>
-                  ORDER REVIEWS
-                </MenuItem>
+
+
+                <Link as={`/d/revieworders`} href={`/data?id=revieworders`}>
+                  <MenuItem py={1} px={3} color='whites.11' fontSize={0}>
+                    ORDER REVIEWS
+                  </MenuItem>
+                </Link>
+                <Link as={`/d/shippingaddresses`} href={`/data?id=shippingaddresses`}>
+                  <MenuItem py={1} px={3} color='whites.11' fontSize={0}>
+                    SHIPPING ADDRESSES
+                  </MenuItem>
+                </Link>
+                <Link as={`/d/payments`} href={`/data?id=payments`}>
+                  <MenuItem py={1} px={3} color='whites.11' fontSize={0}>
+                    PAYMENTS
+                  </MenuItem>
+                </Link>
+
+
+                <Link as={`/d/designers`} href={`/data?id=designers`}>
+                  <MenuItem py={1} px={3} color='whites.11' fontSize={0}>
+                    DESIGNERS
+                  </MenuItem>
+                </Link>
+                <Link as={`/d/nailproducts`} href={`/data?id=nailproducts`}>
+                  <MenuItem py={1} px={3} color='whites.11' fontSize={0}>
+                    NAIL PRODUCTS
+                  </MenuItem>
+                </Link>
+                <Link as={`/d/categories`} href={`/data?id=categories`}>
+                  <MenuItem py={1} px={3} color='whites.11' fontSize={0}>
+                    NAIL CATEGORIES
+                  </MenuItem>
+                </Link>
+                <Link as={`/d/nailproductstocategory`} href={`/data?id=nailproductstocategory`}>
+                  <MenuItem py={1} px={3} color='whites.11' fontSize={0}>
+                    NAIL PRODUCT CATEGORIES
+                  </MenuItem>
+                </Link>
+
+
               </Box>
             </Box>
           }

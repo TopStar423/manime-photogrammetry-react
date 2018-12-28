@@ -122,6 +122,25 @@ var NAIL_PRODUCTS_COLUMN_DESCRIPTION = ['Nail Product ID', 'Date Created', 'Desc
 var NAIL_CATEGORIES_COLUMN_DESCRIPTION = ['Category ID', 'Category Name'];
 var NAIL_PRODUCT_CATEGORIES_COLUMN_DESCRIPTION = ['Nail Product ID', 'Category ID'];
 var ORDERS_COLUMN_PROPERTIES = ['orderid', 'grouporderid', 'nailproductid', 'naillength', 'nailshape', 'orderstatus', 'datecreated'];
+var GROUP_ORDERS_COLUMN_PROPERTIES = ['grouporderid', 'userid', 'grouporderstatus', 'insurance', 'shippingaddress', 'subtotal', 'taxes'];
+var USERS_COLUMN_PROPERTIES = ['userid', 'firstname', 'lastname', 'email', 'totalorders', 'fitted', 'datecreated', 'datelastlogin', 'description', 'subscription'];
+var ORDER_REVIEWS_COLUMN_PROPERTIES = ['reviewid', 'orderid', 'fingername', 'reviewdescription', 'category1', 'category2', 'category3'];
+var SHIPPING_ADDRESSES_COLUMN_PROPERTIES = ['shippingaddressid'];
+var PAYMENTS_COLUMN_PROPERTIES = ['paymentid'];
+var DESIGNERS_COLUMN_PROPERTIES = ['designerid'];
+var NAIL_PRODUCTS_COLUMN_PROPERTIES = ['nailproductid', 'datecreated', 'description', 'designerid', 'name', 'price', 'totalhates', 'totalmanime', 'totalpurchases', 'visible', 'picuri1', 'picuri2', 'picuri3', 'picuri4', 'picuri5'];
+var NAIL_CATEGORIES_COLUMN_PROPERTIES = ['categoryid', 'name'];
+var NAIL_PRODUCT_CATEGORIES_COLUMN_PROPERTIES = ['nailproductid', 'categoryid'];
+var ORDERS_COLUMN_PROPERTIES_TYPE = ['display', 'display', 'display', 'text', 'text', 'menu', 'display'];
+var GROUP_ORDERS_COLUMN_PROPERTIES_TYPE = ['display', 'display', 'text', 'text', 'text', 'text', 'text'];
+var USERS_COLUMN_PROPERTIES_TYPE = ['display', 'text', 'text', 'display', 'text', 'text', 'text', 'text', 'text', 'text'];
+var ORDER_REVIEWS_COLUMN_PROPERTIES_TYPE = ['display', 'display', 'text', 'text', 'text', 'text', 'text'];
+var SHIPPING_ADDRESSES_COLUMN_PROPERTIES_TYPE = ['display'];
+var PAYMENTS_COLUMN_PROPERTIES_TYPE = ['display'];
+var DESIGNERS_COLUMN_PROPERTIES_TYPE = ['display'];
+var NAIL_PRODUCTS_COLUMN_PROPERTIES_TYPE = ['display', 'text', 'text', 'text', 'text', 'text', 'text', 'text', 'text', 'text', 'text', 'text', 'text', 'text', 'text'];
+var NAIL_CATEGORIES_COLUMN_PROPERTIES_TYPE = ['display', 'text'];
+var NAIL_PRODUCT_CATEGORIES_COLUMN_PROPERTIES_TYPE = ['display', 'display'];
 var BoardBody = styled_components__WEBPACK_IMPORTED_MODULE_1__["default"].div.withConfig({
   displayName: "BoardBody",
   componentId: "sc-1mlz8qv-0"
@@ -223,20 +242,57 @@ function (_React$Component) {
     }
   }, {
     key: "render",
-    // this.updateField(i, 'orderid', 'TEST')
     value: function render() {
       var _this2 = this;
 
-      var table = this.props.id == 'orders' ? ORDERS_COLUMN_DESCRIPTION : this.props.id == 'grouporders' ? GROUP_ORDERS_COLUMN_DESCRIPTION : this.props.id == 'users' ? USERS_COLUMN_DESCRIPTION : this.props.id == 'revieworders' ? ORDER_REVIEWS_COLUMN_DESCRIPTION : this.props.id == 'shippingaddresses' ? SHIPPING_ADDRESSES_COLUMN_DESCRIPTION : this.props.id == 'payments' ? PAYMENTS_COLUMN_DESCRIPTION : this.props.id == 'designers' ? DESIGNERS_COLUMN_DESCRIPTION : this.props.id == 'nailproducts' ? NAIL_PRODUCTS_COLUMN_DESCRIPTION : this.props.id == 'categories' ? NAIL_CATEGORIES_COLUMN_DESCRIPTION : this.props.id == 'nailproductstocategory' ? NAIL_PRODUCT_CATEGORIES_COLUMN_DESCRIPTION : [];
-      var tableProps = ORDERS_COLUMN_PROPERTIES;
-      var data = this.state.orders;
-      var numAttr = table.length; // <RowItem onClick={() => this.selectField((i*numAttr)+1)}>{item.grouporderid}</RowItem>
-      // <RowItem onClick={() => this.selectField((i*numAttr)+2)}>{item.nailproductid}</RowItem>
-      // <RowItem onClick={() => this.selectField((i*numAttr)+3)} selected={this.state.selectedField == (i*numAttr) + 3 ? true : false}>{item.naillength}</RowItem>
-      // <RowItem onClick={() => this.selectField((i*numAttr)+4)} selected={this.state.selectedField == (i*numAttr) + 4 ? true : false}>{item.nailshape}</RowItem>
-      // <RowItem onClick={() => this.selectField((i*numAttr)+5)} selected={this.state.selectedField == (i*numAttr) + 5 ? true : false}>{item.orderstatus}</RowItem>
-      // <RowItem onClick={() => this.selectField((i*numAttr)+6)} selected={this.state.selectedField == (i*numAttr) + 6 ? true : false}>{item.datecreated}</RowItem>
+      var table = [];
+      var tableProps = [];
+      var tablePropsType = [];
 
+      if (this.props.id == 'orders') {
+        table = ORDERS_COLUMN_DESCRIPTION;
+        tableProps = ORDERS_COLUMN_PROPERTIES;
+        tablePropsType = ORDERS_COLUMN_PROPERTIES_TYPE;
+      } else if (this.props.id == 'grouporders') {
+        table = GROUP_ORDERS_COLUMN_DESCRIPTION;
+        tableProps = GROUP_ORDERS_COLUMN_PROPERTIES;
+        tablePropsType = GROUP_ORDERS_COLUMN_PROPERTIES_TYPE;
+      } else if (this.props.id == 'users') {
+        table = USERS_COLUMN_DESCRIPTION;
+        tableProps = USERS_COLUMN_PROPERTIES;
+        tablePropsType = USERS_COLUMN_PROPERTIES_TYPE;
+      } else if (this.props.id == 'revieworders') {
+        table = ORDER_REVIEWS_COLUMN_DESCRIPTION;
+        tableProps = ORDER_REVIEWS_COLUMN_PROPERTIES;
+        tablePropsType = ORDER_REVIEWS_COLUMN_PROPERTIES_TYPE;
+      } else if (this.props.id == 'shippingaddresses') {
+        table = SHIPPING_ADDRESSES_COLUMN_DESCRIPTION;
+        tableProps = SHIPPING_ADDRESSES_COLUMN_PROPERTIES;
+        tablePropsType = SHIPPING_ADDRESSES_COLUMN_PROPERTIES_TYPE;
+      } else if (this.props.id == 'payments') {
+        table = PAYMENTS_COLUMN_DESCRIPTION;
+        tableProps = PAYMENTS_COLUMN_PROPERTIES;
+        tablePropsType = PAYMENTS_COLUMN_PROPERTIES_TYPE;
+      } else if (this.props.id == 'designers') {
+        table = DESIGNERS_COLUMN_DESCRIPTION;
+        tableProps = DESIGNERS_COLUMN_PROPERTIES;
+        tablePropsType = DESIGNERS_COLUMN_PROPERTIES_TYPE;
+      } else if (this.props.id == 'nailproducts') {
+        table = NAIL_PRODUCTS_COLUMN_DESCRIPTION;
+        tableProps = NAIL_PRODUCTS_COLUMN_PROPERTIES;
+        tablePropsType = NAIL_PRODUCTS_COLUMN_PROPERTIES_TYPE;
+      } else if (this.props.id == 'categories') {
+        table = NAIL_CATEGORIES_COLUMN_DESCRIPTION;
+        tableProps = NAIL_CATEGORIES_COLUMN_PROPERTIES;
+        tablePropsType = NAIL_CATEGORIES_COLUMN_PROPERTIES_TYPE;
+      } else if (this.props.id == 'nailproductstocategory') {
+        table = NAIL_PRODUCT_CATEGORIES_COLUMN_DESCRIPTION;
+        tableProps = NAIL_PRODUCT_CATEGORIES_COLUMN_PROPERTIES;
+        tablePropsType = NAIL_PRODUCT_CATEGORIES_COLUMN_PROPERTIES_TYPE;
+      }
+
+      var data = this.state.orders;
+      var numAttr = table.length;
       return react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(BoardBody, {
         width: 1
       }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(BoardBodyContainer, {
@@ -245,280 +301,26 @@ function (_React$Component) {
         table: table,
         description: true
       }, table.map(function (item) {
-        return react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_Row__WEBPACK_IMPORTED_MODULE_4__["RowItemJsx"], null, item);
-      })), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(BoardBodyContents, null, this.props.id == 'orders' && data.map(function (item, i) {
+        return react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_Row__WEBPACK_IMPORTED_MODULE_4__["RowItemJsx"], {
+          type: "display"
+        }, item);
+      })), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(BoardBodyContents, null, data.map(function (item, i) {
         return react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_Row__WEBPACK_IMPORTED_MODULE_4__["RowJsx"], {
           table: table
         }, tableProps.map(function (rowItem, j) {
+          var fieldNum = i * numAttr + j;
           return react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_Row__WEBPACK_IMPORTED_MODULE_4__["RowItemJsx"], {
-            i: i * numAttr + j,
-            propertyName: ORDERS_COLUMN_PROPERTIES[j],
+            i: i,
+            fieldNum: fieldNum,
+            propertyName: tableProps[j],
+            type: tablePropsType[j],
             updateField: _this2.updateField,
             onClick: function onClick() {
-              return _this2.selectField(i * numAttr + j);
+              return _this2.selectField(fieldNum);
             },
-            selected: _this2.state.selectedField == i * numAttr + j ? true : false
-          }, item[ORDERS_COLUMN_PROPERTIES[j]]);
+            selectedField: _this2.state.selectedField
+          }, item[tableProps[j]]);
         }));
-      }), this.props.id == 'grouporders' && data.map(function (item, i) {
-        return react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_Row__WEBPACK_IMPORTED_MODULE_4__["RowJsx"], {
-          table: table
-        }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_Row__WEBPACK_IMPORTED_MODULE_4__["RowItemJsx"], {
-          onClick: function onClick() {
-            return _this2.selectField(i * numAttr + 0);
-          }
-        }, item.grouporderid), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_Row__WEBPACK_IMPORTED_MODULE_4__["RowItemJsx"], {
-          onClick: function onClick() {
-            return _this2.selectField(i * numAttr + 1);
-          }
-        }, item.userid), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_Row__WEBPACK_IMPORTED_MODULE_4__["RowItemJsx"], {
-          onClick: function onClick() {
-            return _this2.selectField(i * numAttr + 2);
-          },
-          selected: _this2.state.selectedField == i * numAttr + 2 ? true : false
-        }, item.grouporderstatus), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_Row__WEBPACK_IMPORTED_MODULE_4__["RowItemJsx"], {
-          onClick: function onClick() {
-            return _this2.selectField(i * numAttr + 3);
-          },
-          selected: _this2.state.selectedField == i * numAttr + 3 ? true : false
-        }, item.insurance), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_Row__WEBPACK_IMPORTED_MODULE_4__["RowItemJsx"], {
-          onClick: function onClick() {
-            return _this2.selectField(i * numAttr + 4);
-          },
-          selected: _this2.state.selectedField == i * numAttr + 4 ? true : false
-        }, item.shippingaddress), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_Row__WEBPACK_IMPORTED_MODULE_4__["RowItemJsx"], {
-          onClick: function onClick() {
-            return _this2.selectField(i * numAttr + 5);
-          },
-          selected: _this2.state.selectedField == i * numAttr + 5 ? true : false
-        }, item.subtotal), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_Row__WEBPACK_IMPORTED_MODULE_4__["RowItemJsx"], {
-          onClick: function onClick() {
-            return _this2.selectField(i * numAttr + 6);
-          },
-          selected: _this2.state.selectedField == i * numAttr + 6 ? true : false
-        }, item.taxes));
-      }), this.props.id == 'users' && data.map(function (item, i) {
-        return react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_Row__WEBPACK_IMPORTED_MODULE_4__["RowJsx"], {
-          table: table
-        }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_Row__WEBPACK_IMPORTED_MODULE_4__["RowItemJsx"], {
-          onClick: function onClick() {
-            return _this2.selectField(i * numAttr + 0);
-          }
-        }, item.userid), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_Row__WEBPACK_IMPORTED_MODULE_4__["RowItemJsx"], {
-          onClick: function onClick() {
-            return _this2.selectField(i * numAttr + 1);
-          },
-          selected: _this2.state.selectedField == i * numAttr + 1 ? true : false
-        }, item.firstname), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_Row__WEBPACK_IMPORTED_MODULE_4__["RowItemJsx"], {
-          onClick: function onClick() {
-            return _this2.selectField(i * numAttr + 2);
-          },
-          selected: _this2.state.selectedField == i * numAttr + 2 ? true : false
-        }, item.lastname), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_Row__WEBPACK_IMPORTED_MODULE_4__["RowItemJsx"], {
-          onClick: function onClick() {
-            return _this2.selectField(i * numAttr + 3);
-          },
-          selected: _this2.state.selectedField == i * numAttr + 3 ? true : false
-        }, item.email), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_Row__WEBPACK_IMPORTED_MODULE_4__["RowItemJsx"], {
-          onClick: function onClick() {
-            return _this2.selectField(i * numAttr + 4);
-          },
-          selected: _this2.state.selectedField == i * numAttr + 4 ? true : false
-        }, item.totalorders), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_Row__WEBPACK_IMPORTED_MODULE_4__["RowItemJsx"], {
-          onClick: function onClick() {
-            return _this2.selectField(i * numAttr + 5);
-          },
-          selected: _this2.state.selectedField == i * numAttr + 5 ? true : false
-        }, item.fitted ? 'Fitted' : 'Not Fitted'), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_Row__WEBPACK_IMPORTED_MODULE_4__["RowItemJsx"], {
-          onClick: function onClick() {
-            return _this2.selectField(i * numAttr + 6);
-          },
-          selected: _this2.state.selectedField == i * numAttr + 6 ? true : false
-        }, item.datecreated), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_Row__WEBPACK_IMPORTED_MODULE_4__["RowItemJsx"], {
-          onClick: function onClick() {
-            return _this2.selectField(i * numAttr + 7);
-          },
-          selected: _this2.state.selectedField == i * numAttr + 7 ? true : false
-        }, item.datelastlogin), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_Row__WEBPACK_IMPORTED_MODULE_4__["RowItemJsx"], {
-          onClick: function onClick() {
-            return _this2.selectField(i * numAttr + 8);
-          },
-          selected: _this2.state.selectedField == i * numAttr + 8 ? true : false
-        }, item.description), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_Row__WEBPACK_IMPORTED_MODULE_4__["RowItemJsx"], {
-          onClick: function onClick() {
-            return _this2.selectField(i * numAttr + 9);
-          },
-          selected: _this2.state.selectedField == i * numAttr + 9 ? true : false
-        }, item.subscription));
-      }), this.props.id == 'revieworders' && data.map(function (item, i) {
-        return react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_Row__WEBPACK_IMPORTED_MODULE_4__["RowJsx"], {
-          table: table
-        }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_Row__WEBPACK_IMPORTED_MODULE_4__["RowItemJsx"], {
-          onClick: function onClick() {
-            return _this2.selectField(i * numAttr + 0);
-          }
-        }, item.reviewid), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_Row__WEBPACK_IMPORTED_MODULE_4__["RowItemJsx"], {
-          onClick: function onClick() {
-            return _this2.selectField(i * numAttr + 1);
-          }
-        }, item.orderid), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_Row__WEBPACK_IMPORTED_MODULE_4__["RowItemJsx"], {
-          onClick: function onClick() {
-            return _this2.selectField(i * numAttr + 2);
-          },
-          selected: _this2.state.selectedField == i * numAttr + 2 ? true : false
-        }, item.fingername), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_Row__WEBPACK_IMPORTED_MODULE_4__["RowItemJsx"], {
-          onClick: function onClick() {
-            return _this2.selectField(i * numAttr + 3);
-          },
-          selected: _this2.state.selectedField == i * numAttr + 3 ? true : false
-        }, item.reviewdescription), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_Row__WEBPACK_IMPORTED_MODULE_4__["RowItemJsx"], {
-          onClick: function onClick() {
-            return _this2.selectField(i * numAttr + 4);
-          },
-          selected: _this2.state.selectedField == i * numAttr + 4 ? true : false
-        }, item.category1), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_Row__WEBPACK_IMPORTED_MODULE_4__["RowItemJsx"], {
-          onClick: function onClick() {
-            return _this2.selectField(i * numAttr + 5);
-          },
-          selected: _this2.state.selectedField == i * numAttr + 5 ? true : false
-        }, item.category2), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_Row__WEBPACK_IMPORTED_MODULE_4__["RowItemJsx"], {
-          onClick: function onClick() {
-            return _this2.selectField(i * numAttr + 6);
-          },
-          selected: _this2.state.selectedField == i * numAttr + 6 ? true : false
-        }, item.category3));
-      }), this.props.id == 'shippingaddresses' && data.map(function (item, i) {
-        return react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_Row__WEBPACK_IMPORTED_MODULE_4__["RowJsx"], {
-          table: table
-        }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_Row__WEBPACK_IMPORTED_MODULE_4__["RowItemJsx"], {
-          onClick: function onClick() {
-            return _this2.selectField(i * numAttr + 0);
-          }
-        }, item.shippingaddressid));
-      }), this.props.id == 'payments' && data.map(function (item, i) {
-        return react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_Row__WEBPACK_IMPORTED_MODULE_4__["RowJsx"], {
-          table: table
-        }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_Row__WEBPACK_IMPORTED_MODULE_4__["RowItemJsx"], {
-          onClick: function onClick() {
-            return _this2.selectField(i * numAttr + 0);
-          }
-        }, item.paymentid));
-      }), this.props.id == 'designers' && data.map(function (item, i) {
-        return react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_Row__WEBPACK_IMPORTED_MODULE_4__["RowJsx"], {
-          table: table
-        }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_Row__WEBPACK_IMPORTED_MODULE_4__["RowItemJsx"], {
-          onClick: function onClick() {
-            return _this2.selectField(i * numAttr + 0);
-          }
-        }, item.designerid));
-      }), this.props.id == 'nailproducts' && data.map(function (item, i) {
-        return react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_Row__WEBPACK_IMPORTED_MODULE_4__["RowJsx"], {
-          table: table
-        }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_Row__WEBPACK_IMPORTED_MODULE_4__["RowItemJsx"], {
-          onClick: function onClick() {
-            return _this2.selectField(i * numAttr + 0);
-          }
-        }, item.nailproductid), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_Row__WEBPACK_IMPORTED_MODULE_4__["RowItemJsx"], {
-          onClick: function onClick() {
-            return _this2.selectField(i * numAttr + 1);
-          },
-          selected: _this2.state.selectedField == i * numAttr + 1 ? true : false
-        }, item.datecreated), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_Row__WEBPACK_IMPORTED_MODULE_4__["RowItemJsx"], {
-          onClick: function onClick() {
-            return _this2.selectField(i * numAttr + 2);
-          },
-          selected: _this2.state.selectedField == i * numAttr + 2 ? true : false
-        }, item.description), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_Row__WEBPACK_IMPORTED_MODULE_4__["RowItemJsx"], {
-          onClick: function onClick() {
-            return _this2.selectField(i * numAttr + 3);
-          },
-          selected: _this2.state.selectedField == i * numAttr + 3 ? true : false
-        }, item.designerid), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_Row__WEBPACK_IMPORTED_MODULE_4__["RowItemJsx"], {
-          onClick: function onClick() {
-            return _this2.selectField(i * numAttr + 4);
-          },
-          selected: _this2.state.selectedField == i * numAttr + 4 ? true : false
-        }, item.name), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_Row__WEBPACK_IMPORTED_MODULE_4__["RowItemJsx"], {
-          onClick: function onClick() {
-            return _this2.selectField(i * numAttr + 5);
-          },
-          selected: _this2.state.selectedField == i * numAttr + 5 ? true : false
-        }, item.price), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_Row__WEBPACK_IMPORTED_MODULE_4__["RowItemJsx"], {
-          onClick: function onClick() {
-            return _this2.selectField(i * numAttr + 6);
-          },
-          selected: _this2.state.selectedField == i * numAttr + 6 ? true : false
-        }, item.totalhates), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_Row__WEBPACK_IMPORTED_MODULE_4__["RowItemJsx"], {
-          onClick: function onClick() {
-            return _this2.selectField(i * numAttr + 7);
-          },
-          selected: _this2.state.selectedField == i * numAttr + 7 ? true : false
-        }, item.totallikes), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_Row__WEBPACK_IMPORTED_MODULE_4__["RowItemJsx"], {
-          onClick: function onClick() {
-            return _this2.selectField(i * numAttr + 8);
-          },
-          selected: _this2.state.selectedField == i * numAttr + 8 ? true : false
-        }, item.totalmanime), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_Row__WEBPACK_IMPORTED_MODULE_4__["RowItemJsx"], {
-          onClick: function onClick() {
-            return _this2.selectField(i * numAttr + 9);
-          },
-          selected: _this2.state.selectedField == i * numAttr + 9 ? true : false
-        }, item.totalpurchases), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_Row__WEBPACK_IMPORTED_MODULE_4__["RowItemJsx"], {
-          onClick: function onClick() {
-            return _this2.selectField(i * numAttr + 10);
-          },
-          selected: _this2.state.selectedField == i * numAttr + 10 ? true : false
-        }, item.visible), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_Row__WEBPACK_IMPORTED_MODULE_4__["RowItemJsx"], {
-          onClick: function onClick() {
-            return _this2.selectField(i * numAttr + 11);
-          },
-          selected: _this2.state.selectedField == i * numAttr + 11 ? true : false
-        }, item.picuri1), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_Row__WEBPACK_IMPORTED_MODULE_4__["RowItemJsx"], {
-          onClick: function onClick() {
-            return _this2.selectField(i * numAttr + 12);
-          },
-          selected: _this2.state.selectedField == i * numAttr + 12 ? true : false
-        }, item.picuri2), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_Row__WEBPACK_IMPORTED_MODULE_4__["RowItemJsx"], {
-          onClick: function onClick() {
-            return _this2.selectField(i * numAttr + 13);
-          },
-          selected: _this2.state.selectedField == i * numAttr + 13 ? true : false
-        }, item.picuri3), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_Row__WEBPACK_IMPORTED_MODULE_4__["RowItemJsx"], {
-          onClick: function onClick() {
-            return _this2.selectField(i * numAttr + 14);
-          },
-          selected: _this2.state.selectedField == i * numAttr + 14 ? true : false
-        }, item.picuri4), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_Row__WEBPACK_IMPORTED_MODULE_4__["RowItemJsx"], {
-          onClick: function onClick() {
-            return _this2.selectField(i * numAttr + 15);
-          },
-          selected: _this2.state.selectedField == i * numAttr + 15 ? true : false
-        }, item.picuri5));
-      }), this.props.id == 'categories' && data.map(function (item, i) {
-        return react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_Row__WEBPACK_IMPORTED_MODULE_4__["RowJsx"], {
-          table: table
-        }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_Row__WEBPACK_IMPORTED_MODULE_4__["RowItemJsx"], {
-          onClick: function onClick() {
-            return _this2.selectField(i * numAttr + 0);
-          }
-        }, item.categoryid), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_Row__WEBPACK_IMPORTED_MODULE_4__["RowItemJsx"], {
-          onClick: function onClick() {
-            return _this2.selectField(i * numAttr + 1);
-          },
-          selected: _this2.state.selectedField == i * numAttr + 1 ? true : false
-        }, item.name));
-      }), this.props.id == 'nailproductstocategory' && data.map(function (item, i) {
-        return react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_Row__WEBPACK_IMPORTED_MODULE_4__["RowJsx"], {
-          table: table
-        }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_Row__WEBPACK_IMPORTED_MODULE_4__["RowItemJsx"], {
-          onClick: function onClick() {
-            return _this2.selectField(i * numAttr + 0);
-          }
-        }, item.nailproductid), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_Row__WEBPACK_IMPORTED_MODULE_4__["RowItemJsx"], {
-          onClick: function onClick() {
-            return _this2.selectField(i * numAttr + 1);
-          }
-        }, item.categoryid));
       }))));
     }
   }]);
@@ -526,32 +328,7 @@ function (_React$Component) {
   return BoardJsx;
 }(react__WEBPACK_IMPORTED_MODULE_0___default.a.Component);
 
-; // <Box height='100px' display='flex' flexDirection='row'>
-//   <Box flex='0 0 auto' height='100%' border='1px solid' width='250px'></Box>
-//   <Box flex='0 0 auto' height='100%' border='1px solid' width='250px'></Box>
-//   <Box flex='0 0 auto' height='100%' border='1px solid' width='250px'></Box>
-//   <Box flex='0 0 auto' height='100%' border='1px solid' width='250px'></Box>
-//   <Box flex='0 0 auto' height='100%' border='1px solid' width='250px'></Box>
-//   <Box flex='0 0 auto' height='100%' border='1px solid' width='250px'></Box>
-//   <Box flex='0 0 auto' height='100%' border='1px solid' width='250px'></Box>
-// </Box>
-// <Box display='flex' flexDirection='row' p={2} m={3}>
-//   { table.map((item) => <RowItem mx={2} description={true} fontSize={1}>{item}</RowItem>) }
-// </Box>
-//   {
-//     this.state.orders.map((order) =>
-//       <RowJsx key={order.orderid}>
-//         <RowItem mx={2} fontSize={1}>{order.grouporderid}</RowItem>
-//         <RowItem mx={2} fontSize={1}>{order.orderid}</RowItem>
-//         <RowItem mx={2} fontSize={1}>{order.nailproductid}</RowItem>
-//         <RowItem mx={2} fontSize={1}>{order.naillength}</RowItem>
-//         <RowItem mx={2} fontSize={1}>{order.nailshape}</RowItem>
-//         <RowItem mx={2} fontSize={1}>{order.orderstatus}</RowItem>
-//         <RowItem mx={2} fontSize={1}>{order.datecreated}</RowItem>
-//       </RowJsx>
-//     )
-//   }
-
+;
 /* harmony default export */ __webpack_exports__["default"] = (BoardJsx);
 
 /***/ }),
@@ -895,7 +672,9 @@ var Row = Object(styled_components__WEBPACK_IMPORTED_MODULE_2__["default"])(_Box
 var Input = styled_components__WEBPACK_IMPORTED_MODULE_2__["default"].input.withConfig({
   displayName: "Row__Input",
   componentId: "sc-8qukng-2"
-})(["border:none;width:100%;height:100%;&:focus{outline:none;}"]);
+})(["", " font-family:sans-serif;font-weight:", ";border:none;width:100%;height:100%;&:focus{outline:none;}"], styled_system__WEBPACK_IMPORTED_MODULE_1__["fontSize"], function (props) {
+  return props.description ? 400 : 200;
+});
 var RowJsx = function RowJsx(props) {
   return react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(Row, _extends({
     boxShadow: props.description ? 0 : 2,
@@ -909,23 +688,26 @@ var RowItemJsx = function RowItemJsx(_ref) {
       type = _ref.type,
       updateField = _ref.updateField,
       i = _ref.i,
+      fieldNum = _ref.fieldNum,
       propertyName = _ref.propertyName,
-      props = _objectWithoutProperties(_ref, ["before", "type", "updateField", "i", "propertyName"]);
+      selectedField = _ref.selectedField,
+      props = _objectWithoutProperties(_ref, ["before", "type", "updateField", "i", "fieldNum", "propertyName", "selectedField"]);
 
   return react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(RowItem, _extends({
     ml: ML_ROW_ITEM,
     pl: 1,
-    fontSize: 1
+    selected: selectedField == fieldNum && type != 'display' ? true : false
   }, props), type == 'text' ? react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(Input, {
-    value: props.children
-  }) : type == 'menu' ? react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(Input, {
-    value: props.children
-  }) : react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(Input, {
+    fontSize: 1,
     value: props.children,
     onChange: function onChange(ev) {
       return updateField(i, propertyName, ev.target.value);
     }
-  }));
+  }) : type == 'menu' ? react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(Input, {
+    value: props.children
+  }) : react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_Box__WEBPACK_IMPORTED_MODULE_3__["default"], {
+    fontSize: 1
+  }, props.children));
 }; // calc(100% - ${(props) => {
 //   // console.log(props);
 //   console.log(props.theme.space[props.mx]);

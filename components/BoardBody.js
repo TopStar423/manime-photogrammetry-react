@@ -15,7 +15,28 @@ const NAIL_PRODUCTS_COLUMN_DESCRIPTION = ['Nail Product ID', 'Date Created', 'De
 const NAIL_CATEGORIES_COLUMN_DESCRIPTION = ['Category ID', 'Category Name'];
 const NAIL_PRODUCT_CATEGORIES_COLUMN_DESCRIPTION = ['Nail Product ID', 'Category ID'];
 
-const ORDERS_COLUMN_PROPERTIES = ['orderid', 'grouporderid', 'nailproductid', 'naillength', 'nailshape', 'orderstatus', 'datecreated'];
+const ORDERS_COLUMN_PROPERTIES      = ['orderid', 'grouporderid', 'nailproductid', 'naillength', 'nailshape', 'orderstatus', 'datecreated'];
+const GROUP_ORDERS_COLUMN_PROPERTIES = ['grouporderid', 'userid', 'grouporderstatus', 'insurance', 'shippingaddress', 'subtotal', 'taxes'];
+const USERS_COLUMN_PROPERTIES = ['userid', 'firstname', 'lastname', 'email', 'totalorders', 'fitted', 'datecreated', 'datelastlogin', 'description', 'subscription'];
+const ORDER_REVIEWS_COLUMN_PROPERTIES = ['reviewid', 'orderid', 'fingername', 'reviewdescription', 'category1', 'category2', 'category3'];
+const SHIPPING_ADDRESSES_COLUMN_PROPERTIES = ['shippingaddressid'];
+const PAYMENTS_COLUMN_PROPERTIES = ['paymentid'];
+const DESIGNERS_COLUMN_PROPERTIES = ['designerid'];
+const NAIL_PRODUCTS_COLUMN_PROPERTIES = ['nailproductid', 'datecreated', 'description', 'designerid', 'name', 'price', 'totalhates', 'totalmanime', 'totalpurchases', 'visible', 'picuri1', 'picuri2', 'picuri3', 'picuri4', 'picuri5'];
+const NAIL_CATEGORIES_COLUMN_PROPERTIES = ['categoryid', 'name'];
+const NAIL_PRODUCT_CATEGORIES_COLUMN_PROPERTIES = ['nailproductid', 'categoryid'];
+
+const ORDERS_COLUMN_PROPERTIES_TYPE = ['display', 'display', 'display', 'text', 'text', 'menu', 'display'];
+const GROUP_ORDERS_COLUMN_PROPERTIES_TYPE = ['display', 'display', 'text', 'text', 'text', 'text', 'text'];
+const USERS_COLUMN_PROPERTIES_TYPE = ['display', 'text', 'text', 'display', 'text', 'text', 'text', 'text', 'text', 'text'];
+const ORDER_REVIEWS_COLUMN_PROPERTIES_TYPE = ['display', 'display', 'text', 'text', 'text', 'text', 'text'];
+const SHIPPING_ADDRESSES_COLUMN_PROPERTIES_TYPE = ['display'];
+const PAYMENTS_COLUMN_PROPERTIES_TYPE = ['display'];
+const DESIGNERS_COLUMN_PROPERTIES_TYPE = ['display'];
+const NAIL_PRODUCTS_COLUMN_PROPERTIES_TYPE = ['display', 'text', 'text', 'text', 'text', 'text', 'text', 'text', 'text', 'text', 'text', 'text', 'text', 'text', 'text'];
+const NAIL_CATEGORIES_COLUMN_PROPERTIES_TYPE = ['display', 'text'];
+const NAIL_PRODUCT_CATEGORIES_COLUMN_PROPERTIES_TYPE = ['display', 'display'];
+
 
 const BoardBody = styled.div`
   display: flex;
@@ -113,145 +134,72 @@ class BoardJsx extends React.Component {
     });
   }
 
-  // this.updateField(i, 'orderid', 'TEST')
-
   render() {
-    let table = this.props.id == 'orders' ? ORDERS_COLUMN_DESCRIPTION
-              : this.props.id == 'grouporders' ? GROUP_ORDERS_COLUMN_DESCRIPTION
-              : this.props.id == 'users' ? USERS_COLUMN_DESCRIPTION
-              : this.props.id == 'revieworders' ? ORDER_REVIEWS_COLUMN_DESCRIPTION
-              : this.props.id == 'shippingaddresses' ? SHIPPING_ADDRESSES_COLUMN_DESCRIPTION
-              : this.props.id == 'payments' ? PAYMENTS_COLUMN_DESCRIPTION
-              : this.props.id == 'designers' ? DESIGNERS_COLUMN_DESCRIPTION
-              : this.props.id == 'nailproducts' ? NAIL_PRODUCTS_COLUMN_DESCRIPTION
-              : this.props.id == 'categories' ? NAIL_CATEGORIES_COLUMN_DESCRIPTION
-              : this.props.id == 'nailproductstocategory' ? NAIL_PRODUCT_CATEGORIES_COLUMN_DESCRIPTION
-              : [];
-    const tableProps = ORDERS_COLUMN_PROPERTIES;
+    let table = [];
+    let tableProps = [];
+    let tablePropsType = [];
+
+    if (this.props.id == 'orders') {
+      table = ORDERS_COLUMN_DESCRIPTION;
+      tableProps = ORDERS_COLUMN_PROPERTIES;
+      tablePropsType = ORDERS_COLUMN_PROPERTIES_TYPE;
+    } else if (this.props.id == 'grouporders') {
+      table = GROUP_ORDERS_COLUMN_DESCRIPTION;
+      tableProps = GROUP_ORDERS_COLUMN_PROPERTIES;
+      tablePropsType = GROUP_ORDERS_COLUMN_PROPERTIES_TYPE;
+    } else if (this.props.id == 'users') {
+      table = USERS_COLUMN_DESCRIPTION;
+      tableProps = USERS_COLUMN_PROPERTIES;
+      tablePropsType = USERS_COLUMN_PROPERTIES_TYPE;
+    } else if (this.props.id == 'revieworders') {
+      table = ORDER_REVIEWS_COLUMN_DESCRIPTION;
+      tableProps = ORDER_REVIEWS_COLUMN_PROPERTIES;
+      tablePropsType = ORDER_REVIEWS_COLUMN_PROPERTIES_TYPE;
+    } else if (this.props.id == 'shippingaddresses') {
+      table = SHIPPING_ADDRESSES_COLUMN_DESCRIPTION;
+      tableProps = SHIPPING_ADDRESSES_COLUMN_PROPERTIES;
+      tablePropsType = SHIPPING_ADDRESSES_COLUMN_PROPERTIES_TYPE;
+    } else if (this.props.id == 'payments') {
+      table = PAYMENTS_COLUMN_DESCRIPTION;
+      tableProps = PAYMENTS_COLUMN_PROPERTIES;
+      tablePropsType = PAYMENTS_COLUMN_PROPERTIES_TYPE;
+    } else if (this.props.id == 'designers') {
+      table = DESIGNERS_COLUMN_DESCRIPTION;
+      tableProps = DESIGNERS_COLUMN_PROPERTIES;
+      tablePropsType = DESIGNERS_COLUMN_PROPERTIES_TYPE;
+    } else if (this.props.id == 'nailproducts') {
+      table = NAIL_PRODUCTS_COLUMN_DESCRIPTION;
+      tableProps = NAIL_PRODUCTS_COLUMN_PROPERTIES;
+      tablePropsType = NAIL_PRODUCTS_COLUMN_PROPERTIES_TYPE;
+    } else if (this.props.id == 'categories') {
+      table = NAIL_CATEGORIES_COLUMN_DESCRIPTION;
+      tableProps = NAIL_CATEGORIES_COLUMN_PROPERTIES;
+      tablePropsType = NAIL_CATEGORIES_COLUMN_PROPERTIES_TYPE;
+    } else if (this.props.id == 'nailproductstocategory') {
+      table = NAIL_PRODUCT_CATEGORIES_COLUMN_DESCRIPTION;
+      tableProps = NAIL_PRODUCT_CATEGORIES_COLUMN_PROPERTIES;
+      tablePropsType = NAIL_PRODUCT_CATEGORIES_COLUMN_PROPERTIES_TYPE;
+    }
+
     const data = this.state.orders;
     const numAttr = table.length;
-
-    // <RowItem onClick={() => this.selectField((i*numAttr)+1)}>{item.grouporderid}</RowItem>
-    // <RowItem onClick={() => this.selectField((i*numAttr)+2)}>{item.nailproductid}</RowItem>
-    // <RowItem onClick={() => this.selectField((i*numAttr)+3)} selected={this.state.selectedField == (i*numAttr) + 3 ? true : false}>{item.naillength}</RowItem>
-    // <RowItem onClick={() => this.selectField((i*numAttr)+4)} selected={this.state.selectedField == (i*numAttr) + 4 ? true : false}>{item.nailshape}</RowItem>
-    // <RowItem onClick={() => this.selectField((i*numAttr)+5)} selected={this.state.selectedField == (i*numAttr) + 5 ? true : false}>{item.orderstatus}</RowItem>
-    // <RowItem onClick={() => this.selectField((i*numAttr)+6)} selected={this.state.selectedField == (i*numAttr) + 6 ? true : false}>{item.datecreated}</RowItem>
 
     return (
       <BoardBody width={1}>
         <BoardBodyContainer table={table}>
           <Row table={table} description>
-            { table.map((item) => <RowItem>{item}</RowItem>) }
+            { table.map((item) => <RowItem type='display'>{item}</RowItem>) }
           </Row>
           <BoardBodyContents>
-            { this.props.id == 'orders' &&
+            {
               data.map((item, i) =>
                 <Row table={table}>
                   {
-                    tableProps.map((rowItem, j) => <RowItem i={(i*numAttr)+j} propertyName={ORDERS_COLUMN_PROPERTIES[j]} updateField={this.updateField} onClick={() => this.selectField((i*numAttr)+j)} selected={this.state.selectedField == (i*numAttr) + j ? true : false}>{item[ORDERS_COLUMN_PROPERTIES[j]]}</RowItem>)
+                    tableProps.map((rowItem, j) => {
+                      const fieldNum = (i * numAttr) + j;
+                      return <RowItem i={i} fieldNum={fieldNum} propertyName={tableProps[j]} type={tablePropsType[j]} updateField={this.updateField} onClick={() => this.selectField(fieldNum)} selectedField={this.state.selectedField}>{item[tableProps[j]]}</RowItem>;
+                    })
                   }
-                </Row>
-              )
-            }
-            { this.props.id == 'grouporders' &&
-              data.map((item, i) =>
-                <Row table={table}>
-                  <RowItem onClick={() => this.selectField((i*numAttr)+0)}>{item.grouporderid}</RowItem>
-                  <RowItem onClick={() => this.selectField((i*numAttr)+1)}>{item.userid}</RowItem>
-                  <RowItem onClick={() => this.selectField((i*numAttr)+2)} selected={this.state.selectedField == (i*numAttr) + 2 ? true : false}>{item.grouporderstatus}</RowItem>
-                  <RowItem onClick={() => this.selectField((i*numAttr)+3)} selected={this.state.selectedField == (i*numAttr) + 3 ? true : false}>{item.insurance}</RowItem>
-                  <RowItem onClick={() => this.selectField((i*numAttr)+4)} selected={this.state.selectedField == (i*numAttr) + 4 ? true : false}>{item.shippingaddress}</RowItem>
-                  <RowItem onClick={() => this.selectField((i*numAttr)+5)} selected={this.state.selectedField == (i*numAttr) + 5 ? true : false}>{item.subtotal}</RowItem>
-                  <RowItem onClick={() => this.selectField((i*numAttr)+6)} selected={this.state.selectedField == (i*numAttr) + 6 ? true : false}>{item.taxes}</RowItem>
-                </Row>
-              )
-            }
-            { this.props.id == 'users' &&
-              data.map((item, i) =>
-                <Row table={table}>
-                  <RowItem onClick={() => this.selectField((i*numAttr)+0)}>{item.userid}</RowItem>
-                  <RowItem onClick={() => this.selectField((i*numAttr)+1)} selected={this.state.selectedField == (i*numAttr) + 1 ? true : false}>{item.firstname}</RowItem>
-                  <RowItem onClick={() => this.selectField((i*numAttr)+2)} selected={this.state.selectedField == (i*numAttr) + 2 ? true : false}>{item.lastname}</RowItem>
-                  <RowItem onClick={() => this.selectField((i*numAttr)+3)} selected={this.state.selectedField == (i*numAttr) + 3 ? true : false}>{item.email}</RowItem>
-                  <RowItem onClick={() => this.selectField((i*numAttr)+4)} selected={this.state.selectedField == (i*numAttr) + 4 ? true : false}>{item.totalorders}</RowItem>
-                  <RowItem onClick={() => this.selectField((i*numAttr)+5)} selected={this.state.selectedField == (i*numAttr) + 5 ? true : false}>{item.fitted ? 'Fitted' : 'Not Fitted'}</RowItem>
-                  <RowItem onClick={() => this.selectField((i*numAttr)+6)} selected={this.state.selectedField == (i*numAttr) + 6 ? true : false}>{item.datecreated}</RowItem>
-                  <RowItem onClick={() => this.selectField((i*numAttr)+7)} selected={this.state.selectedField == (i*numAttr) + 7 ? true : false}>{item.datelastlogin}</RowItem>
-                  <RowItem onClick={() => this.selectField((i*numAttr)+8)} selected={this.state.selectedField == (i*numAttr) + 8 ? true : false}>{item.description}</RowItem>
-                  <RowItem onClick={() => this.selectField((i*numAttr)+9)} selected={this.state.selectedField == (i*numAttr) + 9 ? true : false}>{item.subscription}</RowItem>
-                </Row>
-              )
-            }
-            { this.props.id == 'revieworders' &&
-              data.map((item, i) =>
-                <Row table={table}>
-                  <RowItem onClick={() => this.selectField((i*numAttr)+0)}>{item.reviewid}</RowItem>
-                  <RowItem onClick={() => this.selectField((i*numAttr)+1)}>{item.orderid}</RowItem>
-                  <RowItem onClick={() => this.selectField((i*numAttr)+2)} selected={this.state.selectedField == (i*numAttr) + 2 ? true : false}>{item.fingername}</RowItem>
-                  <RowItem onClick={() => this.selectField((i*numAttr)+3)} selected={this.state.selectedField == (i*numAttr) + 3 ? true : false}>{item.reviewdescription}</RowItem>
-                  <RowItem onClick={() => this.selectField((i*numAttr)+4)} selected={this.state.selectedField == (i*numAttr) + 4 ? true : false}>{item.category1}</RowItem>
-                  <RowItem onClick={() => this.selectField((i*numAttr)+5)} selected={this.state.selectedField == (i*numAttr) + 5 ? true : false}>{item.category2}</RowItem>
-                  <RowItem onClick={() => this.selectField((i*numAttr)+6)} selected={this.state.selectedField == (i*numAttr) + 6 ? true : false}>{item.category3}</RowItem>
-                </Row>
-              )
-            }
-            { this.props.id == 'shippingaddresses' &&
-              data.map((item, i) =>
-                <Row table={table}>
-                  <RowItem onClick={() => this.selectField((i*numAttr)+0)}>{item.shippingaddressid}</RowItem>
-                </Row>
-              )
-            }
-            { this.props.id == 'payments' &&
-              data.map((item, i) =>
-                <Row table={table}>
-                  <RowItem onClick={() => this.selectField((i*numAttr)+0)}>{item.paymentid}</RowItem>
-                </Row>
-              )
-            }
-            { this.props.id == 'designers' &&
-              data.map((item, i) =>
-                <Row table={table}>
-                  <RowItem onClick={() => this.selectField((i*numAttr)+0)}>{item.designerid}</RowItem>
-                </Row>
-              )
-            }
-            { this.props.id == 'nailproducts' &&
-              data.map((item, i) =>
-                <Row table={table}>
-                  <RowItem onClick={() => this.selectField((i*numAttr)+0)}>{item.nailproductid}</RowItem>
-                  <RowItem onClick={() => this.selectField((i*numAttr)+1)} selected={this.state.selectedField == (i*numAttr) + 1 ? true : false}>{item.datecreated}</RowItem>
-                  <RowItem onClick={() => this.selectField((i*numAttr)+2)} selected={this.state.selectedField == (i*numAttr) + 2 ? true : false}>{item.description}</RowItem>
-                  <RowItem onClick={() => this.selectField((i*numAttr)+3)} selected={this.state.selectedField == (i*numAttr) + 3 ? true : false}>{item.designerid}</RowItem>
-                  <RowItem onClick={() => this.selectField((i*numAttr)+4)} selected={this.state.selectedField == (i*numAttr) + 4 ? true : false}>{item.name}</RowItem>
-                  <RowItem onClick={() => this.selectField((i*numAttr)+5)} selected={this.state.selectedField == (i*numAttr) + 5 ? true : false}>{item.price}</RowItem>
-                  <RowItem onClick={() => this.selectField((i*numAttr)+6)} selected={this.state.selectedField == (i*numAttr) + 6 ? true : false}>{item.totalhates}</RowItem>
-                  <RowItem onClick={() => this.selectField((i*numAttr)+7)} selected={this.state.selectedField == (i*numAttr) + 7 ? true : false}>{item.totallikes}</RowItem>
-                  <RowItem onClick={() => this.selectField((i*numAttr)+8)} selected={this.state.selectedField == (i*numAttr) + 8 ? true : false}>{item.totalmanime}</RowItem>
-                  <RowItem onClick={() => this.selectField((i*numAttr)+9)} selected={this.state.selectedField == (i*numAttr) + 9 ? true : false}>{item.totalpurchases}</RowItem>
-                  <RowItem onClick={() => this.selectField((i*numAttr)+10)} selected={this.state.selectedField == (i*numAttr) + 10 ? true : false}>{item.visible}</RowItem>
-                  <RowItem onClick={() => this.selectField((i*numAttr)+11)} selected={this.state.selectedField == (i*numAttr) + 11 ? true : false}>{item.picuri1}</RowItem>
-                  <RowItem onClick={() => this.selectField((i*numAttr)+12)} selected={this.state.selectedField == (i*numAttr) + 12 ? true : false}>{item.picuri2}</RowItem>
-                  <RowItem onClick={() => this.selectField((i*numAttr)+13)} selected={this.state.selectedField == (i*numAttr) + 13 ? true : false}>{item.picuri3}</RowItem>
-                  <RowItem onClick={() => this.selectField((i*numAttr)+14)} selected={this.state.selectedField == (i*numAttr) + 14 ? true : false}>{item.picuri4}</RowItem>
-                  <RowItem onClick={() => this.selectField((i*numAttr)+15)} selected={this.state.selectedField == (i*numAttr) + 15 ? true : false}>{item.picuri5}</RowItem>
-                </Row>
-              )
-            }
-            { this.props.id == 'categories' &&
-              data.map((item, i) =>
-                <Row table={table}>
-                  <RowItem onClick={() => this.selectField((i*numAttr)+0)}>{item.categoryid}</RowItem>
-                  <RowItem onClick={() => this.selectField((i*numAttr)+1)} selected={this.state.selectedField == (i*numAttr) + 1 ? true : false}>{item.name}</RowItem>
-                </Row>
-              )
-            }
-            { this.props.id == 'nailproductstocategory' &&
-              data.map((item, i) =>
-                <Row table={table}>
-                  <RowItem onClick={() => this.selectField((i*numAttr)+0)}>{item.nailproductid}</RowItem>
-                  <RowItem onClick={() => this.selectField((i*numAttr)+1)}>{item.categoryid}</RowItem>
                 </Row>
               )
             }
@@ -261,33 +209,5 @@ class BoardJsx extends React.Component {
     );
   }
 };
-
-// <Box height='100px' display='flex' flexDirection='row'>
-//   <Box flex='0 0 auto' height='100%' border='1px solid' width='250px'></Box>
-//   <Box flex='0 0 auto' height='100%' border='1px solid' width='250px'></Box>
-//   <Box flex='0 0 auto' height='100%' border='1px solid' width='250px'></Box>
-//   <Box flex='0 0 auto' height='100%' border='1px solid' width='250px'></Box>
-//   <Box flex='0 0 auto' height='100%' border='1px solid' width='250px'></Box>
-//   <Box flex='0 0 auto' height='100%' border='1px solid' width='250px'></Box>
-//   <Box flex='0 0 auto' height='100%' border='1px solid' width='250px'></Box>
-// </Box>
-
-// <Box display='flex' flexDirection='row' p={2} m={3}>
-//   { table.map((item) => <RowItem mx={2} description={true} fontSize={1}>{item}</RowItem>) }
-// </Box>
-
-//   {
-//     this.state.orders.map((order) =>
-//       <RowJsx key={order.orderid}>
-//         <RowItem mx={2} fontSize={1}>{order.grouporderid}</RowItem>
-//         <RowItem mx={2} fontSize={1}>{order.orderid}</RowItem>
-//         <RowItem mx={2} fontSize={1}>{order.nailproductid}</RowItem>
-//         <RowItem mx={2} fontSize={1}>{order.naillength}</RowItem>
-//         <RowItem mx={2} fontSize={1}>{order.nailshape}</RowItem>
-//         <RowItem mx={2} fontSize={1}>{order.orderstatus}</RowItem>
-//         <RowItem mx={2} fontSize={1}>{order.datecreated}</RowItem>
-//       </RowJsx>
-//     )
-//   }
 
 export default BoardJsx;

@@ -49,6 +49,9 @@ const Row = styled(Box)`
 `;
 
 const Input = styled.input`
+  ${fontSize}
+  font-family: sans-serif;
+  font-weight: ${(props) => props.description ? 400 : 200};
   border: none;
   width: 100%;
   height: 100%;
@@ -63,11 +66,11 @@ export const RowJsx = (props) => (
   </Row>
 );
 
-export const RowItemJsx = ({ before, type, updateField, i, propertyName, ...props }) => (
-  <RowItem ml={ML_ROW_ITEM} pl={1} fontSize={1} {...props}>
-    { type == 'text' ? <Input value={props.children}></Input>
+export const RowItemJsx = ({ before, type, updateField, i, fieldNum, propertyName, selectedField, ...props }) => (
+  <RowItem ml={ML_ROW_ITEM} pl={1} selected={selectedField == fieldNum && type != 'display' ? true : false} {...props}>
+    { type == 'text' ? <Input fontSize={1} value={props.children} onChange={(ev) => updateField(i, propertyName, ev.target.value)}></Input>
       : type == 'menu' ? <Input value={props.children}></Input>
-      : <Input value={props.children} onChange={(ev) => updateField(i, propertyName, ev.target.value)}></Input>
+      : <Box fontSize={1}>{props.children}</Box>
     }
   </RowItem>
 );

@@ -1,0 +1,33 @@
+
+
+
+
+
+
+
+
+
+
+
+const GROUP_ORDERS_COLUMN_PROPERTIES = ['grouporderid', 'userid', 'grouporderstatus', 'insurance', 'shippingaddress', 'subtotal', 'taxes'];
+const USERS_COLUMN_PROPERTIES = ['userid', 'firstname', 'lastname', 'email', 'totalorders', 'fitted', 'datecreated', 'datelastlogin', 'description', 'subscription'];
+const ORDER_REVIEWS_COLUMN_PROPERTIES = ['reviewid', 'orderid', 'fingername', 'reviewdescription', 'category1', 'category2', 'category3'];
+const SHIPPING_ADDRESSES_COLUMN_PROPERTIES = ['shippingaddressid'];
+const PAYMENTS_COLUMN_PROPERTIES = ['paymentid'];
+const DESIGNERS_COLUMN_PROPERTIES = ['designerid'];
+const NAIL_PRODUCTS_COLUMN_PROPERTIES = ['nailproductid', 'datecreated', 'description', 'designerid', 'name', 'price', 'totalhates', 'totalmanime', 'totalpurchases', 'visible', 'picuri1', 'picuri2', 'picuri3', 'picuri4', 'picuri5'];
+const NAIL_CATEGORIES_COLUMN_PROPERTIES = ['categoryid', 'name'];
+const NAIL_PRODUCT_CATEGORIES_COLUMN_PROPERTIES = ['nailproductid', 'categoryid'];
+
+
+
+
+const GROUP_ORDERS_COLUMN_PROPERTIES_TYPE = [];
+const USERS_COLUMN_PROPERTIES_TYPE = [];
+const ORDER_REVIEWS_COLUMN_PROPERTIES_TYPE =
+const SHIPPING_ADDRESSES_COLUMN_PROPERTIES_TYPE = [];
+const PAYMENTS_COLUMN_PROPERTIES_TYPE = [];
+const DESIGNERS_COLUMN_PROPERTIES_TYPE = [];
+const NAIL_PRODUCTS_COLUMN_PROPERTIES_TYPE = [];
+const NAIL_CATEGORIES_COLUMN_PROPERTIES_TYPE = [];
+const NAIL_PRODUCT_CATEGORIES_COLUMN_PROPERTIES_TYPE = [];

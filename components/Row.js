@@ -20,6 +20,12 @@ const RowItem = styled(Box)`
   font-family: sans-serif;
   font-weight: ${(props) => props.description ? 400 : 200};
   flex: 0 0 ${ROW_ITEM_WIDTH}px;
+  height: 80%;
+  align-items: center;
+  display: flex;
+  border: ${(props) => props.selected ? 1 : 0}px solid #313131;
+  border-radius: 3px;
+  box-sizing: border-box;
   &:hover {
   }
 `;
@@ -42,15 +48,27 @@ const Row = styled(Box)`
   }
 `;
 
+const Input = styled.input`
+  border: none;
+  width: 100%;
+  height: 100%;
+  &:focus {
+      outline: none;
+  }
+`;
+
 export const RowJsx = (props) => (
   <Row boxShadow={props.description ? 0 : 2} height={1} my={1} ml={MX_ROW} {...props}>
     {props.children}
   </Row>
 );
 
-export const RowItemJsx = ({ before, ...props }) => (
-  <RowItem ml={ML_ROW_ITEM} fontSize={1} {...props}>
-    {props.children}
+export const RowItemJsx = ({ before, type, updateField, i, propertyName, ...props }) => (
+  <RowItem ml={ML_ROW_ITEM} pl={1} fontSize={1} {...props}>
+    { type == 'text' ? <Input value={props.children}></Input>
+      : type == 'menu' ? <Input value={props.children}></Input>
+      : <Input value={props.children} onChange={(ev) => updateField(i, propertyName, ev.target.value)}></Input>
+    }
   </RowItem>
 );
 

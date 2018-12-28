@@ -121,6 +121,7 @@ var DESIGNERS_COLUMN_DESCRIPTION = ['Designer ID', 'First Name', 'Last Name', 'T
 var NAIL_PRODUCTS_COLUMN_DESCRIPTION = ['Nail Product ID', 'Date Created', 'Description', 'Designer ID', 'Name', 'Price', 'Total Hates', 'Total Likes', 'Total Manime', 'Total Purchases', 'Visible', 'Pic Url 1', 'Pic Url 2', 'Pic Url 3', 'Pic Url 4', 'Pic Url 5'];
 var NAIL_CATEGORIES_COLUMN_DESCRIPTION = ['Category ID', 'Category Name'];
 var NAIL_PRODUCT_CATEGORIES_COLUMN_DESCRIPTION = ['Nail Product ID', 'Category ID'];
+var ORDERS_COLUMN_PROPERTIES = ['orderid', 'grouporderid', 'nailproductid', 'naillength', 'nailshape', 'orderstatus', 'datecreated'];
 var BoardBody = styled_components__WEBPACK_IMPORTED_MODULE_1__["default"].div.withConfig({
   displayName: "BoardBody",
   componentId: "sc-1mlz8qv-0"
@@ -151,6 +152,12 @@ function (_React$Component) {
 
     _this = _possibleConstructorReturn(this, _getPrototypeOf(BoardJsx).call(this, props));
 
+    _defineProperty(_assertThisInitialized(_assertThisInitialized(_this)), "getEndpoint", function (id) {
+      var endpoint = 'LambdaRDSCompany';
+      if (id == 'orders' || id == 'grouporders' || id == 'users') endpoint = 'LambdaRDSClient';else if (id == 'shippingaddresses' || id == 'revieworders' || id == 'payments') endpoint = 'LambdaRDSClientNoncritical';
+      return endpoint;
+    });
+
     _defineProperty(_assertThisInitialized(_assertThisInitialized(_this)), "getData", function (endpoint, tableName) {
       var userInit = {
         headers: {
@@ -170,9 +177,25 @@ function (_React$Component) {
       });
     });
 
+    _defineProperty(_assertThisInitialized(_assertThisInitialized(_this)), "selectField", function (index) {
+      _this.setState({
+        selectedField: index
+      });
+    });
+
+    _defineProperty(_assertThisInitialized(_assertThisInitialized(_this)), "updateField", function (index, propertyName, propertyValue) {
+      var _orders = _this.state.orders;
+      _orders[index][propertyName] = propertyValue;
+
+      _this.setState({
+        orders: _orders
+      });
+    });
+
     _this.state = {
       orders: [],
-      numColumns: 0
+      numColumns: 0,
+      selectedField: -1
     };
     return _this;
   }
@@ -181,15 +204,16 @@ function (_React$Component) {
     key: "componentDidMount",
     value: function componentDidMount() {
       this._mounted = true;
+      var endpoint = this.getEndpoint(this.props.id);
+      this.getData(endpoint, this.props.id);
     }
   }, {
     key: "componentDidUpdate",
     value: function componentDidUpdate(prevProps) {
       if (this.props.id !== prevProps.id) {
-        var id = this.props.id;
-        var endpoint = 'LambdaRDSCompany';
-        if (id == 'orders' || id == 'grouporders' || id == 'users') endpoint = 'LambdaRDSClient';else if (id == 'shippingaddresses' || id == 'revieworders' || id == 'payments') endpoint = 'LambdaRDSClientNoncritical';
+        var endpoint = this.getEndpoint(this.props.id);
         this.getData(endpoint, this.props.id);
+        this.selectField(-1);
       }
     }
   }, {
@@ -199,40 +223,20 @@ function (_React$Component) {
     }
   }, {
     key: "render",
-    // ORDERS
-    // comments: ""
-    // datecreated: "2018-11-05T02:09:21.000Z"
-    // deliverydate: "2004-10-19T08:23:54.000Z"
-    // discount: 0
-    // grouporderid: "c7938ff0-f832-11e8-ae6e-ff8724e0fb43"
-    // listedprice: 0
-    // naillength: "2MM"
-    // nailproductid: "1"
-    // nailshape: "BALLERINA"
-    // orderid: "c7ceeb40-f832-11e8-ae6e-ff8724e0fb43"
-    // orderstatus: "Order Received"
-    // userid: null
-    // USERS
-    // credits: null
-    // datecreated: null
-    // datelastlogin: null
-    // description: null
-    // email: "ahnguye@ucdavis.edu"
-    // firstname: "Andre22"
-    // fitted: null
-    // lastname: null
-    // leftfingerscurvature: null
-    // leftfingerspicture: null
-    // leftthumbpicture: null
-    // profilepicture: null
-    // rightfingerscurvature: null
-    // rightfingerspicture: null
-    // rightthumbpicture: null
-    // subscription: null
-    // totalorders: null
-    // userid: "us-west-2:ea2e2490-ebfe-4ce3-8e92-e7ed80623abe"
+    // this.updateField(i, 'orderid', 'TEST')
     value: function render() {
+      var _this2 = this;
+
       var table = this.props.id == 'orders' ? ORDERS_COLUMN_DESCRIPTION : this.props.id == 'grouporders' ? GROUP_ORDERS_COLUMN_DESCRIPTION : this.props.id == 'users' ? USERS_COLUMN_DESCRIPTION : this.props.id == 'revieworders' ? ORDER_REVIEWS_COLUMN_DESCRIPTION : this.props.id == 'shippingaddresses' ? SHIPPING_ADDRESSES_COLUMN_DESCRIPTION : this.props.id == 'payments' ? PAYMENTS_COLUMN_DESCRIPTION : this.props.id == 'designers' ? DESIGNERS_COLUMN_DESCRIPTION : this.props.id == 'nailproducts' ? NAIL_PRODUCTS_COLUMN_DESCRIPTION : this.props.id == 'categories' ? NAIL_CATEGORIES_COLUMN_DESCRIPTION : this.props.id == 'nailproductstocategory' ? NAIL_PRODUCT_CATEGORIES_COLUMN_DESCRIPTION : [];
+      var tableProps = ORDERS_COLUMN_PROPERTIES;
+      var data = this.state.orders;
+      var numAttr = table.length; // <RowItem onClick={() => this.selectField((i*numAttr)+1)}>{item.grouporderid}</RowItem>
+      // <RowItem onClick={() => this.selectField((i*numAttr)+2)}>{item.nailproductid}</RowItem>
+      // <RowItem onClick={() => this.selectField((i*numAttr)+3)} selected={this.state.selectedField == (i*numAttr) + 3 ? true : false}>{item.naillength}</RowItem>
+      // <RowItem onClick={() => this.selectField((i*numAttr)+4)} selected={this.state.selectedField == (i*numAttr) + 4 ? true : false}>{item.nailshape}</RowItem>
+      // <RowItem onClick={() => this.selectField((i*numAttr)+5)} selected={this.state.selectedField == (i*numAttr) + 5 ? true : false}>{item.orderstatus}</RowItem>
+      // <RowItem onClick={() => this.selectField((i*numAttr)+6)} selected={this.state.selectedField == (i*numAttr) + 6 ? true : false}>{item.datecreated}</RowItem>
+
       return react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(BoardBody, {
         width: 1
       }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(BoardBodyContainer, {
@@ -242,46 +246,279 @@ function (_React$Component) {
         description: true
       }, table.map(function (item) {
         return react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_Row__WEBPACK_IMPORTED_MODULE_4__["RowItemJsx"], null, item);
-      })), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(BoardBodyContents, null, this.props.id == 'orders' && this.state.orders.map(function (item) {
+      })), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(BoardBodyContents, null, this.props.id == 'orders' && data.map(function (item, i) {
         return react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_Row__WEBPACK_IMPORTED_MODULE_4__["RowJsx"], {
           table: table
-        }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_Row__WEBPACK_IMPORTED_MODULE_4__["RowItemJsx"], null, item.orderid), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_Row__WEBPACK_IMPORTED_MODULE_4__["RowItemJsx"], null, item.grouporderid), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_Row__WEBPACK_IMPORTED_MODULE_4__["RowItemJsx"], null, item.nailproductid), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_Row__WEBPACK_IMPORTED_MODULE_4__["RowItemJsx"], null, item.naillength), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_Row__WEBPACK_IMPORTED_MODULE_4__["RowItemJsx"], null, item.nailshape), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_Row__WEBPACK_IMPORTED_MODULE_4__["RowItemJsx"], null, item.orderstatus), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_Row__WEBPACK_IMPORTED_MODULE_4__["RowItemJsx"], null, item.datecreated));
-      }), this.props.id == 'grouporders' && this.state.orders.map(function (item) {
+        }, tableProps.map(function (rowItem, j) {
+          return react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_Row__WEBPACK_IMPORTED_MODULE_4__["RowItemJsx"], {
+            i: i * numAttr + j,
+            propertyName: ORDERS_COLUMN_PROPERTIES[j],
+            updateField: _this2.updateField,
+            onClick: function onClick() {
+              return _this2.selectField(i * numAttr + j);
+            },
+            selected: _this2.state.selectedField == i * numAttr + j ? true : false
+          }, item[ORDERS_COLUMN_PROPERTIES[j]]);
+        }));
+      }), this.props.id == 'grouporders' && data.map(function (item, i) {
         return react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_Row__WEBPACK_IMPORTED_MODULE_4__["RowJsx"], {
           table: table
-        }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_Row__WEBPACK_IMPORTED_MODULE_4__["RowItemJsx"], null, item.grouporderid), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_Row__WEBPACK_IMPORTED_MODULE_4__["RowItemJsx"], null, item.userid), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_Row__WEBPACK_IMPORTED_MODULE_4__["RowItemJsx"], null, item.grouporderstatus), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_Row__WEBPACK_IMPORTED_MODULE_4__["RowItemJsx"], null, item.insurance), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_Row__WEBPACK_IMPORTED_MODULE_4__["RowItemJsx"], null, item.shippingaddress), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_Row__WEBPACK_IMPORTED_MODULE_4__["RowItemJsx"], null, item.subtotal), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_Row__WEBPACK_IMPORTED_MODULE_4__["RowItemJsx"], null, item.taxes));
-      }), this.props.id == 'users' && this.state.orders.map(function (item) {
+        }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_Row__WEBPACK_IMPORTED_MODULE_4__["RowItemJsx"], {
+          onClick: function onClick() {
+            return _this2.selectField(i * numAttr + 0);
+          }
+        }, item.grouporderid), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_Row__WEBPACK_IMPORTED_MODULE_4__["RowItemJsx"], {
+          onClick: function onClick() {
+            return _this2.selectField(i * numAttr + 1);
+          }
+        }, item.userid), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_Row__WEBPACK_IMPORTED_MODULE_4__["RowItemJsx"], {
+          onClick: function onClick() {
+            return _this2.selectField(i * numAttr + 2);
+          },
+          selected: _this2.state.selectedField == i * numAttr + 2 ? true : false
+        }, item.grouporderstatus), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_Row__WEBPACK_IMPORTED_MODULE_4__["RowItemJsx"], {
+          onClick: function onClick() {
+            return _this2.selectField(i * numAttr + 3);
+          },
+          selected: _this2.state.selectedField == i * numAttr + 3 ? true : false
+        }, item.insurance), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_Row__WEBPACK_IMPORTED_MODULE_4__["RowItemJsx"], {
+          onClick: function onClick() {
+            return _this2.selectField(i * numAttr + 4);
+          },
+          selected: _this2.state.selectedField == i * numAttr + 4 ? true : false
+        }, item.shippingaddress), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_Row__WEBPACK_IMPORTED_MODULE_4__["RowItemJsx"], {
+          onClick: function onClick() {
+            return _this2.selectField(i * numAttr + 5);
+          },
+          selected: _this2.state.selectedField == i * numAttr + 5 ? true : false
+        }, item.subtotal), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_Row__WEBPACK_IMPORTED_MODULE_4__["RowItemJsx"], {
+          onClick: function onClick() {
+            return _this2.selectField(i * numAttr + 6);
+          },
+          selected: _this2.state.selectedField == i * numAttr + 6 ? true : false
+        }, item.taxes));
+      }), this.props.id == 'users' && data.map(function (item, i) {
         return react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_Row__WEBPACK_IMPORTED_MODULE_4__["RowJsx"], {
           table: table
-        }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_Row__WEBPACK_IMPORTED_MODULE_4__["RowItemJsx"], null, item.userid), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_Row__WEBPACK_IMPORTED_MODULE_4__["RowItemJsx"], null, item.firstname), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_Row__WEBPACK_IMPORTED_MODULE_4__["RowItemJsx"], null, item.lastname), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_Row__WEBPACK_IMPORTED_MODULE_4__["RowItemJsx"], null, item.email), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_Row__WEBPACK_IMPORTED_MODULE_4__["RowItemJsx"], null, item.totalorders), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_Row__WEBPACK_IMPORTED_MODULE_4__["RowItemJsx"], null, item.fitted ? 'Fitted' : 'Not Fitted'), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_Row__WEBPACK_IMPORTED_MODULE_4__["RowItemJsx"], null, item.datecreated), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_Row__WEBPACK_IMPORTED_MODULE_4__["RowItemJsx"], null, item.datelastlogin), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_Row__WEBPACK_IMPORTED_MODULE_4__["RowItemJsx"], null, item.description), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_Row__WEBPACK_IMPORTED_MODULE_4__["RowItemJsx"], null, item.subscription));
-      }), this.props.id == 'revieworders' && this.state.orders.map(function (item) {
+        }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_Row__WEBPACK_IMPORTED_MODULE_4__["RowItemJsx"], {
+          onClick: function onClick() {
+            return _this2.selectField(i * numAttr + 0);
+          }
+        }, item.userid), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_Row__WEBPACK_IMPORTED_MODULE_4__["RowItemJsx"], {
+          onClick: function onClick() {
+            return _this2.selectField(i * numAttr + 1);
+          },
+          selected: _this2.state.selectedField == i * numAttr + 1 ? true : false
+        }, item.firstname), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_Row__WEBPACK_IMPORTED_MODULE_4__["RowItemJsx"], {
+          onClick: function onClick() {
+            return _this2.selectField(i * numAttr + 2);
+          },
+          selected: _this2.state.selectedField == i * numAttr + 2 ? true : false
+        }, item.lastname), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_Row__WEBPACK_IMPORTED_MODULE_4__["RowItemJsx"], {
+          onClick: function onClick() {
+            return _this2.selectField(i * numAttr + 3);
+          },
+          selected: _this2.state.selectedField == i * numAttr + 3 ? true : false
+        }, item.email), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_Row__WEBPACK_IMPORTED_MODULE_4__["RowItemJsx"], {
+          onClick: function onClick() {
+            return _this2.selectField(i * numAttr + 4);
+          },
+          selected: _this2.state.selectedField == i * numAttr + 4 ? true : false
+        }, item.totalorders), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_Row__WEBPACK_IMPORTED_MODULE_4__["RowItemJsx"], {
+          onClick: function onClick() {
+            return _this2.selectField(i * numAttr + 5);
+          },
+          selected: _this2.state.selectedField == i * numAttr + 5 ? true : false
+        }, item.fitted ? 'Fitted' : 'Not Fitted'), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_Row__WEBPACK_IMPORTED_MODULE_4__["RowItemJsx"], {
+          onClick: function onClick() {
+            return _this2.selectField(i * numAttr + 6);
+          },
+          selected: _this2.state.selectedField == i * numAttr + 6 ? true : false
+        }, item.datecreated), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_Row__WEBPACK_IMPORTED_MODULE_4__["RowItemJsx"], {
+          onClick: function onClick() {
+            return _this2.selectField(i * numAttr + 7);
+          },
+          selected: _this2.state.selectedField == i * numAttr + 7 ? true : false
+        }, item.datelastlogin), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_Row__WEBPACK_IMPORTED_MODULE_4__["RowItemJsx"], {
+          onClick: function onClick() {
+            return _this2.selectField(i * numAttr + 8);
+          },
+          selected: _this2.state.selectedField == i * numAttr + 8 ? true : false
+        }, item.description), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_Row__WEBPACK_IMPORTED_MODULE_4__["RowItemJsx"], {
+          onClick: function onClick() {
+            return _this2.selectField(i * numAttr + 9);
+          },
+          selected: _this2.state.selectedField == i * numAttr + 9 ? true : false
+        }, item.subscription));
+      }), this.props.id == 'revieworders' && data.map(function (item, i) {
         return react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_Row__WEBPACK_IMPORTED_MODULE_4__["RowJsx"], {
           table: table
-        }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_Row__WEBPACK_IMPORTED_MODULE_4__["RowItemJsx"], null, item.reviewid), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_Row__WEBPACK_IMPORTED_MODULE_4__["RowItemJsx"], null, item.orderid), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_Row__WEBPACK_IMPORTED_MODULE_4__["RowItemJsx"], null, item.fingername), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_Row__WEBPACK_IMPORTED_MODULE_4__["RowItemJsx"], null, item.reviewdescription), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_Row__WEBPACK_IMPORTED_MODULE_4__["RowItemJsx"], null, item.category1), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_Row__WEBPACK_IMPORTED_MODULE_4__["RowItemJsx"], null, item.category2), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_Row__WEBPACK_IMPORTED_MODULE_4__["RowItemJsx"], null, item.category3));
-      }), this.props.id == 'shippingaddresses' && this.state.orders.map(function (item) {
+        }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_Row__WEBPACK_IMPORTED_MODULE_4__["RowItemJsx"], {
+          onClick: function onClick() {
+            return _this2.selectField(i * numAttr + 0);
+          }
+        }, item.reviewid), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_Row__WEBPACK_IMPORTED_MODULE_4__["RowItemJsx"], {
+          onClick: function onClick() {
+            return _this2.selectField(i * numAttr + 1);
+          }
+        }, item.orderid), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_Row__WEBPACK_IMPORTED_MODULE_4__["RowItemJsx"], {
+          onClick: function onClick() {
+            return _this2.selectField(i * numAttr + 2);
+          },
+          selected: _this2.state.selectedField == i * numAttr + 2 ? true : false
+        }, item.fingername), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_Row__WEBPACK_IMPORTED_MODULE_4__["RowItemJsx"], {
+          onClick: function onClick() {
+            return _this2.selectField(i * numAttr + 3);
+          },
+          selected: _this2.state.selectedField == i * numAttr + 3 ? true : false
+        }, item.reviewdescription), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_Row__WEBPACK_IMPORTED_MODULE_4__["RowItemJsx"], {
+          onClick: function onClick() {
+            return _this2.selectField(i * numAttr + 4);
+          },
+          selected: _this2.state.selectedField == i * numAttr + 4 ? true : false
+        }, item.category1), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_Row__WEBPACK_IMPORTED_MODULE_4__["RowItemJsx"], {
+          onClick: function onClick() {
+            return _this2.selectField(i * numAttr + 5);
+          },
+          selected: _this2.state.selectedField == i * numAttr + 5 ? true : false
+        }, item.category2), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_Row__WEBPACK_IMPORTED_MODULE_4__["RowItemJsx"], {
+          onClick: function onClick() {
+            return _this2.selectField(i * numAttr + 6);
+          },
+          selected: _this2.state.selectedField == i * numAttr + 6 ? true : false
+        }, item.category3));
+      }), this.props.id == 'shippingaddresses' && data.map(function (item, i) {
         return react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_Row__WEBPACK_IMPORTED_MODULE_4__["RowJsx"], {
           table: table
-        }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_Row__WEBPACK_IMPORTED_MODULE_4__["RowItemJsx"], null, item.shippingaddressid));
-      }), this.props.id == 'payments' && this.state.orders.map(function (item) {
+        }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_Row__WEBPACK_IMPORTED_MODULE_4__["RowItemJsx"], {
+          onClick: function onClick() {
+            return _this2.selectField(i * numAttr + 0);
+          }
+        }, item.shippingaddressid));
+      }), this.props.id == 'payments' && data.map(function (item, i) {
         return react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_Row__WEBPACK_IMPORTED_MODULE_4__["RowJsx"], {
           table: table
-        }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_Row__WEBPACK_IMPORTED_MODULE_4__["RowItemJsx"], null, item.paymentid));
-      }), this.props.id == 'designers' && this.state.orders.map(function (item) {
+        }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_Row__WEBPACK_IMPORTED_MODULE_4__["RowItemJsx"], {
+          onClick: function onClick() {
+            return _this2.selectField(i * numAttr + 0);
+          }
+        }, item.paymentid));
+      }), this.props.id == 'designers' && data.map(function (item, i) {
         return react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_Row__WEBPACK_IMPORTED_MODULE_4__["RowJsx"], {
           table: table
-        }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_Row__WEBPACK_IMPORTED_MODULE_4__["RowItemJsx"], null, item.designerid));
-      }), this.props.id == 'nailproducts' && this.state.orders.map(function (item) {
+        }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_Row__WEBPACK_IMPORTED_MODULE_4__["RowItemJsx"], {
+          onClick: function onClick() {
+            return _this2.selectField(i * numAttr + 0);
+          }
+        }, item.designerid));
+      }), this.props.id == 'nailproducts' && data.map(function (item, i) {
         return react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_Row__WEBPACK_IMPORTED_MODULE_4__["RowJsx"], {
           table: table
-        }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_Row__WEBPACK_IMPORTED_MODULE_4__["RowItemJsx"], null, item.nailproductid), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_Row__WEBPACK_IMPORTED_MODULE_4__["RowItemJsx"], null, item.datecreated), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_Row__WEBPACK_IMPORTED_MODULE_4__["RowItemJsx"], null, item.description), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_Row__WEBPACK_IMPORTED_MODULE_4__["RowItemJsx"], null, item.designerid), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_Row__WEBPACK_IMPORTED_MODULE_4__["RowItemJsx"], null, item.name), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_Row__WEBPACK_IMPORTED_MODULE_4__["RowItemJsx"], null, item.price), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_Row__WEBPACK_IMPORTED_MODULE_4__["RowItemJsx"], null, item.totalhates), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_Row__WEBPACK_IMPORTED_MODULE_4__["RowItemJsx"], null, item.totallikes), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_Row__WEBPACK_IMPORTED_MODULE_4__["RowItemJsx"], null, item.totalmanime), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_Row__WEBPACK_IMPORTED_MODULE_4__["RowItemJsx"], null, item.totalpurchases), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_Row__WEBPACK_IMPORTED_MODULE_4__["RowItemJsx"], null, item.visible), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_Row__WEBPACK_IMPORTED_MODULE_4__["RowItemJsx"], null, item.picuri1), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_Row__WEBPACK_IMPORTED_MODULE_4__["RowItemJsx"], null, item.picuri2), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_Row__WEBPACK_IMPORTED_MODULE_4__["RowItemJsx"], null, item.picuri3), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_Row__WEBPACK_IMPORTED_MODULE_4__["RowItemJsx"], null, item.picuri4), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_Row__WEBPACK_IMPORTED_MODULE_4__["RowItemJsx"], null, item.picuri5));
-      }), this.props.id == 'categories' && this.state.orders.map(function (item) {
+        }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_Row__WEBPACK_IMPORTED_MODULE_4__["RowItemJsx"], {
+          onClick: function onClick() {
+            return _this2.selectField(i * numAttr + 0);
+          }
+        }, item.nailproductid), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_Row__WEBPACK_IMPORTED_MODULE_4__["RowItemJsx"], {
+          onClick: function onClick() {
+            return _this2.selectField(i * numAttr + 1);
+          },
+          selected: _this2.state.selectedField == i * numAttr + 1 ? true : false
+        }, item.datecreated), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_Row__WEBPACK_IMPORTED_MODULE_4__["RowItemJsx"], {
+          onClick: function onClick() {
+            return _this2.selectField(i * numAttr + 2);
+          },
+          selected: _this2.state.selectedField == i * numAttr + 2 ? true : false
+        }, item.description), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_Row__WEBPACK_IMPORTED_MODULE_4__["RowItemJsx"], {
+          onClick: function onClick() {
+            return _this2.selectField(i * numAttr + 3);
+          },
+          selected: _this2.state.selectedField == i * numAttr + 3 ? true : false
+        }, item.designerid), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_Row__WEBPACK_IMPORTED_MODULE_4__["RowItemJsx"], {
+          onClick: function onClick() {
+            return _this2.selectField(i * numAttr + 4);
+          },
+          selected: _this2.state.selectedField == i * numAttr + 4 ? true : false
+        }, item.name), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_Row__WEBPACK_IMPORTED_MODULE_4__["RowItemJsx"], {
+          onClick: function onClick() {
+            return _this2.selectField(i * numAttr + 5);
+          },
+          selected: _this2.state.selectedField == i * numAttr + 5 ? true : false
+        }, item.price), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_Row__WEBPACK_IMPORTED_MODULE_4__["RowItemJsx"], {
+          onClick: function onClick() {
+            return _this2.selectField(i * numAttr + 6);
+          },
+          selected: _this2.state.selectedField == i * numAttr + 6 ? true : false
+        }, item.totalhates), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_Row__WEBPACK_IMPORTED_MODULE_4__["RowItemJsx"], {
+          onClick: function onClick() {
+            return _this2.selectField(i * numAttr + 7);
+          },
+          selected: _this2.state.selectedField == i * numAttr + 7 ? true : false
+        }, item.totallikes), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_Row__WEBPACK_IMPORTED_MODULE_4__["RowItemJsx"], {
+          onClick: function onClick() {
+            return _this2.selectField(i * numAttr + 8);
+          },
+          selected: _this2.state.selectedField == i * numAttr + 8 ? true : false
+        }, item.totalmanime), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_Row__WEBPACK_IMPORTED_MODULE_4__["RowItemJsx"], {
+          onClick: function onClick() {
+            return _this2.selectField(i * numAttr + 9);
+          },
+          selected: _this2.state.selectedField == i * numAttr + 9 ? true : false
+        }, item.totalpurchases), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_Row__WEBPACK_IMPORTED_MODULE_4__["RowItemJsx"], {
+          onClick: function onClick() {
+            return _this2.selectField(i * numAttr + 10);
+          },
+          selected: _this2.state.selectedField == i * numAttr + 10 ? true : false
+        }, item.visible), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_Row__WEBPACK_IMPORTED_MODULE_4__["RowItemJsx"], {
+          onClick: function onClick() {
+            return _this2.selectField(i * numAttr + 11);
+          },
+          selected: _this2.state.selectedField == i * numAttr + 11 ? true : false
+        }, item.picuri1), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_Row__WEBPACK_IMPORTED_MODULE_4__["RowItemJsx"], {
+          onClick: function onClick() {
+            return _this2.selectField(i * numAttr + 12);
+          },
+          selected: _this2.state.selectedField == i * numAttr + 12 ? true : false
+        }, item.picuri2), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_Row__WEBPACK_IMPORTED_MODULE_4__["RowItemJsx"], {
+          onClick: function onClick() {
+            return _this2.selectField(i * numAttr + 13);
+          },
+          selected: _this2.state.selectedField == i * numAttr + 13 ? true : false
+        }, item.picuri3), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_Row__WEBPACK_IMPORTED_MODULE_4__["RowItemJsx"], {
+          onClick: function onClick() {
+            return _this2.selectField(i * numAttr + 14);
+          },
+          selected: _this2.state.selectedField == i * numAttr + 14 ? true : false
+        }, item.picuri4), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_Row__WEBPACK_IMPORTED_MODULE_4__["RowItemJsx"], {
+          onClick: function onClick() {
+            return _this2.selectField(i * numAttr + 15);
+          },
+          selected: _this2.state.selectedField == i * numAttr + 15 ? true : false
+        }, item.picuri5));
+      }), this.props.id == 'categories' && data.map(function (item, i) {
         return react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_Row__WEBPACK_IMPORTED_MODULE_4__["RowJsx"], {
           table: table
-        }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_Row__WEBPACK_IMPORTED_MODULE_4__["RowItemJsx"], null, item.categoryid), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_Row__WEBPACK_IMPORTED_MODULE_4__["RowItemJsx"], null, item.name));
-      }), this.props.id == 'nailproductstocategory' && this.state.orders.map(function (item) {
+        }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_Row__WEBPACK_IMPORTED_MODULE_4__["RowItemJsx"], {
+          onClick: function onClick() {
+            return _this2.selectField(i * numAttr + 0);
+          }
+        }, item.categoryid), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_Row__WEBPACK_IMPORTED_MODULE_4__["RowItemJsx"], {
+          onClick: function onClick() {
+            return _this2.selectField(i * numAttr + 1);
+          },
+          selected: _this2.state.selectedField == i * numAttr + 1 ? true : false
+        }, item.name));
+      }), this.props.id == 'nailproductstocategory' && data.map(function (item, i) {
         return react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_Row__WEBPACK_IMPORTED_MODULE_4__["RowJsx"], {
           table: table
-        }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_Row__WEBPACK_IMPORTED_MODULE_4__["RowItemJsx"], null, item.nailproductid), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_Row__WEBPACK_IMPORTED_MODULE_4__["RowItemJsx"], null, item.categoryid));
+        }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_Row__WEBPACK_IMPORTED_MODULE_4__["RowItemJsx"], {
+          onClick: function onClick() {
+            return _this2.selectField(i * numAttr + 0);
+          }
+        }, item.nailproductid), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_Row__WEBPACK_IMPORTED_MODULE_4__["RowItemJsx"], {
+          onClick: function onClick() {
+            return _this2.selectField(i * numAttr + 1);
+          }
+        }, item.categoryid));
       }))));
     }
   }]);
@@ -401,7 +638,7 @@ var MenuItem = Object(styled_components__WEBPACK_IMPORTED_MODULE_2__["default"])
 var Header = Object(styled_components__WEBPACK_IMPORTED_MODULE_2__["default"])(_Box__WEBPACK_IMPORTED_MODULE_4__["default"]).withConfig({
   displayName: "Layout__Header",
   componentId: "sc-1ln4gt-2"
-})(["box-shadow:0 1px 3px 0 rgba(0,0,0,0.15);"]); // const LayoutJsx = ({ before, ...props }) => (
+})(["box-shadow:0 1px 3px 0 rgba(0,0,0,0.15);z-index:100;"]); // const LayoutJsx = ({ before, ...props }) => (
 //   <ThemeProvider theme={theme}>
 //     <Container>
 //       { !before &&
@@ -464,7 +701,8 @@ function (_React$Component) {
           before = _this$props.before,
           props = _objectWithoutProperties(_this$props, ["before"]);
 
-      var width = this.state.width;
+      var width = this.state.width; // https://s3-us-west-2.amazonaws.com/mani-me-app/menu.svg
+
       return react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(styled_components__WEBPACK_IMPORTED_MODULE_2__["ThemeProvider"], {
         theme: _utils_theme__WEBPACK_IMPORTED_MODULE_3__["theme"]
       }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(Container, {
@@ -475,7 +713,17 @@ function (_React$Component) {
         height: "100%",
         bg: "blacks.11"
       }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_Box__WEBPACK_IMPORTED_MODULE_4__["default"], {
-        py: 2
+        px: 2,
+        p: 2,
+        width: ['100px', '120px']
+      }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("img", {
+        src: "https://s3-us-west-2.amazonaws.com/mani-me-app/manimelogo.png",
+        style: {
+          width: '100%',
+          height: 'auto'
+        }
+      })), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_Box__WEBPACK_IMPORTED_MODULE_4__["default"], {
+        py: 1
       }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(next_link__WEBPACK_IMPORTED_MODULE_1___default.a, {
         as: "/d/orders",
         href: "/data?id=orders"
@@ -624,9 +872,11 @@ var ROW_ITEM_WIDTH = 200; // flex: 1 0 ${(props) => {
 var RowItem = Object(styled_components__WEBPACK_IMPORTED_MODULE_2__["default"])(_Box__WEBPACK_IMPORTED_MODULE_3__["default"]).withConfig({
   displayName: "Row__RowItem",
   componentId: "sc-8qukng-0"
-})(["white-space:nowrap;overflow:hidden;font-family:sans-serif;font-weight:", ";flex:0 0 ", "px;&:hover{}"], function (props) {
+})(["white-space:nowrap;overflow:hidden;font-family:sans-serif;font-weight:", ";flex:0 0 ", "px;height:80%;align-items:center;display:flex;border:", "px solid #313131;border-radius:3px;box-sizing:border-box;&:hover{}"], function (props) {
   return props.description ? 400 : 200;
-}, ROW_ITEM_WIDTH); // New Row requires horizontal margins
+}, ROW_ITEM_WIDTH, function (props) {
+  return props.selected ? 1 : 0;
+}); // New Row requires horizontal margins
 
 var Row = Object(styled_components__WEBPACK_IMPORTED_MODULE_2__["default"])(_Box__WEBPACK_IMPORTED_MODULE_3__["default"]).withConfig({
   displayName: "Row",
@@ -642,6 +892,10 @@ var Row = Object(styled_components__WEBPACK_IMPORTED_MODULE_2__["default"])(_Box
 }, function (props) {
   return !props.description ? 'translateY(-1px)' : 'none';
 });
+var Input = styled_components__WEBPACK_IMPORTED_MODULE_2__["default"].input.withConfig({
+  displayName: "Row__Input",
+  componentId: "sc-8qukng-2"
+})(["border:none;width:100%;height:100%;&:focus{outline:none;}"]);
 var RowJsx = function RowJsx(props) {
   return react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(Row, _extends({
     boxShadow: props.description ? 0 : 2,
@@ -652,12 +906,26 @@ var RowJsx = function RowJsx(props) {
 };
 var RowItemJsx = function RowItemJsx(_ref) {
   var before = _ref.before,
-      props = _objectWithoutProperties(_ref, ["before"]);
+      type = _ref.type,
+      updateField = _ref.updateField,
+      i = _ref.i,
+      propertyName = _ref.propertyName,
+      props = _objectWithoutProperties(_ref, ["before", "type", "updateField", "i", "propertyName"]);
 
   return react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(RowItem, _extends({
     ml: ML_ROW_ITEM,
+    pl: 1,
     fontSize: 1
-  }, props), props.children);
+  }, props), type == 'text' ? react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(Input, {
+    value: props.children
+  }) : type == 'menu' ? react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(Input, {
+    value: props.children
+  }) : react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(Input, {
+    value: props.children,
+    onChange: function onChange(ev) {
+      return updateField(i, propertyName, ev.target.value);
+    }
+  }));
 }; // calc(100% - ${(props) => {
 //   // console.log(props);
 //   console.log(props.theme.space[props.mx]);

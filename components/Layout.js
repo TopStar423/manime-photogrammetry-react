@@ -24,6 +24,7 @@ const MenuItem = styled(Box)`
 
 const Header = styled(Box)`
   box-shadow: 0 1px 3px 0 rgba(0,0,0,0.15);
+  z-index: 100;
 `;
 
 // const LayoutJsx = ({ before, ...props }) => (
@@ -66,14 +67,20 @@ class Layout extends React.Component {
   render() {
     const { before, ...props } = this.props;
     const width = this.state.width;
+
+    // https://s3-us-west-2.amazonaws.com/mani-me-app/menu.svg
+    
     return (
       <ThemeProvider theme={theme}>
         <Container height={this.state.height} width={this.state.width}>
           { !before &&
             <Box minWidth={[150, 200]} height='100%' bg='blacks.11'>
-              <Box py={2}>
+              <Box px={2} p={2} width={['100px', '120px']}>
+                <img src='https://s3-us-west-2.amazonaws.com/mani-me-app/manimelogo.png' style={{width: '100%', height: 'auto'}}/>
 
+              </Box>
 
+              <Box py={1}>
                 <Link as={`/d/orders`} href={`/data?id=orders`}>
                   <MenuItem py={1} px={3} color='whites.11' fontSize={0}>
                     ORDERS

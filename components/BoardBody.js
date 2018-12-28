@@ -15,6 +15,8 @@ const NAIL_PRODUCTS_COLUMN_DESCRIPTION = ['Nail Product ID', 'Date Created', 'De
 const NAIL_CATEGORIES_COLUMN_DESCRIPTION = ['Category ID', 'Category Name'];
 const NAIL_PRODUCT_CATEGORIES_COLUMN_DESCRIPTION = ['Nail Product ID', 'Category ID'];
 
+const ORDERS_COLUMN_PROPERTIES = ['orderid', 'grouporderid', 'nailproductid', 'naillength', 'nailshape', 'orderstatus', 'datecreated'];
+
 const BoardBody = styled.div`
   display: flex;
   flex: 1 0 auto;
@@ -52,28 +54,35 @@ class BoardJsx extends React.Component {
     super(props);
     this.state = {
       orders: [],
-      numColumns: 0
+      numColumns: 0,
+      selectedField: -1
     };
   }
   componentDidMount() {
     this._mounted = true;
+    const endpoint = this.getEndpoint(this.props.id);
+    this.getData(endpoint, this.props.id);
   }
 
   componentDidUpdate(prevProps) {
     if (this.props.id !== prevProps.id) {
-      const id = this.props.id;
-      let endpoint = 'LambdaRDSCompany';
-      if (id == 'orders' || id == 'grouporders' || id == 'users')
-        endpoint = 'LambdaRDSClient';
-      else if (id == 'shippingaddresses' || id == 'revieworders' || id == 'payments')
-        endpoint = 'LambdaRDSClientNoncritical';
-
+      const endpoint = this.getEndpoint(this.props.id);
       this.getData(endpoint, this.props.id);
+      this.selectField(-1);
     }
   }
 
   componentWillUnmount() {
     this._mounted = false;
+  }
+
+  getEndpoint = (id) => {
+    let endpoint = 'LambdaRDSCompany';
+    if (id == 'orders' || id == 'grouporders' || id == 'users')
+      endpoint = 'LambdaRDSClient';
+    else if (id == 'shippingaddresses' || id == 'revieworders' || id == 'payments')
+      endpoint = 'LambdaRDSClientNoncritical';
+    return endpoint;
   }
 
   getData = (endpoint, tableName) => {
@@ -90,39 +99,21 @@ class BoardJsx extends React.Component {
     });
   }
 
-  // ORDERS
-  // comments: ""
-  // datecreated: "2018-11-05T02:09:21.000Z"
-  // deliverydate: "2004-10-19T08:23:54.000Z"
-  // discount: 0
-  // grouporderid: "c7938ff0-f832-11e8-ae6e-ff8724e0fb43"
-  // listedprice: 0
-  // naillength: "2MM"
-  // nailproductid: "1"
-  // nailshape: "BALLERINA"
-  // orderid: "c7ceeb40-f832-11e8-ae6e-ff8724e0fb43"
-  // orderstatus: "Order Received"
-  // userid: null
+  selectField = (index) => {
+    this.setState({
+      selectedField: index
+    })
+  }
 
-  // USERS
-  // credits: null
-  // datecreated: null
-  // datelastlogin: null
-  // description: null
-  // email: "ahnguye@ucdavis.edu"
-  // firstname: "Andre22"
-  // fitted: null
-  // lastname: null
-  // leftfingerscurvature: null
-  // leftfingerspicture: null
-  // leftthumbpicture: null
-  // profilepicture: null
-  // rightfingerscurvature: null
-  // rightfingerspicture: null
-  // rightthumbpicture: null
-  // subscription: null
-  // totalorders: null
-  // userid: "us-west-2:ea2e2490-ebfe-4ce3-8e92-e7ed80623abe"
+  updateField = (index, propertyName, propertyValue) => {
+    let _orders = this.state.orders;
+    _orders[index][propertyName] = propertyValue;
+    this.setState({
+      orders: _orders
+    });
+  }
+
+  // this.updateField(i, 'orderid', 'TEST')
 
   render() {
     let table = this.props.id == 'orders' ? ORDERS_COLUMN_DESCRIPTION
@@ -136,6 +127,16 @@ class BoardJsx extends React.Component {
               : this.props.id == 'categories' ? NAIL_CATEGORIES_COLUMN_DESCRIPTION
               : this.props.id == 'nailproductstocategory' ? NAIL_PRODUCT_CATEGORIES_COLUMN_DESCRIPTION
               : [];
+    const tableProps = ORDERS_COLUMN_PROPERTIES;
+    const data = this.state.orders;
+    const numAttr = table.length;
+
+    // <RowItem onClick={() => this.selectField((i*numAttr)+1)}>{item.grouporderid}</RowItem>
+    // <RowItem onClick={() => this.selectField((i*numAttr)+2)}>{item.nailproductid}</RowItem>
+    // <RowItem onClick={() => this.selectField((i*numAttr)+3)} selected={this.state.selectedField == (i*numAttr) + 3 ? true : false}>{item.naillength}</RowItem>
+    // <RowItem onClick={() => this.selectField((i*numAttr)+4)} selected={this.state.selectedField == (i*numAttr) + 4 ? true : false}>{item.nailshape}</RowItem>
+    // <RowItem onClick={() => this.selectField((i*numAttr)+5)} selected={this.state.selectedField == (i*numAttr) + 5 ? true : false}>{item.orderstatus}</RowItem>
+    // <RowItem onClick={() => this.selectField((i*numAttr)+6)} selected={this.state.selectedField == (i*numAttr) + 6 ? true : false}>{item.datecreated}</RowItem>
 
     return (
       <BoardBody width={1}>
@@ -145,116 +146,112 @@ class BoardJsx extends React.Component {
           </Row>
           <BoardBodyContents>
             { this.props.id == 'orders' &&
-              this.state.orders.map((item) =>
+              data.map((item, i) =>
                 <Row table={table}>
-                  <RowItem>{item.orderid}</RowItem>
-                  <RowItem>{item.grouporderid}</RowItem>
-                  <RowItem>{item.nailproductid}</RowItem>
-                  <RowItem>{item.naillength}</RowItem>
-                  <RowItem>{item.nailshape}</RowItem>
-                  <RowItem>{item.orderstatus}</RowItem>
-                  <RowItem>{item.datecreated}</RowItem>
+                  {
+                    tableProps.map((rowItem, j) => <RowItem i={(i*numAttr)+j} propertyName={ORDERS_COLUMN_PROPERTIES[j]} updateField={this.updateField} onClick={() => this.selectField((i*numAttr)+j)} selected={this.state.selectedField == (i*numAttr) + j ? true : false}>{item[ORDERS_COLUMN_PROPERTIES[j]]}</RowItem>)
+                  }
                 </Row>
               )
             }
             { this.props.id == 'grouporders' &&
-              this.state.orders.map((item) =>
+              data.map((item, i) =>
                 <Row table={table}>
-                  <RowItem>{item.grouporderid}</RowItem>
-                  <RowItem>{item.userid}</RowItem>
-                  <RowItem>{item.grouporderstatus}</RowItem>
-                  <RowItem>{item.insurance}</RowItem>
-                  <RowItem>{item.shippingaddress}</RowItem>
-                  <RowItem>{item.subtotal}</RowItem>
-                  <RowItem>{item.taxes}</RowItem>
+                  <RowItem onClick={() => this.selectField((i*numAttr)+0)}>{item.grouporderid}</RowItem>
+                  <RowItem onClick={() => this.selectField((i*numAttr)+1)}>{item.userid}</RowItem>
+                  <RowItem onClick={() => this.selectField((i*numAttr)+2)} selected={this.state.selectedField == (i*numAttr) + 2 ? true : false}>{item.grouporderstatus}</RowItem>
+                  <RowItem onClick={() => this.selectField((i*numAttr)+3)} selected={this.state.selectedField == (i*numAttr) + 3 ? true : false}>{item.insurance}</RowItem>
+                  <RowItem onClick={() => this.selectField((i*numAttr)+4)} selected={this.state.selectedField == (i*numAttr) + 4 ? true : false}>{item.shippingaddress}</RowItem>
+                  <RowItem onClick={() => this.selectField((i*numAttr)+5)} selected={this.state.selectedField == (i*numAttr) + 5 ? true : false}>{item.subtotal}</RowItem>
+                  <RowItem onClick={() => this.selectField((i*numAttr)+6)} selected={this.state.selectedField == (i*numAttr) + 6 ? true : false}>{item.taxes}</RowItem>
                 </Row>
               )
             }
             { this.props.id == 'users' &&
-              this.state.orders.map((item) =>
+              data.map((item, i) =>
                 <Row table={table}>
-                  <RowItem>{item.userid}</RowItem>
-                  <RowItem>{item.firstname}</RowItem>
-                  <RowItem>{item.lastname}</RowItem>
-                  <RowItem>{item.email}</RowItem>
-                  <RowItem>{item.totalorders}</RowItem>
-                  <RowItem>{item.fitted ? 'Fitted' : 'Not Fitted'}</RowItem>
-                  <RowItem>{item.datecreated}</RowItem>
-                  <RowItem>{item.datelastlogin}</RowItem>
-                  <RowItem>{item.description}</RowItem>
-                  <RowItem>{item.subscription}</RowItem>
+                  <RowItem onClick={() => this.selectField((i*numAttr)+0)}>{item.userid}</RowItem>
+                  <RowItem onClick={() => this.selectField((i*numAttr)+1)} selected={this.state.selectedField == (i*numAttr) + 1 ? true : false}>{item.firstname}</RowItem>
+                  <RowItem onClick={() => this.selectField((i*numAttr)+2)} selected={this.state.selectedField == (i*numAttr) + 2 ? true : false}>{item.lastname}</RowItem>
+                  <RowItem onClick={() => this.selectField((i*numAttr)+3)} selected={this.state.selectedField == (i*numAttr) + 3 ? true : false}>{item.email}</RowItem>
+                  <RowItem onClick={() => this.selectField((i*numAttr)+4)} selected={this.state.selectedField == (i*numAttr) + 4 ? true : false}>{item.totalorders}</RowItem>
+                  <RowItem onClick={() => this.selectField((i*numAttr)+5)} selected={this.state.selectedField == (i*numAttr) + 5 ? true : false}>{item.fitted ? 'Fitted' : 'Not Fitted'}</RowItem>
+                  <RowItem onClick={() => this.selectField((i*numAttr)+6)} selected={this.state.selectedField == (i*numAttr) + 6 ? true : false}>{item.datecreated}</RowItem>
+                  <RowItem onClick={() => this.selectField((i*numAttr)+7)} selected={this.state.selectedField == (i*numAttr) + 7 ? true : false}>{item.datelastlogin}</RowItem>
+                  <RowItem onClick={() => this.selectField((i*numAttr)+8)} selected={this.state.selectedField == (i*numAttr) + 8 ? true : false}>{item.description}</RowItem>
+                  <RowItem onClick={() => this.selectField((i*numAttr)+9)} selected={this.state.selectedField == (i*numAttr) + 9 ? true : false}>{item.subscription}</RowItem>
                 </Row>
               )
             }
             { this.props.id == 'revieworders' &&
-              this.state.orders.map((item) =>
+              data.map((item, i) =>
                 <Row table={table}>
-                  <RowItem>{item.reviewid}</RowItem>
-                  <RowItem>{item.orderid}</RowItem>
-                  <RowItem>{item.fingername}</RowItem>
-                  <RowItem>{item.reviewdescription}</RowItem>
-                  <RowItem>{item.category1}</RowItem>
-                  <RowItem>{item.category2}</RowItem>
-                  <RowItem>{item.category3}</RowItem>
+                  <RowItem onClick={() => this.selectField((i*numAttr)+0)}>{item.reviewid}</RowItem>
+                  <RowItem onClick={() => this.selectField((i*numAttr)+1)}>{item.orderid}</RowItem>
+                  <RowItem onClick={() => this.selectField((i*numAttr)+2)} selected={this.state.selectedField == (i*numAttr) + 2 ? true : false}>{item.fingername}</RowItem>
+                  <RowItem onClick={() => this.selectField((i*numAttr)+3)} selected={this.state.selectedField == (i*numAttr) + 3 ? true : false}>{item.reviewdescription}</RowItem>
+                  <RowItem onClick={() => this.selectField((i*numAttr)+4)} selected={this.state.selectedField == (i*numAttr) + 4 ? true : false}>{item.category1}</RowItem>
+                  <RowItem onClick={() => this.selectField((i*numAttr)+5)} selected={this.state.selectedField == (i*numAttr) + 5 ? true : false}>{item.category2}</RowItem>
+                  <RowItem onClick={() => this.selectField((i*numAttr)+6)} selected={this.state.selectedField == (i*numAttr) + 6 ? true : false}>{item.category3}</RowItem>
                 </Row>
               )
             }
             { this.props.id == 'shippingaddresses' &&
-              this.state.orders.map((item) =>
+              data.map((item, i) =>
                 <Row table={table}>
-                  <RowItem>{item.shippingaddressid}</RowItem>
+                  <RowItem onClick={() => this.selectField((i*numAttr)+0)}>{item.shippingaddressid}</RowItem>
                 </Row>
               )
             }
             { this.props.id == 'payments' &&
-              this.state.orders.map((item) =>
+              data.map((item, i) =>
                 <Row table={table}>
-                  <RowItem>{item.paymentid}</RowItem>
+                  <RowItem onClick={() => this.selectField((i*numAttr)+0)}>{item.paymentid}</RowItem>
                 </Row>
               )
             }
             { this.props.id == 'designers' &&
-              this.state.orders.map((item) =>
+              data.map((item, i) =>
                 <Row table={table}>
-                  <RowItem>{item.designerid}</RowItem>
+                  <RowItem onClick={() => this.selectField((i*numAttr)+0)}>{item.designerid}</RowItem>
                 </Row>
               )
             }
             { this.props.id == 'nailproducts' &&
-              this.state.orders.map((item) =>
+              data.map((item, i) =>
                 <Row table={table}>
-                  <RowItem>{item.nailproductid}</RowItem>
-                  <RowItem>{item.datecreated}</RowItem>
-                  <RowItem>{item.description}</RowItem>
-                  <RowItem>{item.designerid}</RowItem>
-                  <RowItem>{item.name}</RowItem>
-                  <RowItem>{item.price}</RowItem>
-                  <RowItem>{item.totalhates}</RowItem>
-                  <RowItem>{item.totallikes}</RowItem>
-                  <RowItem>{item.totalmanime}</RowItem>
-                  <RowItem>{item.totalpurchases}</RowItem>
-                  <RowItem>{item.visible}</RowItem>
-                  <RowItem>{item.picuri1}</RowItem>
-                  <RowItem>{item.picuri2}</RowItem>
-                  <RowItem>{item.picuri3}</RowItem>
-                  <RowItem>{item.picuri4}</RowItem>
-                  <RowItem>{item.picuri5}</RowItem>
+                  <RowItem onClick={() => this.selectField((i*numAttr)+0)}>{item.nailproductid}</RowItem>
+                  <RowItem onClick={() => this.selectField((i*numAttr)+1)} selected={this.state.selectedField == (i*numAttr) + 1 ? true : false}>{item.datecreated}</RowItem>
+                  <RowItem onClick={() => this.selectField((i*numAttr)+2)} selected={this.state.selectedField == (i*numAttr) + 2 ? true : false}>{item.description}</RowItem>
+                  <RowItem onClick={() => this.selectField((i*numAttr)+3)} selected={this.state.selectedField == (i*numAttr) + 3 ? true : false}>{item.designerid}</RowItem>
+                  <RowItem onClick={() => this.selectField((i*numAttr)+4)} selected={this.state.selectedField == (i*numAttr) + 4 ? true : false}>{item.name}</RowItem>
+                  <RowItem onClick={() => this.selectField((i*numAttr)+5)} selected={this.state.selectedField == (i*numAttr) + 5 ? true : false}>{item.price}</RowItem>
+                  <RowItem onClick={() => this.selectField((i*numAttr)+6)} selected={this.state.selectedField == (i*numAttr) + 6 ? true : false}>{item.totalhates}</RowItem>
+                  <RowItem onClick={() => this.selectField((i*numAttr)+7)} selected={this.state.selectedField == (i*numAttr) + 7 ? true : false}>{item.totallikes}</RowItem>
+                  <RowItem onClick={() => this.selectField((i*numAttr)+8)} selected={this.state.selectedField == (i*numAttr) + 8 ? true : false}>{item.totalmanime}</RowItem>
+                  <RowItem onClick={() => this.selectField((i*numAttr)+9)} selected={this.state.selectedField == (i*numAttr) + 9 ? true : false}>{item.totalpurchases}</RowItem>
+                  <RowItem onClick={() => this.selectField((i*numAttr)+10)} selected={this.state.selectedField == (i*numAttr) + 10 ? true : false}>{item.visible}</RowItem>
+                  <RowItem onClick={() => this.selectField((i*numAttr)+11)} selected={this.state.selectedField == (i*numAttr) + 11 ? true : false}>{item.picuri1}</RowItem>
+                  <RowItem onClick={() => this.selectField((i*numAttr)+12)} selected={this.state.selectedField == (i*numAttr) + 12 ? true : false}>{item.picuri2}</RowItem>
+                  <RowItem onClick={() => this.selectField((i*numAttr)+13)} selected={this.state.selectedField == (i*numAttr) + 13 ? true : false}>{item.picuri3}</RowItem>
+                  <RowItem onClick={() => this.selectField((i*numAttr)+14)} selected={this.state.selectedField == (i*numAttr) + 14 ? true : false}>{item.picuri4}</RowItem>
+                  <RowItem onClick={() => this.selectField((i*numAttr)+15)} selected={this.state.selectedField == (i*numAttr) + 15 ? true : false}>{item.picuri5}</RowItem>
                 </Row>
               )
             }
             { this.props.id == 'categories' &&
-              this.state.orders.map((item) =>
+              data.map((item, i) =>
                 <Row table={table}>
-                  <RowItem>{item.categoryid}</RowItem>
-                  <RowItem>{item.name}</RowItem>
+                  <RowItem onClick={() => this.selectField((i*numAttr)+0)}>{item.categoryid}</RowItem>
+                  <RowItem onClick={() => this.selectField((i*numAttr)+1)} selected={this.state.selectedField == (i*numAttr) + 1 ? true : false}>{item.name}</RowItem>
                 </Row>
               )
             }
             { this.props.id == 'nailproductstocategory' &&
-              this.state.orders.map((item) =>
+              data.map((item, i) =>
                 <Row table={table}>
-                  <RowItem>{item.nailproductid}</RowItem>
-                  <RowItem>{item.categoryid}</RowItem>
+                  <RowItem onClick={() => this.selectField((i*numAttr)+0)}>{item.nailproductid}</RowItem>
+                  <RowItem onClick={() => this.selectField((i*numAttr)+1)}>{item.categoryid}</RowItem>
                 </Row>
               )
             }

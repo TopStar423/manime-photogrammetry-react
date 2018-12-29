@@ -1,6 +1,7 @@
 import styled, { ThemeProvider } from 'styled-components';
 import { theme } from '../utils/theme';
 import Box from './Box';
+import { RefreshButton } from './StyledComponents';
 import { RowJsx as Row, RowItemJsx as RowItem, MX_ROW, ML_ROW_ITEM, ROW_ITEM_WIDTH } from './Row';
 import { API } from 'aws-amplify';
 
@@ -76,7 +77,11 @@ class BoardJsx extends React.Component {
     this.state = {
       orders: [],
       numColumns: 0,
-      selectedField: -1
+      selectedField: -1,
+      selectedFieldType: 'display',
+      selectedBoundingRect: {},
+      endpoint: '',
+      tableName: ''
     };
   }
   componentDidMount() {
@@ -90,6 +95,7 @@ class BoardJsx extends React.Component {
       const endpoint = this.getEndpoint(this.props.id);
       this.getData(endpoint, this.props.id);
       this.selectField(-1);
+      // console.log(this.state.orders);
     }
   }
 
@@ -107,6 +113,10 @@ class BoardJsx extends React.Component {
   }
 
   getData = (endpoint, tableName) => {
+    this.setState({
+      endpoint,
+      tableName
+    });
     let userInit = {
       headers: { 'Content-Type': 'application/json' }
     }
@@ -116,14 +126,17 @@ class BoardJsx extends React.Component {
         console.log(ordersResponse.rows)
       }
     }).catch((err) => {
-      console.log(err.stack);
+      // console.log(err.stack);
     });
   }
 
-  selectField = (index) => {
+  selectField = (index, type, boundingRect) => {
     this.setState({
-      selectedField: index
+      selectedField: index,
+      selectedFieldType: type,
+      selectedBoundingRect: boundingRect
     })
+    console.log(boundingRect);
   }
 
   updateField = (index, propertyName, propertyValue) => {
@@ -132,6 +145,32 @@ class BoardJsx extends React.Component {
     this.setState({
       orders: _orders
     });
+
+    // LAMBDA
+    if (this.props.id == 'users') {
+      let userData = {
+        userid: this.state.orders[index]['userid'],
+        columnname: 'fitted',
+        columnvalue: propertyValue
+      }
+      let userInit = {
+          body: userData,
+          headers: { 'Content-Type': 'application/json' }
+      }
+      API.post(this.state.endpoint, '/users/update/column', userInit).then(response => {
+          console.log(response);
+      }).catch(error => {
+          console.log(error);
+      });
+    }
+  }
+
+  getElementBounds = (element) => {
+    if (element) {
+      // console.log(element);
+      // console.log(element.getBoundingClientRect());
+    }
+    return {};
   }
 
   render() {
@@ -186,7 +225,11 @@ class BoardJsx extends React.Component {
 
     return (
       <BoardBody width={1}>
+        { this.state.selectedFieldType == 'menu' &&
+          <div style={{backgroundColor: '#000', width: '100px', height: '100px', position: 'absolute', zIndex: 1000, top: this.state.selectedBoundingRect.bottom, left: this.state.selectedBoundingRect.left}}></div>
+        }
         <BoardBodyContainer table={table}>
+          <RefreshButton mt={3} mx={3} mb={2} onClick={() => this.getData(this.state.endpoint, this.state.tableName)}>Refresh</RefreshButton>
           <Row table={table} description>
             { table.map((item) => <RowItem type='display'>{item}</RowItem>) }
           </Row>
@@ -197,7 +240,15 @@ class BoardJsx extends React.Component {
                   {
                     tableProps.map((rowItem, j) => {
                       const fieldNum = (i * numAttr) + j;
-                      return <RowItem i={i} fieldNum={fieldNum} propertyName={tableProps[j]} type={tablePropsType[j]} updateField={this.updateField} onClick={() => this.selectField(fieldNum)} selectedField={this.state.selectedField}>{item[tableProps[j]]}</RowItem>;
+                      return (
+                        <RowItem i={i} fieldNum={fieldNum} propertyName={tableProps[j]} type={tablePropsType[j]} updateField={this.updateField} selectField={this.selectField} selectedField={this.state.selectedField}>
+                          { tableProps[j] ==  'fitted' && item[tableProps[j]] == false ?
+                              'false'
+                            :
+                              item[tableProps[j]]
+                          }
+                        </RowItem>
+                      );
                     })
                   }
                 </Row>

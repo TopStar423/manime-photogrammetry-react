@@ -66,14 +66,32 @@ export const RowJsx = (props) => (
   </Row>
 );
 
-export const RowItemJsx = ({ before, type, updateField, i, fieldNum, propertyName, selectedField, ...props }) => (
-  <RowItem ml={ML_ROW_ITEM} pl={1} selected={selectedField == fieldNum && type != 'display' ? true : false} {...props}>
-    { type == 'text' ? <Input fontSize={1} value={props.children} onChange={(ev) => updateField(i, propertyName, ev.target.value)}></Input>
-      : type == 'menu' ? <Input value={props.children}></Input>
-      : <Box fontSize={1}>{props.children}</Box>
-    }
-  </RowItem>
-);
+// export const RowItemJsx = ({ before, type, updateField, i, fieldNum, propertyName, selectedField, ...props }) => (
+//   <RowItem ml={ML_ROW_ITEM} pl={1} selected={selectedField == fieldNum && type != 'display' ? true : false} {...props}>
+//     { type == 'text' ? <Input fontSize={1} value={props.children ? props.children : ''} onChange={(ev) => updateField(i, propertyName, ev.target.value)}></Input>
+//       : type == 'menu' ? <Input value={props.children}></Input>
+//       : <Box fontSize={1}>{props.children}</Box>
+//     }
+//   </RowItem>
+// );
+
+export class RowItemJsx extends React.Component {
+  rowItemClick = () => {
+    this.props.selectField(this.props.fieldNum, this.props.type, this._ref.getBoundingClientRect());
+  }
+
+  render() {
+    const { before, type, updateField, i, fieldNum, propertyName, selectField, selectedField, ...props } = this.props;
+    return (
+      <RowItem ref={(ref)=> this._ref = ref} ml={ML_ROW_ITEM} pl={1} selected={selectedField == fieldNum && type != 'display' ? true : false} {...props} onClick={this.rowItemClick}>
+        { type == 'text' ? <Input fontSize={1} value={props.children ? props.children : ''} onChange={(ev) => updateField(i, propertyName, ev.target.value)}></Input>
+          : type == 'menu' ? <Input value={props.children} onChange={() => {}}></Input>
+          : <Box fontSize={1}>{props.children}</Box>
+        }
+      </RowItem>
+    );
+  }
+}
 
 
 // calc(100% - ${(props) => {

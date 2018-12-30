@@ -4,6 +4,7 @@ import Box from './Box';
 import { RefreshButton } from './StyledComponents';
 import { RowJsx as Row, RowItemJsx as RowItem, MX_ROW, ML_ROW_ITEM, ROW_ITEM_WIDTH } from './Row';
 import { API } from 'aws-amplify';
+import { connect } from "react-redux";
 
 const ORDERS_COLUMN_DESCRIPTION = ['Order ID', 'Group Order ID', 'Nail Product ID', 'Nail Length', 'Nail Shape', 'Order Status', 'Date Created'];
 const GROUP_ORDERS_COLUMN_DESCRIPTION = ['Group Order ID', 'User ID', 'Group Order Status', 'Insurance', 'Shipping Address', 'Subtotal', 'Taxes'];
@@ -84,6 +85,12 @@ class BoardJsx extends React.Component {
       tableName: ''
     };
   }
+
+  // static getInitialProps({ store, isServer, pathname, query }) {
+  //   store.dispatch({ type: 'SET_ACTIVE', activeSelection: 'foo' });
+  //   return { custom: 'custom' };
+  // }
+
   componentDidMount() {
     this._mounted = true;
     const endpoint = this.getEndpoint(this.props.id);
@@ -223,6 +230,8 @@ class BoardJsx extends React.Component {
     const data = this.state.orders;
     const numAttr = table.length;
 
+    // console.log(this.props);
+
     return (
       <BoardBody width={1}>
         { this.state.selectedFieldType == 'menu' &&
@@ -261,4 +270,4 @@ class BoardJsx extends React.Component {
   }
 };
 
-export default BoardJsx;
+export default connect()(BoardJsx);

@@ -86,11 +86,6 @@ class BoardJsx extends React.Component {
     };
   }
 
-  // static getInitialProps({ store, isServer, pathname, query }) {
-  //   store.dispatch({ type: 'SET_ACTIVE', activeSelection: 'foo' });
-  //   return { custom: 'custom' };
-  // }
-
   componentDidMount() {
     this._mounted = true;
     const endpoint = this.getEndpoint(this.props.id);
@@ -102,7 +97,6 @@ class BoardJsx extends React.Component {
       const endpoint = this.getEndpoint(this.props.id);
       this.getData(endpoint, this.props.id);
       this.selectField(-1);
-      // console.log(this.state.orders);
     }
   }
 
@@ -172,14 +166,6 @@ class BoardJsx extends React.Component {
     }
   }
 
-  getElementBounds = (element) => {
-    if (element) {
-      // console.log(element);
-      // console.log(element.getBoundingClientRect());
-    }
-    return {};
-  }
-
   render() {
     let table = [];
     let tableProps = [];
@@ -229,8 +215,6 @@ class BoardJsx extends React.Component {
 
     const data = this.state.orders;
     const numAttr = table.length;
-
-    // console.log(this.props);
 
     return (
       <BoardBody width={1}>

@@ -58,3 +58,126 @@ export const RefreshButton = styled.button`
     background-color: #1088c4;
   }
 `;
+
+export const Input = styled.input`
+  ${space}
+  ${height}
+  ${width}
+  ${fontSize}
+  ${color}
+  ${display}
+  ${alignSelf}
+  ${justifySelf}
+  ${alignItems}
+  ${justifyContent}
+  ${flex}
+  ${flexWrap}
+  ${flexDirection}
+  ${flexBasis}
+  ${background}
+  ${backgroundImage}
+  ${backgroundSize}
+  ${backgroundRepeat}
+  ${borderRadius}
+  ${borderColor}
+  ${borders}
+  ${boxShadow}
+  ${opacity}
+  ${overflow}
+  ${position}
+  ${zIndex}
+  ${top}
+  ${left}
+  ${bottom}
+  ${right}
+  ${fontFamily}
+  ${fontWeight}
+  ${minWidth}
+  ${maxWidth}
+  ${minHeight}
+  ${maxHeight}
+  ${size}
+  ${ratio}
+`;
+
+export const Button = styled.button`
+  ${space}
+  ${height}
+  ${width}
+  ${fontSize}
+  ${color}
+  ${display}
+  ${alignSelf}
+  ${justifySelf}
+  ${alignItems}
+  ${justifyContent}
+  ${flex}
+  ${flexWrap}
+  ${flexDirection}
+  ${flexBasis}
+  ${background}
+  ${backgroundImage}
+  ${backgroundSize}
+  ${backgroundRepeat}
+  ${borderRadius}
+  ${borderColor}
+  ${borders}
+  ${boxShadow}
+  ${opacity}
+  ${overflow}
+  ${position}
+  ${zIndex}
+  ${top}
+  ${left}
+  ${bottom}
+  ${right}
+  ${fontFamily}
+  ${fontWeight}
+  ${minWidth}
+  ${maxWidth}
+  ${minHeight}
+  ${maxHeight}
+  ${size}
+  ${ratio}
+`;
+
+export const Label = styled.label`
+  ${space}
+  ${height}
+  ${width}
+  ${fontSize}
+  ${color}
+  ${display}
+  ${alignSelf}
+  ${justifySelf}
+  ${alignItems}
+  ${justifyContent}
+  ${flex}
+  ${flexWrap}
+  ${flexDirection}
+  ${flexBasis}
+  ${background}
+  ${backgroundImage}
+  ${backgroundSize}
+  ${backgroundRepeat}
+  ${borderRadius}
+  ${borderColor}
+  ${borders}
+  ${boxShadow}
+  ${opacity}
+  ${overflow}
+  ${position}
+  ${zIndex}
+  ${top}
+  ${left}
+  ${bottom}
+  ${right}
+  ${fontFamily}
+  ${fontWeight}
+  ${minWidth}
+  ${maxWidth}
+  ${minHeight}
+  ${maxHeight}
+  ${size}
+  ${ratio}
+`;

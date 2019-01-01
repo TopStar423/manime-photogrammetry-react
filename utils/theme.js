@@ -17,7 +17,7 @@ export const theme = {
   fonts: {
     serif: 'athelas, georgia, times, serif',
     sansSerif:
-      '-apple-system, BlinkMacSystemFont, "avenir next", avenir, "helvetica neue", helvetica, ubuntu, roboto, noto, "segoe ui", arial, sans-serif',
+      '-apple-system, BlinkMacSystemFont, "Helvetica Neue", Helvetica, "avenir next", avenir, "Segoe UI", Arial, sans-serif',
   },
   borders: [
     0,

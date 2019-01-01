@@ -6,6 +6,7 @@ import withRedux from "next-redux-wrapper";
 import thunkMiddleware from 'redux-thunk';
 import { createLogger } from 'redux-logger';
 import rootReducer from '../reducers';
+import Auth from '../components/Auth';
 
 function createMiddlewares ({ isServer }) {
   let middlewares = [ thunkMiddleware ];
@@ -30,12 +31,38 @@ class _App extends App {
     return { pageProps };
   }
 
+  constructor(props) {
+    super(props);
+    this.state = {
+      isAuth: false
+    };
+  }
+
+  componentDidMount() {
+    this.authSubscriber = this.props.store.subscribe(this.isAuthSubscriber);
+  }
+
+  componentWillUnmount() {
+    this.authSubscriber();
+  }
+
+  isAuthSubscriber = () => {
+    const reduxState = this.props.store.getState();
+    const isAuth = reduxState.userData.isAuth;
+    this.setState({ isAuth });
+  }
+
   render() {
     const { Component, pageProps, store } = this.props;
+    const { isAuth } = this.state;
     return (
       <Container>
         <Provider store={store}>
-          <Component {...pageProps} />
+          { isAuth ?
+            <Component {...pageProps} />
+          :
+            <Auth />
+          }
         </Provider>
       </Container>
     );

@@ -137,7 +137,7 @@ class BoardJsx extends React.Component {
       selectedFieldType: type,
       selectedBoundingRect: boundingRect
     })
-    console.log(boundingRect);
+    //console.log(boundingRect);
   }
 
   updateField = (index, propertyName, propertyValue) => {
@@ -148,22 +148,22 @@ class BoardJsx extends React.Component {
     });
 
     // LAMBDA
-    if (this.props.id == 'users') {
-      let userData = {
-        userid: this.state.orders[index]['userid'],
-        columnname: 'fitted',
-        columnvalue: propertyValue
-      }
-      let userInit = {
-          body: userData,
-          headers: { 'Content-Type': 'application/json' }
-      }
-      API.post(this.state.endpoint, '/users/update/column', userInit).then(response => {
-          console.log(response);
-      }).catch(error => {
-          console.log(error);
-      });
-    }
+    // if (this.props.id == 'users') {
+    //   let userData = {
+    //     userid: this.state.orders[index]['userid'],
+    //     columnname: 'fitted',
+    //     columnvalue: propertyValue
+    //   }
+    //   let userInit = {
+    //       body: userData,
+    //       headers: { 'Content-Type': 'application/json' }
+    //   }
+    //   API.post(this.state.endpoint, '/users/update/column', userInit).then(response => {
+    //       console.log(response);
+    //   }).catch(error => {
+    //       console.log(error);
+    //   });
+    // }
   }
 
   render() {

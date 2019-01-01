@@ -1,6 +1,10 @@
 import { space, width, fontSize, color, height, justifyContent, alignItems, display, fontFamily, fontWeight, boxShadow } from 'styled-system';
 import styled from 'styled-components';
 import Box from './Box';
+import { connect } from "react-redux";
+import activeElement from '../reducers';
+import { setActiveElement } from '../actions';
+
 
 export const MX_ROW = 3;
 export const ML_ROW_ITEM = 2;
@@ -22,7 +26,6 @@ const RowItem = styled(Box)`
   height: 80%;
   align-items: center;
   display: flex;
-
   border-radius: 3px;
   box-sizing: border-box;
 `;
@@ -77,31 +80,31 @@ export const RowJsx = (props) => (
 //   </RowItem>
 // );
 
-export class RowItemJsx extends React.Component {
+export const RowItemComponent = class RowItemClass extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      propertyValue: ''
+      propertyValue: this.props.children ? this.props.children : ''
     };
   }
 
-  rowItemClick = () => {
-    // this.props.selectField(this.props.fieldNum, this.props.type, {});
+  rowItemClick = async () => {
+    this.props.selectField(this.props.fieldNum, this.props.type, this._ref.getBoundingClientRect());
+    // this.props.setActiveElement({id: this.props.fieldNum, top: 10, left: 10, right: 10, bottom: 10, options: []});
   }
 
   updateField = (index, propertyName, propertyValue) => {
-    this.setState({
-      propertyName,
-      propertyValue
-    });
+    this.setState({ propertyValue });
+    // this.props.updateField(index, propertyName, propertyValue);
   }
 
   render() {
     const { before, type, updateField, i, fieldNum, propertyName, selectField, selectedField, ...props } = this.props;
+    const { activeElement } = this.props;
     return (
-      <RowItem ref={(ref)=> this._ref = ref} ml={ML_ROW_ITEM} selected={selectedField == fieldNum && type != 'display' ? true : false} {...props} onClick={this.rowItemClick}>
-        { type == 'text' ? <Input pl={2} fontSize={1} value={props.children ? props.children : ''} onChange={(ev) => updateField(i, propertyName, ev.target.value)}></Input>
-          : type == 'menu' ? <Input pl={2} value={props.children} onChange={() => {}}></Input>
+      <RowItem ref={(ref)=> this._ref = ref} ml={ML_ROW_ITEM} {...props} onClick={this.rowItemClick}>
+        { type == 'text' ? <Input pl={2} fontSize={1} value={this.state.propertyValue} onChange={(ev) => this.updateField(fieldNum, propertyName, ev.target.value)}></Input>
+          : type == 'menu' ? <Input pl={2} value={this.state.propertyValue} onChange={() => {}}></Input>
           : <Box fontSize={1}>{props.children}</Box>
         }
       </RowItem>
@@ -109,9 +112,15 @@ export class RowItemJsx extends React.Component {
   }
 }
 
-
-// calc(100% - ${(props) => {
-//   // console.log(props);
-//   console.log(props.theme.space[props.mx]);
-//   return 128;
-// }}px);
+// const mapStateToProps = state => ({
+//   ...activeElement(state, '')
+// })
+//
+// const mapDispatchToProps = dispatch => ({
+//   setActiveElement: id => dispatch(setActiveElement(id))
+// })
+//
+// export const RowItemComponent = connect(
+//   mapStateToProps,
+//   mapDispatchToProps
+// )(RowItemClass);

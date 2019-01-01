@@ -2,9 +2,9 @@ import styled, { ThemeProvider } from 'styled-components';
 import { theme } from '../utils/theme';
 import Box from './Box';
 import { RefreshButton } from './StyledComponents';
-import { RowJsx as Row, RowItemJsx as RowItem, MX_ROW, ML_ROW_ITEM, ROW_ITEM_WIDTH } from './Row';
+import { RowJsx as Row, RowItemComponent as RowItem, MX_ROW, ML_ROW_ITEM, ROW_ITEM_WIDTH } from './Row';
 import { API } from 'aws-amplify';
-import { connect } from "react-redux";
+// import { connect } from "react-redux";
 
 const ORDERS_COLUMN_DESCRIPTION = ['Order ID', 'Group Order ID', 'Nail Product ID', 'Nail Length', 'Nail Shape', 'Order Status', 'Date Created'];
 const GROUP_ORDERS_COLUMN_DESCRIPTION = ['Group Order ID', 'User ID', 'Group Order Status', 'Insurance', 'Shipping Address', 'Subtotal', 'Taxes'];
@@ -72,6 +72,26 @@ const BoardBodyContents = styled(Box)`
   width: 100%;
 `;
 
+const DropDownMenu = styled(Box)`
+  position: absolute;
+  z-index: 1000;
+  background: #fff;
+  border-radius: 3px;
+  box-shadow: 0 10px 15px 0 rgba(0,0,0,0.05);
+  box-sizing: border-box;
+  border: 1px solid #dddddd;
+  padding: 5px 0px;
+`;
+
+const A = styled.a`
+  display: flex;
+  font-size: 13px;
+  padding: 10px 15px;
+  &:hover {
+    background-color: #f3f3f3;
+  }
+`;
+
 class BoardJsx extends React.Component {
   constructor(props) {
     super(props);
@@ -136,8 +156,8 @@ class BoardJsx extends React.Component {
       selectedField: index,
       selectedFieldType: type,
       selectedBoundingRect: boundingRect
-    })
-    //console.log(boundingRect);
+    }, () => console.log(this.state))
+    // console.log(boundingRect);
   }
 
   updateField = (index, propertyName, propertyValue) => {
@@ -219,7 +239,11 @@ class BoardJsx extends React.Component {
     return (
       <BoardBody width={1}>
         { this.state.selectedFieldType == 'menu' &&
-          <div style={{backgroundColor: '#000', width: '100px', height: '100px', position: 'absolute', zIndex: 1000, top: this.state.selectedBoundingRect.bottom, left: this.state.selectedBoundingRect.left}}></div>
+          <DropDownMenu style={{width: '100px', top: this.state.selectedBoundingRect.bottom + 1, left: this.state.selectedBoundingRect.left}}>
+            <A onClick={() => this.setState({ selectedFieldType: 'display' })}>Option 1</A>
+            <A onClick={() => this.setState({ selectedFieldType: 'display' })}>Option 2</A>
+            <A onClick={() => this.setState({ selectedFieldType: 'display' })}>Option 3</A>
+          </DropDownMenu>
         }
         <BoardBodyContainer table={table}>
           <RefreshButton mt={3} mx={3} mb={2} onClick={() => this.getData(this.state.endpoint, this.state.tableName)}>Refresh</RefreshButton>
@@ -254,4 +278,4 @@ class BoardJsx extends React.Component {
   }
 };
 
-export default connect()(BoardJsx);
+export default BoardJsx;

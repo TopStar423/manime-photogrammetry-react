@@ -1,7 +1,7 @@
 import { space, width, fontSize, color, height, justifyContent, alignItems, display, fontFamily, fontWeight, boxShadow } from 'styled-system';
 import styled from 'styled-components';
 import Box from './Box';
-import { connect } from "react-redux";
+import { connect } from 'react-redux';
 import activeElement from '../reducers';
 import { setActiveElement } from '../actions';
 
@@ -80,7 +80,7 @@ export const RowJsx = (props) => (
 //   </RowItem>
 // );
 
-export const RowItemComponent = class RowItemClass extends React.Component {
+class RowItemClass extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -89,8 +89,10 @@ export const RowItemComponent = class RowItemClass extends React.Component {
   }
 
   rowItemClick = async () => {
-    this.props.selectField(this.props.fieldNum, this.props.type, this._ref.getBoundingClientRect());
-    // this.props.setActiveElement({id: this.props.fieldNum, top: 10, left: 10, right: 10, bottom: 10, options: []});
+    const boundingRect = this._ref.getBoundingClientRect();
+    // if (this.props.selectField)
+    //   this.props.selectField(this.props.fieldNum, this.props.type, this._ref.getBoundingClientRect());
+    this.props.setActiveElement({id: this.props.id, propertyName: this.props.propertyName, type: this.props.type, top: boundingRect.top, left: boundingRect.left, right: boundingRect.right, bottom: boundingRect.bottom, options: []});
   }
 
   updateField = (index, propertyName, propertyValue) => {
@@ -107,20 +109,23 @@ export const RowItemComponent = class RowItemClass extends React.Component {
           : type == 'menu' ? <Input pl={2} value={this.state.propertyValue} onChange={() => {}}></Input>
           : <Box fontSize={1}>{props.children}</Box>
         }
+
       </RowItem>
     );
   }
 }
 
-// const mapStateToProps = state => ({
-//   ...activeElement(state, '')
-// })
-//
-// const mapDispatchToProps = dispatch => ({
-//   setActiveElement: id => dispatch(setActiveElement(id))
-// })
-//
-// export const RowItemComponent = connect(
-//   mapStateToProps,
-//   mapDispatchToProps
-// )(RowItemClass);
+// <svg width="24" height="24" viewBox="0 0 24 24"><path fill='#a1a1a1' d="M16 17.01V10h-2v7.01h-3L15 21l4-3.99h-3zM9 3L5 6.99h3V14h2V6.99h3L9 3z"/><path d="M0 0h24v24H0z" fill="none"/></svg>
+
+const mapStateToProps = state => ({
+  ...activeElement(state, '')
+})
+
+const mapDispatchToProps = dispatch => ({
+  setActiveElement: element => dispatch(setActiveElement(element))
+})
+
+export const RowItemComponent = connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(RowItemClass);

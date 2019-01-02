@@ -3,6 +3,10 @@ import styled, { ThemeProvider } from 'styled-components';
 import { theme } from '../utils/theme';
 import Box from './Box';
 import Sidebar from './Sidebar';
+import { connect } from 'react-redux';
+import activeElement from '../reducers';
+import { setDisplay } from '../actions';
+import { StandardButton } from './StyledComponents';
 
 const Container = styled.div`
   display: flex;
@@ -16,6 +20,31 @@ const Container = styled.div`
 const Header = styled(Box)`
   box-shadow: 0 1px 3px 0 rgba(0,0,0,0.15);
   z-index: 100;
+`;
+
+
+// Refactor below. Portal?
+const Modal = styled(Box)`
+`;
+
+const DropDownMenu = styled(Box)`
+  position: absolute;
+  z-index: 1000;
+  background: #fff;
+  border-radius: 3px;
+  box-shadow: 0 10px 15px 0 rgba(0,0,0,0.05);
+  box-sizing: border-box;
+  border: 1px solid #dddddd;
+  padding: 5px 0px;
+`;
+
+const A = styled.a`
+  display: flex;
+  font-size: 13px;
+  padding: 10px 15px;
+  &:hover {
+    background-color: #f3f3f3;
+  }
 `;
 
 class Layout extends React.Component {
@@ -37,6 +66,20 @@ class Layout extends React.Component {
   updateWindowDimensions() {
     this.setState({ width: window.innerWidth, height: window.innerHeight });
   }
+
+  modalOnClick = (e) => {
+    if (this.modalRef.contains(e.target))
+      console.log('inside');
+    else
+      this.props.setActiveElement();
+  }
+  menuOnClick = (e) => {
+    if (this.menuRef.contains(e.target))
+      console.log('inside');
+    else
+      this.props.setActiveElement();
+  }
+
   render() {
     const { before, ...props } = this.props;
     const width = this.state.width;
@@ -54,10 +97,47 @@ class Layout extends React.Component {
             </Header>
             {props.children}
           </Box>
+
+          { this.props.activeElement.type == 'menu' &&
+            <Box position='absolute' width='100%' height='100%' onClick={this.menuOnClick}>
+              <DropDownMenu ref={(menuRef) => this.menuRef = menuRef} style={{width: '100px', top: this.props.activeElement.bottom + 1, left: this.props.activeElement.left}}>
+                <A onClick={this.props.setActiveElement}>Option 1</A>
+                <A onClick={this.props.setActiveElement}>Option 2</A>
+                <A onClick={this.props.setActiveElement}>Option 3</A>
+              </DropDownMenu>
+            </Box>
+          }
+          { this.props.activeElement.type == 'modal' &&
+            <Box position='absolute' width='100%' height='100%' bg='rgba(0,0,0,0.4)' display='flex' justifyContent='center' alignItems='center' onClick={this.modalOnClick}>
+              <Modal ref={(modalRef) => this.modalRef = modalRef} width={'500px'} bg='#fff' px={2} pt={3} pb={2} boxShadow='0 1px 3px 0 rgba(0,0,0,0.15)' borderRadius='3px'>
+                <Box display='flex' p={2} fontFamily='sansSerif' fontSize={4}>
+                  {this.props.activeElement.propertyName}: {this.props.activeElement.id}
+                </Box>
+                <Box p={2} display='flex' flexDirection='column'>
+                  <label>Populate object with {this.props.activeElement.propertyName} = {this.props.activeElement.id}</label>
+                  <Box display='flex' width='100%' flexDirection='row' justifyContent='flex-end' mt={3}>
+                    <StandardButton onClick={() => this.props.setActiveElement()}>Save</StandardButton>
+                  </Box>
+                </Box>
+              </Modal>
+            </Box>
+          }
+
         </Container>
       </ThemeProvider>
     );
   }
 }
 
-export default Layout;
+const mapStateToProps = state => ({
+  ...activeElement(state, '')
+})
+
+const mapDispatchToProps = dispatch => ({
+  setActiveElement: () => dispatch(setDisplay())
+})
+
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(Layout);

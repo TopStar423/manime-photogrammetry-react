@@ -3,6 +3,10 @@ export const setActiveElement = element => ({
   element
 });
 
+export const setDisplay = () => ({
+  type: 'SET_DISPLAY'
+});
+
 export const setIsAuth = isAuth => ({
   type: 'SET_IS_AUTH',
   isAuth

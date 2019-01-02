@@ -1,7 +1,7 @@
 import styled, { ThemeProvider } from 'styled-components';
 import { theme } from '../utils/theme';
 import Box from './Box';
-import { RefreshButton } from './StyledComponents';
+import { StandardButton, StandardInput } from './StyledComponents';
 import { RowJsx as Row, RowItemComponent as RowItem, MX_ROW, ML_ROW_ITEM, ROW_ITEM_WIDTH } from './Row';
 import { API } from 'aws-amplify';
 // import { connect } from "react-redux";
@@ -24,20 +24,20 @@ const ORDER_REVIEWS_COLUMN_PROPERTIES = ['reviewid', 'orderid', 'fingername', 'r
 const SHIPPING_ADDRESSES_COLUMN_PROPERTIES = ['shippingaddressid'];
 const PAYMENTS_COLUMN_PROPERTIES = ['paymentid'];
 const DESIGNERS_COLUMN_PROPERTIES = ['designerid'];
-const NAIL_PRODUCTS_COLUMN_PROPERTIES = ['nailproductid', 'datecreated', 'description', 'designerid', 'name', 'price', 'totalhates', 'totalmanime', 'totalpurchases', 'visible', 'picuri1', 'picuri2', 'picuri3', 'picuri4', 'picuri5'];
+const NAIL_PRODUCTS_COLUMN_PROPERTIES = ['nailproductid', 'datecreated', 'description', 'designerid', 'name', 'price', 'totalhates', 'totalmanime', 'totalmanime', 'totalpurchases', 'visible', 'picuri1', 'picuri2', 'picuri3', 'picuri4', 'picuri5'];
 const NAIL_CATEGORIES_COLUMN_PROPERTIES = ['categoryid', 'name'];
 const NAIL_PRODUCT_CATEGORIES_COLUMN_PROPERTIES = ['nailproductid', 'categoryid'];
 
-const ORDERS_COLUMN_PROPERTIES_TYPE = ['display', 'display', 'display', 'text', 'text', 'menu', 'display'];
-const GROUP_ORDERS_COLUMN_PROPERTIES_TYPE = ['display', 'display', 'text', 'text', 'text', 'text', 'text'];
-const USERS_COLUMN_PROPERTIES_TYPE = ['display', 'text', 'text', 'display', 'text', 'text', 'text', 'text', 'text', 'text'];
-const ORDER_REVIEWS_COLUMN_PROPERTIES_TYPE = ['display', 'display', 'text', 'text', 'text', 'text', 'text'];
-const SHIPPING_ADDRESSES_COLUMN_PROPERTIES_TYPE = ['display'];
-const PAYMENTS_COLUMN_PROPERTIES_TYPE = ['display'];
-const DESIGNERS_COLUMN_PROPERTIES_TYPE = ['display'];
-const NAIL_PRODUCTS_COLUMN_PROPERTIES_TYPE = ['display', 'text', 'text', 'text', 'text', 'text', 'text', 'text', 'text', 'text', 'text', 'text', 'text', 'text', 'text'];
-const NAIL_CATEGORIES_COLUMN_PROPERTIES_TYPE = ['display', 'text'];
-const NAIL_PRODUCT_CATEGORIES_COLUMN_PROPERTIES_TYPE = ['display', 'display'];
+const ORDERS_COLUMN_PROPERTIES_TYPE = ['modal', 'modal', 'modal', 'text', 'text', 'menu', 'display'];
+const GROUP_ORDERS_COLUMN_PROPERTIES_TYPE = ['modal', 'modal', 'text', 'text', 'text', 'text', 'text'];
+const USERS_COLUMN_PROPERTIES_TYPE = ['modal', 'text', 'text', 'display', 'text', 'text', 'text', 'text', 'text', 'text'];
+const ORDER_REVIEWS_COLUMN_PROPERTIES_TYPE = ['modal', 'modal', 'text', 'text', 'text', 'text', 'text'];
+const SHIPPING_ADDRESSES_COLUMN_PROPERTIES_TYPE = ['modal'];
+const PAYMENTS_COLUMN_PROPERTIES_TYPE = ['modal'];
+const DESIGNERS_COLUMN_PROPERTIES_TYPE = ['modal'];
+const NAIL_PRODUCTS_COLUMN_PROPERTIES_TYPE = ['modal', 'text', 'text', 'text', 'text', 'text', 'text', 'text', 'text', 'text', 'text', 'text', 'text', 'text', 'text', 'text'];
+const NAIL_CATEGORIES_COLUMN_PROPERTIES_TYPE = ['modal', 'text'];
+const NAIL_PRODUCT_CATEGORIES_COLUMN_PROPERTIES_TYPE = ['modal', 'modal'];
 
 
 const BoardBody = styled.div`
@@ -72,26 +72,6 @@ const BoardBodyContents = styled(Box)`
   width: 100%;
 `;
 
-const DropDownMenu = styled(Box)`
-  position: absolute;
-  z-index: 1000;
-  background: #fff;
-  border-radius: 3px;
-  box-shadow: 0 10px 15px 0 rgba(0,0,0,0.05);
-  box-sizing: border-box;
-  border: 1px solid #dddddd;
-  padding: 5px 0px;
-`;
-
-const A = styled.a`
-  display: flex;
-  font-size: 13px;
-  padding: 10px 15px;
-  &:hover {
-    background-color: #f3f3f3;
-  }
-`;
-
 class BoardJsx extends React.Component {
   constructor(props) {
     super(props);
@@ -102,7 +82,8 @@ class BoardJsx extends React.Component {
       selectedFieldType: 'display',
       selectedBoundingRect: {},
       endpoint: '',
-      tableName: ''
+      tableName: '',
+      searchValue: ''
     };
   }
 
@@ -136,7 +117,8 @@ class BoardJsx extends React.Component {
   getData = (endpoint, tableName) => {
     this.setState({
       endpoint,
-      tableName
+      tableName,
+      orders: []
     });
     let userInit = {
       headers: { 'Content-Type': 'application/json' }
@@ -156,7 +138,7 @@ class BoardJsx extends React.Component {
       selectedField: index,
       selectedFieldType: type,
       selectedBoundingRect: boundingRect
-    }, () => console.log(this.state))
+    });
     // console.log(boundingRect);
   }
 
@@ -184,6 +166,10 @@ class BoardJsx extends React.Component {
     //       console.log(error);
     //   });
     // }
+  }
+
+  updateSearchBar = (searchValue) => {
+    this.setState({ searchValue });
   }
 
   render() {
@@ -233,20 +219,29 @@ class BoardJsx extends React.Component {
       tablePropsType = NAIL_PRODUCT_CATEGORIES_COLUMN_PROPERTIES_TYPE;
     }
 
-    const data = this.state.orders;
+    // const data = this.state.orders;
+    const data = this.state.orders.filter((row) => Object.values(row).some((rowItem) => {
+      if (!rowItem) return false;
+      if (typeof rowItem == 'number')
+        return rowItem.toString().toLowerCase().indexOf(this.state.searchValue) >= 0;
+      if (typeof rowItem == 'string')
+        return rowItem.toLowerCase().indexOf(this.state.searchValue) >= 0;
+      return false;
+    }));
+    // console.log(data)
+
     const numAttr = table.length;
 
     return (
       <BoardBody width={1}>
-        { this.state.selectedFieldType == 'menu' &&
-          <DropDownMenu style={{width: '100px', top: this.state.selectedBoundingRect.bottom + 1, left: this.state.selectedBoundingRect.left}}>
-            <A onClick={() => this.setState({ selectedFieldType: 'display' })}>Option 1</A>
-            <A onClick={() => this.setState({ selectedFieldType: 'display' })}>Option 2</A>
-            <A onClick={() => this.setState({ selectedFieldType: 'display' })}>Option 3</A>
-          </DropDownMenu>
-        }
+        <Box display='flex' flexDirection='row' width='100%' position='absolute' pt={3} pb={2}>
+          <StandardButton ml={3} onClick={() => this.getData(this.state.endpoint, this.state.tableName)}>Refresh</StandardButton>
+          <StandardButton ml={3} disabled>New</StandardButton>
+          <StandardButton ml={3} disabled>Save</StandardButton>
+          <StandardInput ml={3} value={this.state.searchValue} onChange={(ev) => this.updateSearchBar(ev.target.value.toLowerCase())}></StandardInput>
+        </Box>
+        <Box height='25px' width='100%' pt={3} pb={2} />
         <BoardBodyContainer table={table}>
-          <RefreshButton mt={3} mx={3} mb={2} onClick={() => this.getData(this.state.endpoint, this.state.tableName)}>Refresh</RefreshButton>
           <Row table={table} description>
             { table.map((item) => <RowItem type='display'>{item}</RowItem>) }
           </Row>
@@ -258,7 +253,7 @@ class BoardJsx extends React.Component {
                     tableProps.map((rowItem, j) => {
                       const fieldNum = (i * numAttr) + j;
                       return (
-                        <RowItem i={i} fieldNum={fieldNum} propertyName={tableProps[j]} type={tablePropsType[j]} updateField={this.updateField} selectField={this.selectField} selectedField={this.state.selectedField}>
+                        <RowItem id={item[tableProps[0]]} i={i} fieldNum={fieldNum} propertyName={tableProps[j]} type={tablePropsType[j]} updateField={this.updateField} selectField={this.selectField} selectedField={this.state.selectedField}>
                           { tableProps[j] ==  'fitted' && item[tableProps[j]] == false ?
                               'false'
                             :

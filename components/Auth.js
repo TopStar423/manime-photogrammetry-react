@@ -68,7 +68,7 @@ const Container = styled(Box)`
 class AuthComponent extends React.Component {
   constructor(props) {
     super(props);
-    this.state = { width: 0, height: 0 };
+    this.state = { width: 0, height: 0, email: '', password: '' };
     this.updateWindowDimensions = this.updateWindowDimensions.bind(this);
   }
   componentDidMount() {
@@ -84,8 +84,15 @@ class AuthComponent extends React.Component {
     this.setState({ width: window.innerWidth, height: window.innerHeight });
   }
 
-  signIn = () => {
-    Auth.signIn('photogrammetry', 'cmscms')
+  updateAuth = (key, value) => {
+    this.setState({
+      [key]: value
+    })
+  }
+
+  signIn = (ev) => {
+    ev.preventDefault();
+    Auth.signIn(this.state.email, this.state.password)
     .then(user => this.props.setIsAuth(true))
     .catch(err => console.log(err.stack));
   }
@@ -104,13 +111,15 @@ class AuthComponent extends React.Component {
               Log In
             </Box>
             <Box mx={4} mb={3} p={4} display='flex' flexDirection='column'>
-              <Label>Email Address</Label>
-              <Input></Input>
-              <Label>Password</Label>
-              <Input></Input>
-              <Box display='flex' width='100%' flexDirection='row' justifyContent='flex-end' mt={3}>
-                <Button onClick={this.signIn}>Log in</Button>
-              </Box>
+              <form>
+                <Label>Email Address</Label>
+                <Input value={this.state.email} onChange={(ev) => this.updateAuth('email', ev.target.value)}></Input>
+                <Label>Password</Label>
+                <Input type='password' value={this.state.password} onChange={(ev) => this.updateAuth('password', ev.target.value)}></Input>
+                <Box display='flex' width='100%' flexDirection='row' justifyContent='flex-end' mt={3}>
+                  <Button type='submit' onClick={this.signIn}>Log in</Button>
+                </Box>
+              </form>
             </Box>
           </Box>
         </Container>

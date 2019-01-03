@@ -18,8 +18,9 @@ Amplify.configure({
     mandatorySignIn: false,
   },
   Storage: {
-    bucket: 'mani-me-react-native-userfiles-1',
-    region: 'us-west-1',
+    // bucket: 'mani-me-react-native-userfiles-1',
+    bucket: 'mani-me-app',
+    region: 'us-west-2',
   },
   API: {
         endpoints: [

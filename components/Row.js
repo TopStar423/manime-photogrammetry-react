@@ -92,21 +92,26 @@ class RowItemClass extends React.Component {
     const boundingRect = this._ref.getBoundingClientRect();
     // if (this.props.selectField)
     //   this.props.selectField(this.props.fieldNum, this.props.type, this._ref.getBoundingClientRect());
-    this.props.setActiveElement({id: this.props.id, propertyName: this.props.propertyName, type: this.props.type, top: boundingRect.top, left: boundingRect.left, right: boundingRect.right, bottom: boundingRect.bottom, options: []});
+    this.props.setActiveElement({id: this.props.id, fieldNum: this.props.fieldNum, propertyName: this.props.propertyName, type: this.props.type, top: boundingRect.top, left: boundingRect.left, right: boundingRect.right, bottom: boundingRect.bottom, options: []});
   }
 
   updateField = (index, propertyName, propertyValue) => {
     this.setState({ propertyValue });
-    // this.props.updateField(index, propertyName, propertyValue);
+    this.props.updateField(this.props.id, propertyName, propertyValue);
   }
 
   render() {
     const { before, type, updateField, i, fieldNum, propertyName, selectField, selectedField, ...props } = this.props;
     const { activeElement } = this.props;
+
+    // Temp before redux
+    const imagePath = this.props.activeElement.fieldNum == this.props.fieldNum && this.props.activeElement.imagePath ? this.props.activeElement.imagePath : props.children;
+
     return (
       <RowItem ref={(ref)=> this._ref = ref} ml={ML_ROW_ITEM} {...props} onClick={this.rowItemClick}>
         { type == 'text' ? <Input pl={2} fontSize={1} value={this.state.propertyValue} onChange={(ev) => this.updateField(fieldNum, propertyName, ev.target.value)}></Input>
           : type == 'menu' ? <Input pl={2} value={this.state.propertyValue} onChange={() => {}}></Input>
+          : type == 'image' ? <Box fontSize={1} onClick={(ev) => this.updateField(fieldNum, propertyName, imagePath)}>{imagePath}</Box>
           : <Box fontSize={1}>{props.children}</Box>
         }
 

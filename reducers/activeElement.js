@@ -3,7 +3,9 @@ const activeElement = (state = { id: -1, type: 'display' }, action) => {
     case 'SET_ACTIVE_ELEMENT':
       return action.element;
     case 'SET_DISPLAY':
-      return { ...action.element, type: 'display' };
+      return { ...state, type: 'display' };
+    case 'SET_KEY_VALUE':
+      return { ...state, [action.key]: action.value };
     default:
       return state;
   }

@@ -5,8 +5,9 @@ import Box from './Box';
 import Sidebar from './Sidebar';
 import { connect } from 'react-redux';
 import activeElement from '../reducers';
-import { setDisplay } from '../actions';
-import { StandardButton } from './StyledComponents';
+import { setDisplay, setKeyValue } from '../actions';
+import { StandardButton, StandardInput, StandardLabel } from './StyledComponents';
+import { API, Storage } from 'aws-amplify';
 
 const Container = styled.div`
   display: flex;
@@ -50,7 +51,14 @@ const A = styled.a`
 class Layout extends React.Component {
   constructor(props) {
     super(props);
-    this.state = { width: 0, height: 0 };
+    this.state = {
+      width: 0,
+      height: 0,
+      // Refactor below into layer component
+      uploadImageName: '',
+      errorMessage: '',
+      tempFile: null
+    };
     this.updateWindowDimensions = this.updateWindowDimensions.bind(this);
   }
 
@@ -71,13 +79,36 @@ class Layout extends React.Component {
     if (this.modalRef.contains(e.target))
       console.log('inside');
     else
-      this.props.setActiveElement();
+      this.props.setActiveElementDisplay();
   }
   menuOnClick = (e) => {
     if (this.menuRef.contains(e.target))
       console.log('inside');
     else
-      this.props.setActiveElement();
+      this.props.setActiveElementDisplay();
+  }
+  chooseImage = (e) => {
+    const file = e.target.files[0];
+    this.setState({ tempFile: file });
+    // https://s3-us-west-2.amazonaws.com/mani-me-app/public/example.png
+  }
+  uploadImage = () => {
+    if (this.state.uploadImageName == '') {
+      this.setState({ errorMessage: 'Must enter an image name' });
+      return;
+    }
+    this.setState({ errorMessage: '' });
+    Storage.put(this.state.uploadImageName, this.state.tempFile, {
+      contentType: 'image/png'
+    })
+    .then(result => {
+      this.props.setActiveElementDisplay();
+      this.props.setActiveElementKeyValue('imagePath', `https://s3-us-west-2.amazonaws.com/mani-me-app/public/${this.state.uploadName}.png`);
+    })
+    .catch(err => {
+      this.setState({ errorMessage: 'Upload failed, check console.' });
+      console.log(err);
+    });
   }
 
   render() {
@@ -101,9 +132,9 @@ class Layout extends React.Component {
           { this.props.activeElement.type == 'menu' &&
             <Box position='absolute' width='100%' height='100%' onClick={this.menuOnClick}>
               <DropDownMenu ref={(menuRef) => this.menuRef = menuRef} style={{width: '100px', top: this.props.activeElement.bottom + 1, left: this.props.activeElement.left}}>
-                <A onClick={this.props.setActiveElement}>Option 1</A>
-                <A onClick={this.props.setActiveElement}>Option 2</A>
-                <A onClick={this.props.setActiveElement}>Option 3</A>
+                <A onClick={this.props.setActiveElementDisplay}>Option 1</A>
+                <A onClick={this.props.setActiveElementDisplay}>Option 2</A>
+                <A onClick={this.props.setActiveElementDisplay}>Option 3</A>
               </DropDownMenu>
             </Box>
           }
@@ -116,7 +147,29 @@ class Layout extends React.Component {
                 <Box p={2} display='flex' flexDirection='column'>
                   <label>Populate object with {this.props.activeElement.propertyName} = {this.props.activeElement.id}</label>
                   <Box display='flex' width='100%' flexDirection='row' justifyContent='flex-end' mt={3}>
-                    <StandardButton onClick={() => this.props.setActiveElement()}>Save</StandardButton>
+                    <StandardButton onClick={this.props.setActiveElementDisplay}>Save</StandardButton>
+                  </Box>
+                </Box>
+              </Modal>
+            </Box>
+          }
+          { this.props.activeElement.type == 'image' &&
+
+            <Box position='absolute' width='100%' height='100%' bg='rgba(0,0,0,0.4)' display='flex' justifyContent='center' alignItems='center' onClick={this.modalOnClick}>
+              <Modal ref={(modalRef) => this.modalRef = modalRef} width={'500px'} bg='#fff' px={2} pt={3} pb={2} boxShadow='0 1px 3px 0 rgba(0,0,0,0.15)' borderRadius='3px'>
+                <Box display='flex' p={2} fontFamily='sansSerif' fontSize={4}>
+                  {this.props.activeElement.propertyName}
+                </Box>
+                <Box p={2} display='flex' flexDirection='column'>
+                  <Box display='flex' flexDirection='column' justifyContent='center' mt={3} mx={5}>
+                    <StandardLabel>File Name: (Careful, will overwrite if file name already exists)</StandardLabel>
+                    <StandardInput width='100%' mb={2} value={this.state.uploadImageName} onChange={(ev) => this.setState({ uploadImageName: ev.target.value })}></StandardInput>
+                    <input
+                      type="file" accept='image/png'
+                      onChange={(e) => this.chooseImage(e)}
+                    />
+                  <StandardButton mt={2} onClick={this.uploadImage}>Upload</StandardButton>
+                  <StandardLabel fontSize={2} color='#bb0000' mt={2}>{this.state.errorMessage}</StandardLabel>
                   </Box>
                 </Box>
               </Modal>
@@ -134,7 +187,8 @@ const mapStateToProps = state => ({
 })
 
 const mapDispatchToProps = dispatch => ({
-  setActiveElement: () => dispatch(setDisplay())
+  setActiveElementDisplay: () => dispatch(setDisplay()),
+  setActiveElementKeyValue: (key, value) => dispatch(setKeyValue(key, value))
 })
 
 export default connect(

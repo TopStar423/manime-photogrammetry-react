@@ -204,3 +204,11 @@ export const Label = styled.label`
   ${size}
   ${ratio}
 `;
+
+export const StandardLabel = styled(Label)`
+  font-family: '-apple-system, BlinkMacSystemFont, "Helvetica Neue", Helvetica, "avenir next", avenir, "Segoe UI", Arial, sans-serif';
+  color: ${(props) => props.color ? props.color : '#808590'};
+  font-size: 12px;
+  font-weight: 500;
+  margin-bottom: 5px;
+`;

@@ -95,7 +95,14 @@ class RowItemClass extends React.Component {
     this.props.setActiveElement({id: this.props.id, fieldNum: this.props.fieldNum, propertyName: this.props.propertyName, type: this.props.type, top: boundingRect.top, left: boundingRect.left, right: boundingRect.right, bottom: boundingRect.bottom, options: []});
   }
 
+  componentDidUpdate(prevProps) {
+    if (this.props.activeElement.fieldNum == this.props.fieldNum && this.props.activeElement.imagePath && prevProps.activeElement.imagePath != this.props.activeElement.imagePath)
+      this.updateField(this.props.fieldNum, this.props.propertyName, this.props.activeElement.imagePath);
+  }
+
   updateField = (index, propertyName, propertyValue) => {
+    console.log(propertyName);
+    console.log(propertyValue);
     this.setState({ propertyValue });
     this.props.updateField(this.props.id, propertyName, propertyValue);
   }
@@ -111,7 +118,8 @@ class RowItemClass extends React.Component {
       <RowItem ref={(ref)=> this._ref = ref} ml={ML_ROW_ITEM} {...props} onClick={this.rowItemClick}>
         { type == 'text' ? <Input pl={2} fontSize={1} value={this.state.propertyValue} onChange={(ev) => this.updateField(fieldNum, propertyName, ev.target.value)}></Input>
           : type == 'menu' ? <Input pl={2} value={this.state.propertyValue} onChange={() => {}}></Input>
-          : type == 'image' ? <Box fontSize={1} onClick={(ev) => this.updateField(fieldNum, propertyName, imagePath)}>{imagePath}</Box>
+          : type == 'image' ? <Box fontSize={1}>{imagePath}</Box>
+          // : type == 'image' ? <Input fontSize={1} value={imagePath} onChange={(ev) => this.updateField(fieldNum, propertyName, imagePath)}></Input>
           : <Box fontSize={1}>{props.children}</Box>
         }
 

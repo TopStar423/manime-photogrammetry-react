@@ -8,7 +8,7 @@ import uuid from 'uuid';
 
 // import { connect } from "react-redux";
 
-const ORDERS_COLUMN_DESCRIPTION = ['Order ID', 'Group Order ID', 'Nail Product ID', 'Nail Length', 'Nail Shape', 'Order Status', 'Date Created'];
+const ORDERS_COLUMN_DESCRIPTION = ['_Email', 'Order ID', 'Group Order ID', 'Nail Product ID', 'Nail Length', 'Nail Shape', 'Order Status', 'Date Created'];
 const GROUP_ORDERS_COLUMN_DESCRIPTION = ['Group Order ID', 'User ID', 'Group Order Status', 'Insurance', 'Shipping Address', 'Subtotal', 'Taxes'];
 const USERS_COLUMN_DESCRIPTION = ['User ID', 'First Name', 'Last Name', 'Email', 'Total Orders', 'Fitted', 'Date Created', 'Date Last Login', 'Description', 'Subscription'];
 const ORDER_REVIEWS_COLUMN_DESCRIPTION = ['Review ID', 'Order ID', 'Finger Name', 'Review Description', 'Category 1', 'Category 2', 'Category 3'];
@@ -19,7 +19,7 @@ const NAIL_PRODUCTS_COLUMN_DESCRIPTION = ['Nail Product ID', 'Date Created', 'De
 const NAIL_CATEGORIES_COLUMN_DESCRIPTION = ['Category ID', 'Category Name'];
 const NAIL_PRODUCT_CATEGORIES_COLUMN_DESCRIPTION = ['Nail Product ID', 'Category ID'];
 
-const ORDERS_COLUMN_PROPERTIES      = ['orderid', 'grouporderid', 'nailproductid', 'naillength', 'nailshape', 'orderstatus', 'datecreated'];
+const ORDERS_COLUMN_PROPERTIES = ['email', 'orderid', 'grouporderid', 'nailproductid', 'naillength', 'nailshape', 'orderstatus', 'datecreated'];
 const GROUP_ORDERS_COLUMN_PROPERTIES = ['grouporderid', 'userid', 'grouporderstatus', 'insurance', 'shippingaddress', 'subtotal', 'taxes'];
 const USERS_COLUMN_PROPERTIES = ['userid', 'firstname', 'lastname', 'email', 'totalorders', 'fitted', 'datecreated', 'datelastlogin', 'description', 'subscription'];
 const ORDER_REVIEWS_COLUMN_PROPERTIES = ['reviewid', 'orderid', 'fingername', 'reviewdescription', 'category1', 'category2', 'category3'];
@@ -30,7 +30,7 @@ const NAIL_PRODUCTS_COLUMN_PROPERTIES = ['nailproductid', 'datecreated', 'descri
 const NAIL_CATEGORIES_COLUMN_PROPERTIES = ['categoryid', 'name'];
 const NAIL_PRODUCT_CATEGORIES_COLUMN_PROPERTIES = ['nailproductid', 'categoryid'];
 
-const ORDERS_COLUMN_PROPERTIES_TYPE = ['modal', 'modal', 'modal', 'text', 'text', 'menu', 'time'];
+const ORDERS_COLUMN_PROPERTIES_TYPE = ['display', 'modal', 'modal', 'modal', 'text', 'text', 'menu', 'time'];
 const GROUP_ORDERS_COLUMN_PROPERTIES_TYPE = ['modal', 'modal', 'menu', 'text', 'text', 'text', 'text'];
 const USERS_COLUMN_PROPERTIES_TYPE = ['modal', 'text', 'text', 'display', 'text', 'menu', 'time', 'time', 'text', 'text'];
 const ORDER_REVIEWS_COLUMN_PROPERTIES_TYPE = ['modal', 'modal', 'text', 'text', 'text', 'text', 'text'];
@@ -125,7 +125,10 @@ class BoardJsx extends React.Component {
     let userInit = {
       headers: { 'Content-Type': 'application/json' }
     }
-    API.get(endpoint, `/${tableName}/read`, userInit).then(ordersResponse => {
+    let pathName = `/${tableName}/read`;
+    if (tableName == 'orders')
+      pathName = `/${tableName}/cms/read`;
+    API.get(endpoint, pathName, userInit).then(ordersResponse => {
       if(ordersResponse && ordersResponse.rows && this._mounted) {
         this.setState({ orders: ordersResponse.rows });
         console.log(ordersResponse.rows)
@@ -191,10 +194,37 @@ class BoardJsx extends React.Component {
     this.setState({ searchValue });
   }
 
+  addColumnFromDiffTable = (tableName, id, propName) => {
+    if (typeof tableName != 'string' || typeof id != 'string' || typeof propName != 'string')
+      return {};
+
+    let userInit = {
+      headers: { 'Content-Type': 'application/json' }
+    }
+    API.get(this.getEndpoint(tableName), `/${tableName}/read/${id}`, userInit).then(response => {
+      console.log(response);
+      if(response && response.rows && this._mounted) {
+      }
+    }).catch((err) => {
+      // console.log(err.stack);
+    });
+  }
+
   render() {
     let table = [];
     let tableProps = [];
     let tablePropsType = [];
+
+    // const data = this.state.orders;
+    const data = this.state.orders.filter((row) => Object.values(row).some((rowItem) => {
+      if (!rowItem) return false;
+      if (typeof rowItem == 'number')
+        return rowItem.toString().toLowerCase().indexOf(this.state.searchValue) >= 0;
+      if (typeof rowItem == 'string')
+        return rowItem.toLowerCase().indexOf(this.state.searchValue) >= 0;
+      return false;
+    }));
+    // console.log(data)
 
     if (this.props.id == 'orders') {
       table = ORDERS_COLUMN_DESCRIPTION;
@@ -237,17 +267,6 @@ class BoardJsx extends React.Component {
       tableProps = NAIL_PRODUCT_CATEGORIES_COLUMN_PROPERTIES;
       tablePropsType = NAIL_PRODUCT_CATEGORIES_COLUMN_PROPERTIES_TYPE;
     }
-
-    // const data = this.state.orders;
-    const data = this.state.orders.filter((row) => Object.values(row).some((rowItem) => {
-      if (!rowItem) return false;
-      if (typeof rowItem == 'number')
-        return rowItem.toString().toLowerCase().indexOf(this.state.searchValue) >= 0;
-      if (typeof rowItem == 'string')
-        return rowItem.toLowerCase().indexOf(this.state.searchValue) >= 0;
-      return false;
-    }));
-    // console.log(data)
 
     const numAttr = table.length;
 

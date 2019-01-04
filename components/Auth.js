@@ -94,7 +94,7 @@ class AuthComponent extends React.Component {
     ev.preventDefault();
     Auth.signIn(this.state.email, this.state.password)
     .then(user => {
-      if (this.state.email == 'photogrammetry' && this.state.password == 'email')
+      if (this.state.email == 'photogrammetry' && this.state.password == 'cmscms')
         this.props.setIsAuth(true);
     })
     .catch(err => console.log(err.stack));

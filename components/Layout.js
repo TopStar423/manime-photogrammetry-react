@@ -14,15 +14,14 @@ const Container = styled.div`
   flex-direction: row;
   margin: 0;
   padding: 0;
-  height: ${props => props.height}px;
-  width: ${props => props.width}px;
+  height: 100%;
+  width: 100%;
 `;
 
 const Header = styled(Box)`
   box-shadow: 0 1px 3px 0 rgba(0,0,0,0.15);
   z-index: 100;
 `;
-
 
 // Refactor below. Portal?
 const Modal = styled(Box)`
@@ -52,28 +51,28 @@ class Layout extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      width: 0,
-      height: 0,
+      // width: 0,
+      // height: 0,
       // Refactor below into layer component
       uploadImageName: '',
       errorMessage: '',
       tempFile: null
     };
-    this.updateWindowDimensions = this.updateWindowDimensions.bind(this);
+    // this.updateWindowDimensions = this.updateWindowDimensions.bind(this);
   }
 
-  componentDidMount() {
-    this.updateWindowDimensions();
-    window.addEventListener('resize', this.updateWindowDimensions);
-  }
-
-  componentWillUnmount() {
-    window.removeEventListener('resize', this.updateWindowDimensions);
-  }
-
-  updateWindowDimensions() {
-    this.setState({ width: window.innerWidth, height: window.innerHeight });
-  }
+  // componentDidMount() {
+  //   this.updateWindowDimensions();
+  //   window.addEventListener('resize', this.updateWindowDimensions);
+  // }
+  //
+  // componentWillUnmount() {
+  //   window.removeEventListener('resize', this.updateWindowDimensions);
+  // }
+  //
+  // updateWindowDimensions() {
+  //   this.setState({ width: window.innerWidth, height: window.innerHeight });
+  // }
 
   modalOnClick = (e) => {
     if (this.modalRef.contains(e.target))
@@ -119,7 +118,7 @@ class Layout extends React.Component {
 
     return (
       <ThemeProvider theme={theme}>
-        <Container height={this.state.height} width={this.state.width}>
+        <Container>
           { !before &&
             <Sidebar />
           }

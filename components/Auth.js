@@ -105,7 +105,7 @@ class AuthComponent extends React.Component {
     const { height, width } = this.state;
     return (
       <ThemeProvider theme={theme}>
-        <Container display='flex' flexDirection='column' justifyContent='center' alignItems='center' width={width} height={height}>
+        <Container display='flex' flexDirection='column' justifyContent='center' alignItems='center' width='100%' height='100%'>
           <Box width={'500px'} display='flex' flexDirection='column' alignItems='center' mb={3} pb={2}>
             <img src='https://s3-us-west-2.amazonaws.com/mani-me-app/manimelogo.png' style={{width: '35%', height: 'auto'}}/>
           </Box>

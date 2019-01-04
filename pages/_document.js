@@ -19,6 +19,12 @@ export default class MyDocument extends Document {
       <html style={{ height: '100%', width: '100%', overflow: 'hidden' }}>
         <Head>
           {this.props.styleTags}
+          <style>
+            {`#__next {
+              height: 100%;
+              width: 100%;
+            }`}
+          </style>
         </Head>
         <body style={{ margin: 0, height: '100%', width: '100%' }}>
           <Main />

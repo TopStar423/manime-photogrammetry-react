@@ -92,7 +92,7 @@ class RowItemClass extends React.Component {
     const boundingRect = this._ref.getBoundingClientRect();
     // if (this.props.selectField)
     //   this.props.selectField(this.props.fieldNum, this.props.type, this._ref.getBoundingClientRect());
-    this.props.setActiveElement({id: this.props.id, fieldNum: this.props.fieldNum, propertyName: this.props.propertyName, type: this.props.type, top: boundingRect.top, left: boundingRect.left, right: boundingRect.right, bottom: boundingRect.bottom, options: []});
+    this.props.setActiveElement({id: this.props.id, fieldNum: this.props.fieldNum, propertyName: this.props.propertyName, propertyValue: this.props.propertyValue, type: this.props.type, top: boundingRect.top, left: boundingRect.left, right: boundingRect.right, bottom: boundingRect.bottom, options: []});
   }
 
   componentDidUpdate(prevProps) {

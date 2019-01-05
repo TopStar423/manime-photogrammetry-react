@@ -97,13 +97,17 @@ class Layout extends React.Component {
       this.setState({ errorMessage: 'Must enter an image name' });
       return;
     }
+    if (!this.state.uploadImageName || this.state.uploadImageName == undefined) {
+      this.setState({ errorMessage: 'Image Name State Undefined' });
+      return;
+    }
     this.setState({ errorMessage: '' });
-    Storage.put(this.state.uploadImageName, this.state.tempFile, {
+    Storage.put(`${this.state.uploadImageName}.png`, this.state.tempFile, {
       contentType: 'image/png'
     })
     .then(result => {
       this.props.setActiveElementDisplay();
-      this.props.setActiveElementKeyValue('imagePath', `https://s3-us-west-2.amazonaws.com/mani-me-app/public/${this.state.uploadName}.png`);
+      this.props.setActiveElementKeyValue('imagePath', `https://s3-us-west-2.amazonaws.com/mani-me-app/public/${this.state.uploadImageName}.png`);
     })
     .catch(err => {
       this.setState({ errorMessage: 'Upload failed, check console.' });
@@ -158,8 +162,13 @@ class Layout extends React.Component {
             <Box position='absolute' width='100%' height='100%' bg='rgba(0,0,0,0.4)' display='flex' justifyContent='center' alignItems='center' onClick={this.modalOnClick}>
               <Modal ref={(modalRef) => this.modalRef = modalRef} width={'500px'} bg='#fff' px={2} pt={3} pb={2} boxShadow='0 1px 3px 0 rgba(0,0,0,0.15)' borderRadius='3px'>
                 <Box display='flex' p={2} fontFamily='sansSerif' fontSize={4}>
-                  {this.props.activeElement.propertyName}
+                  {this.props.activeElement.propertyName}:
                 </Box>
+
+                <Box display='flex' px={2} fontFamily='sansSerif' fontSize={2}>
+                  {this.props.activeElement.propertyValue}
+                </Box>
+
                 <Box p={2} display='flex' flexDirection='column'>
                   <Box display='flex' flexDirection='column' justifyContent='center' mt={3} mx={5}>
                     <StandardLabel>File Name: (Careful, will overwrite if file name already exists)</StandardLabel>

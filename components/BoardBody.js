@@ -15,7 +15,7 @@ const ORDER_REVIEWS_COLUMN_DESCRIPTION = ['Review ID', 'Order ID', 'Finger Name'
 const SHIPPING_ADDRESSES_COLUMN_DESCRIPTION = ['Shipping Address ID', 'User ID', 'Name', 'Address Line 1', 'Address Line 2', 'City', 'Zip Code', 'State', 'Country', 'Latitude', 'Longitude'];
 const PAYMENTS_COLUMN_DESCRIPTION = ['Payment ID', 'User ID', 'Name', 'Last 4', 'Refunded', 'Paid', 'Address Line 1', 'Address Line 2', 'City', 'Zip Code', 'State', 'Country'];
 const DESIGNERS_COLUMN_DESCRIPTION = ['Designer ID', 'First Name', 'Last Name', 'Total Reviews', 'Total Designs', 'Profile Picture', 'Description', 'Location', 'Url 1', 'Url 2', 'Url 3', 'Url 4', 'Url 5', 'Url 6'];
-const NAIL_PRODUCTS_COLUMN_DESCRIPTION = ['Nail Product ID', 'Date Created', 'Description', 'Designer ID', 'Name', 'Price', 'Total Hates', 'Total Likes', 'Total Manime', 'Total Purchases', 'Visible', 'Pic Url 1', 'Pic Url 2', 'Pic Url 3', 'Pic Url 4', 'Pic Url 5'];
+const NAIL_PRODUCTS_COLUMN_DESCRIPTION = ['Nail Product ID', 'Index','Date Created', 'Description', 'Designer ID', 'Name', 'Price', 'Total Hates', 'Total Likes', 'Total Manime', 'Total Purchases', 'Visible', 'Pic Url 1', 'Pic Url 2', 'Pic Url 3', 'Pic Url 4', 'Pic Url 5', 'Overlay Url'];
 const NAIL_CATEGORIES_COLUMN_DESCRIPTION = ['Category ID', 'Category Name'];
 const NAIL_PRODUCT_CATEGORIES_COLUMN_DESCRIPTION = ['Nail Product ID', 'Category ID'];
 
@@ -26,7 +26,7 @@ const ORDER_REVIEWS_COLUMN_PROPERTIES = ['reviewid', 'orderid', 'fingername', 'r
 const SHIPPING_ADDRESSES_COLUMN_PROPERTIES = ['shippingaddressid'];
 const PAYMENTS_COLUMN_PROPERTIES = ['paymentid'];
 const DESIGNERS_COLUMN_PROPERTIES = ['designerid'];
-const NAIL_PRODUCTS_COLUMN_PROPERTIES = ['nailproductid', 'datecreated', 'description', 'designerid', 'name', 'price', 'totalhates', 'totalmanime', 'totalmanime', 'totalpurchases', 'visible', 'picuri1', 'picuri2', 'picuri3', 'picuri4', 'picuri5'];
+const NAIL_PRODUCTS_COLUMN_PROPERTIES = ['nailproductid', 'index', 'datecreated', 'description', 'designerid', 'name', 'price', 'totalhates', 'totalmanime', 'totalmanime', 'totalpurchases', 'visible', 'picuri1', 'picuri2', 'picuri3', 'picuri4', 'picuri5', 'overlayuri'];
 const NAIL_CATEGORIES_COLUMN_PROPERTIES = ['categoryid', 'name'];
 const NAIL_PRODUCT_CATEGORIES_COLUMN_PROPERTIES = ['nailproductid', 'categoryid'];
 
@@ -37,7 +37,7 @@ const ORDER_REVIEWS_COLUMN_PROPERTIES_TYPE = ['modal', 'modal', 'text', 'text', 
 const SHIPPING_ADDRESSES_COLUMN_PROPERTIES_TYPE = ['modal'];
 const PAYMENTS_COLUMN_PROPERTIES_TYPE = ['modal'];
 const DESIGNERS_COLUMN_PROPERTIES_TYPE = ['modal'];
-const NAIL_PRODUCTS_COLUMN_PROPERTIES_TYPE = ['modal', 'time', 'text', 'modal', 'text', 'text', 'text', 'text', 'text', 'text', 'text', 'image', 'image', 'image', 'image', 'image'];
+const NAIL_PRODUCTS_COLUMN_PROPERTIES_TYPE = ['modal', 'text', 'time', 'text', 'modal', 'text', 'text', 'text', 'text', 'text', 'text', 'text', 'image', 'image', 'image', 'image', 'image', 'image'];
 const NAIL_CATEGORIES_COLUMN_PROPERTIES_TYPE = ['modal', 'text'];
 const NAIL_PRODUCT_CATEGORIES_COLUMN_PROPERTIES_TYPE = ['modal', 'modal'];
 

@@ -156,7 +156,8 @@ class Layout extends React.Component {
                     <Box mb={3}>
                       <Box>Enter Texture Name: </Box>
                       <Input pl={2} fontSize={4} value={this.state.texture} onChange={(ev) => this.setState({ texture: ev.target.value })}></Input>
-                      <a href={`http://52.27.72.157/_v4G/workbench/mmw.php?measure=${this.props.activeElement.id}&user=${this.props.activeElement.item.email}&nailLength=3&shape=square&texture=${this.state.texture}`}>
+                      <a target="_blank"
+                         href={`http://52.27.72.157/_v4G/workbench/mmw.php?measure=${this.props.activeElement.id}&user=${this.props.activeElement.item.email}&nailLength=3&shape=square&texture=${this.state.texture}`}>
                         Open Photogrammetry Workbench
                       </a>
                     </Box>

@@ -98,6 +98,8 @@ class BoardJsx extends React.Component {
   componentDidUpdate(prevProps) {
     if (this.props.id !== prevProps.id) {
       const endpoint = this.getEndpoint(this.props.id);
+      // dispatch table name?
+
       this.getData(endpoint, this.props.id);
       this.selectField(-1);
     }
@@ -291,7 +293,10 @@ class BoardJsx extends React.Component {
                     tableProps.map((rowItem, j) => {
                       const fieldNum = (i * numAttr) + j;
                       return (
-                        <RowItem id={item[tableProps[0]]} i={i} fieldNum={fieldNum} propertyName={tableProps[j]} propertyValue={item[tableProps[j]]} type={tablePropsType[j]} updateField={this.updateField} selectField={this.selectField} selectedField={this.state.selectedField}>
+
+                        // give rowItem all of item and parse from there? ye.
+
+                        <RowItem item={item} id={item[tableProps[0]]} i={i} fieldNum={fieldNum} propertyName={tableProps[j]} propertyValue={item[tableProps[j]]} type={tablePropsType[j]} updateField={this.updateField} selectField={this.selectField} selectedField={this.state.selectedField}>
                           { tableProps[j] ==  'fitted' && item[tableProps[j]] == false ?
                               'false'
                             :

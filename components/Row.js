@@ -18,7 +18,7 @@ export const ROW_ITEM_WIDTH = 200;
 //   return props.children.length * (ROW_ITEM_WIDTH + margin);
 // }}px;
 
-const RowItem = styled(Box)`
+export const RowItem = styled(Box)`
   white-space: nowrap;
   overflow: hidden;
   font-weight: ${(props) => props.description ? 400 : 200};
@@ -33,7 +33,7 @@ const RowItem = styled(Box)`
 
 
 // New Row requires horizontal margins
-const Row = styled(Box)`
+export const Row = styled(Box)`
   display: flex;
   flex-direction: row;
   flex: 0 0 40px;
@@ -50,7 +50,7 @@ const Row = styled(Box)`
   }
 `;
 
-const Input = styled.input`
+export const Input = styled.input`
   ${space}
   ${fontSize}
   font-weight: ${(props) => props.description ? 400 : 200};
@@ -92,7 +92,7 @@ class RowItemClass extends React.Component {
     const boundingRect = this._ref.getBoundingClientRect();
     // if (this.props.selectField)
     //   this.props.selectField(this.props.fieldNum, this.props.type, this._ref.getBoundingClientRect());
-    this.props.setActiveElement({id: this.props.id, fieldNum: this.props.fieldNum, propertyName: this.props.propertyName, propertyValue: this.props.propertyValue, type: this.props.type, top: boundingRect.top, left: boundingRect.left, right: boundingRect.right, bottom: boundingRect.bottom, options: []});
+    this.props.setActiveElement({id: this.props.id, item: this.props.item, fieldNum: this.props.fieldNum, propertyName: this.props.propertyName, propertyValue: this.props.propertyValue, type: this.props.type, top: boundingRect.top, left: boundingRect.left, right: boundingRect.right, bottom: boundingRect.bottom, options: []});
   }
 
   componentDidUpdate(prevProps) {

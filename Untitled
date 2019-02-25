@@ -18,6 +18,13 @@
     ]
 }
 
+
+
+"arn:aws:execute-api:us-west-1:052931065798:2ehwnnicy0/*/POST/*/create",
+"arn:aws:execute-api:us-west-1:052931065798:2ehwnnicy0/*/POST/*/update",
+"arn:aws:execute-api:us-west-1:052931065798:2ehwnnicy0/*/GET/*/read"
+
+
 ${cognito-identity.amazonaws.com:sub}
 
 

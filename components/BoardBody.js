@@ -129,7 +129,7 @@ class BoardJsx extends React.Component {
     }
 
     let pathName = `/${tableName}/read`;
-    if (tableName == 'orders')
+    if (tableName == 'orders' || tableName == 'grouporders' || tableName == 'users' )
       pathName = `/${tableName}/cms/read`;
     API.get(endpoint, pathName, userInit).then(ordersResponse => {
       if(ordersResponse && ordersResponse.rows && this._mounted) {

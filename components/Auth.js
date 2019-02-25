@@ -92,10 +92,34 @@ class AuthComponent extends React.Component {
 
   signIn = (ev) => {
     ev.preventDefault();
+
+    // Auth.signOut().then(() => {
+    //   Auth.signUp({
+    //     username: this.state.email,
+    //     password: this.state.password,
+    //     attributes: {
+    //     },
+    //     validationData: []
+    //   })
+    //   .then(data => {
+    //
+    //     Auth.signIn(this.state.email, this.state.password)
+    //     .then(user => {
+    //       this.props.setIsAuth(true);
+    //       Auth.currentCredentials().then((res) => console.log(res));
+    //       Auth.currentSession().then((res) => console.log(res));
+    //     })
+    //     .catch(err => console.log(err.stack));
+    //   })
+    //   .catch(err => console.log(err));
+    // }).catch(e => {
+    // });
+
     Auth.signIn(this.state.email, this.state.password)
     .then(user => {
-      // if (this.state.email == 'photogrammetry' && this.state.password == 'cmscms')
       this.props.setIsAuth(true);
+      // Auth.currentCredentials().then((res) => console.log(res));
+      // Auth.currentSession().then((res) => console.log(res));
     })
     .catch(err => console.log(err.stack));
   }

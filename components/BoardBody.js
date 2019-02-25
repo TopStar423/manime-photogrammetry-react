@@ -127,6 +127,7 @@ class BoardJsx extends React.Component {
     let userInit = {
       headers: { 'Content-Type': 'application/json' }
     }
+
     let pathName = `/${tableName}/read`;
     if (tableName == 'orders')
       pathName = `/${tableName}/cms/read`;

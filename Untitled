@@ -1,9 +1,24 @@
 
+"arn:aws:execute-api:region:account-id:api-id/stage/METHOD_HTTP_VERB/Resource-path"
 
+{
+    "Version": "2012-10-17",
+    "Statement": [
+        {
+            "Effect": "Allow",
+            "Action": [
+                "execute-api:Invoke"
+            ],
+            "Resource": [
+                "arn:aws:execute-api:us-west-1:052931065798:seet0wnvr7/*/*/*",
+                "arn:aws:execute-api:us-west-1:052931065798:2ehwnnicy0/*/*/*",
+                "arn:aws:execute-api:us-west-1:052931065798:bems9o4jfe/*/GET/*"
+            ]
+        }
+    ]
+}
 
-
-
-
+${cognito-identity.amazonaws.com:sub}
 
 
 

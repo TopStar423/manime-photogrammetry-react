@@ -7,6 +7,7 @@ import thunkMiddleware from 'redux-thunk';
 import { createLogger } from 'redux-logger';
 import rootReducer from '../reducers';
 import Auth from '../components/Auth';
+import Aws from '../components/Aws';
 
 function createMiddlewares ({ isServer }) {
   let middlewares = [ thunkMiddleware ];

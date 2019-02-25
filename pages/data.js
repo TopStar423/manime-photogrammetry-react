@@ -1,7 +1,7 @@
 import Link from 'next/link';
 import Layout from '../components/Layout';
 import fetch from 'isomorphic-unfetch';
-import Amplify from '../components/Aws';
+// import Amplify from '../components/Aws';
 import BoardBody from '../components/BoardBody';
 
 const PostLink = (props) => (

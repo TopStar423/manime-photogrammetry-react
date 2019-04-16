@@ -18,12 +18,27 @@
     ]
 }
 
-
+{
+    "Version": "2012-10-17",
+    "Statement": [
+        {
+            "Effect": "Allow",
+            "Action": [
+                "execute-api:Invoke"
+            ],
+            "Resource": [
+                "arn:aws:execute-api:us-west-1:052931065798:2ehwnnicy0/*/POST/*/create",
+                "arn:aws:execute-api:us-west-1:052931065798:2ehwnnicy0/*/POST/users/update/column",
+                "arn:aws:execute-api:us-west-1:052931065798:2ehwnnicy0/*/GET/*/read/${cognito-identity.amazonaws.com:sub}",
+                "arn:aws:execute-api:us-west-1:052931065798:2ehwnnicy0/*/GET/orders/read/"
+            ]
+        }
+    ]
+}
 
 "arn:aws:execute-api:us-west-1:052931065798:2ehwnnicy0/*/POST/*/create",
 "arn:aws:execute-api:us-west-1:052931065798:2ehwnnicy0/*/POST/*/update",
 "arn:aws:execute-api:us-west-1:052931065798:2ehwnnicy0/*/GET/*/read"
-
 
 ${cognito-identity.amazonaws.com:sub}
 

@@ -118,7 +118,9 @@ class AuthComponent extends React.Component {
     Auth.signIn(this.state.email, this.state.password)
     .then(user => {
       this.props.setIsAuth(true);
-      // Auth.currentCredentials().then((res) => console.log(res));
+      Auth.currentCredentials().then(credentials => {
+        this.props.dispatchSetIdentityId(credentials.identityId);
+      });
       // Auth.currentSession().then((res) => console.log(res));
     })
     .catch(err => console.log(err.stack));
@@ -160,7 +162,8 @@ const mapStateToProps = state => ({
 })
 
 const mapDispatchToProps = dispatch => ({
-  setIsAuth: isAuth => dispatch(setIsAuth(isAuth))
+  setIsAuth: isAuth => dispatch(setIsAuth(isAuth)),
+  dispatchSetIdentityId: identityId => dispatch({ type: 'SET_IDENTITY_ID', identityId })
 })
 
 export default connect(

@@ -6,6 +6,8 @@ import { RowJsx as Row, RowItemComponent as RowItem, MX_ROW, ML_ROW_ITEM, ROW_IT
 import { API, Storage } from 'aws-amplify';
 import uuid from 'uuid';
 
+import { connect } from 'react-redux';
+import userData from '../reducers';
 // import { connect } from "react-redux";
 
 const ORDERS_COLUMN_DESCRIPTION = ['_Email', 'Order ID', 'Group Order ID', 'Nail Product ID', 'Nail Length', 'Nail Shape', 'Order Status', 'Date Created'];
@@ -118,7 +120,7 @@ class BoardJsx extends React.Component {
     return endpoint;
   }
 
-  getData = (endpoint, tableName) => {
+  getData = async (endpoint, tableName) => {
     this.setState({
       endpoint,
       tableName,
@@ -128,17 +130,37 @@ class BoardJsx extends React.Component {
       headers: { 'Content-Type': 'application/json' }
     }
 
-    let pathName = `/${tableName}/read`;
-    if (tableName == 'orders' || tableName == 'grouporders' || tableName == 'users' )
-      pathName = `/${tableName}/cms/read`;
-    API.get(endpoint, pathName, userInit).then(ordersResponse => {
-      if(ordersResponse && ordersResponse.rows && this._mounted) {
-        this.setState({ orders: ordersResponse.rows });
-        console.log(ordersResponse.rows)
-      }
-    }).catch((err) => {
-      // console.log(err.stack);
-    });
+    console.log(this.props.userData);
+    const user = 'photogrammetry';
+
+    if (user == 'photogrammetry') {
+      let pathName = `/${tableName}/read`;
+      if (tableName == 'orders' || tableName == 'grouporders' || tableName == 'users')
+        pathName = `/${tableName}/cms/read`;
+
+      API.get(endpoint, pathName, userInit).then(ordersResponse => {
+        if(ordersResponse && ordersResponse.rows && this._mounted) {
+          this.setState({ orders: ordersResponse.rows });
+          console.log(ordersResponse.rows)
+        }
+      }).catch((err) => {
+        // console.log(err.stack);
+      });
+    } else {
+
+      const cognitoId = [];
+      cognitoId.map(id => {
+        pathName = `/${tableName}/read/${id}`;
+
+        API.get(endpoint, pathName, userInit).then(ordersResponse => {
+          if(ordersResponse && ordersResponse.rows && this._mounted) {
+            this.setState({ orders: [...this.state.orders, ...ordersResponse.rows] });
+          }
+        }).catch((err) => {
+          console.log(err);
+        });
+      });
+    }
   }
 
   createRow = () => {
@@ -227,7 +249,7 @@ class BoardJsx extends React.Component {
         return rowItem.toLowerCase().indexOf(this.state.searchValue) >= 0;
       return false;
     }));
-    // console.log(data)
+    // console.log(data);
 
     if (this.props.id == 'orders') {
       table = ORDERS_COLUMN_DESCRIPTION;
@@ -317,4 +339,11 @@ class BoardJsx extends React.Component {
   }
 };
 
-export default BoardJsx;
+const mapStateToProps = state => ({
+  userData: userData(state.userData, { type: 'DEFAULT' })
+})
+
+export default connect(
+  mapStateToProps,
+  null,
+)(BoardJsx);

@@ -17,3 +17,7 @@ export const setIsAuth = isAuth => ({
   type: 'SET_IS_AUTH',
   isAuth
 });
+
+export const DEFAULT = () => ({
+  type: 'DEFAULT'
+});

@@ -73,6 +73,12 @@ Amplify.configure({
                 endpoint: "https://bems9o4jfe.execute-api.us-west-1.amazonaws.com/default",
                 service: 'execute-api',
                 region: "us-west-1"
+            },
+            {
+                name: 'LambdaServer',
+                endpoint: 'https://frclo239p9.execute-api.us-west-1.amazonaws.com/production',
+                service: 'execute-api',
+                region: 'us-west-1'
             }
         ]
     }

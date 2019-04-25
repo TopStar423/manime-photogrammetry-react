@@ -7,7 +7,8 @@ import { API, Storage } from 'aws-amplify';
 import uuid from 'uuid';
 
 import { connect } from 'react-redux';
-import userData from '../reducers';
+import userData from '../reducers/userData';
+import { DEFAULT } from '../actions';
 // import { connect } from "react-redux";
 
 const ORDERS_COLUMN_DESCRIPTION = ['_Email', 'Order ID', 'Group Order ID', 'Nail Product ID', 'Nail Length', 'Nail Shape', 'Order Status', 'Date Created'];
@@ -25,7 +26,7 @@ const ORDERS_COLUMN_PROPERTIES = ['email', 'orderid', 'grouporderid', 'nailprodu
 const GROUP_ORDERS_COLUMN_PROPERTIES = ['grouporderid', 'userid', 'grouporderstatus', 'insurance', 'shippingaddress', 'subtotal', 'taxes'];
 const USERS_COLUMN_PROPERTIES = ['userid', 'firstname', 'lastname', 'email', 'totalorders', 'fitted', 'datecreated', 'datelastlogin', 'description', 'subscription', 'designpref', 'designpref2', 'designpref3'];
 const ORDER_REVIEWS_COLUMN_PROPERTIES = ['reviewid', 'orderid', 'fingername', 'reviewdescription', 'category1', 'category2', 'category3'];
-const SHIPPING_ADDRESSES_COLUMN_PROPERTIES = ['shippingaddressid'];
+const SHIPPING_ADDRESSES_COLUMN_PROPERTIES = ['shippingaddressid', 'userid', 'name', 'addressline1', 'addressline2', 'city', 'addresszip', 'addresstate', 'addresscountry', 'addresslatitude', 'addresslongitude'];
 const PAYMENTS_COLUMN_PROPERTIES = ['paymentid'];
 const DESIGNERS_COLUMN_PROPERTIES = ['designerid'];
 const NAIL_PRODUCTS_COLUMN_PROPERTIES = ['nailproductid', 'index', 'datecreated', 'description', 'designerid', 'name', 'price', 'totalhates', 'totalmanime', 'totalmanime', 'totalpurchases', 'visible', 'picuri1', 'picuri2', 'picuri3', 'picuri4', 'picuri5', 'overlayuri', 'version'];
@@ -80,7 +81,7 @@ class BoardJsx extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      orders: [],
+      data: [],
       numColumns: 0,
       selectedField: -1,
       selectedFieldType: 'display',
@@ -98,10 +99,16 @@ class BoardJsx extends React.Component {
   }
 
   componentDidUpdate(prevProps) {
+    const endpoint = this.getEndpoint(this.props.id);
     if (this.props.id !== prevProps.id) {
-      const endpoint = this.getEndpoint(this.props.id);
-      // dispatch table name?
+      this.getData(endpoint, this.props.id);
+      this.selectField(-1);
+    }
 
+    // Defensive programming, remove later
+    const prevIdentityId = prevProps.userData ? prevProps.userData.identityId : null;
+    const identityId = this.props.userData ? this.props.userData.identityId : null;
+    if (prevIdentityId != identityId) {
       this.getData(endpoint, this.props.id);
       this.selectField(-1);
     }
@@ -124,42 +131,53 @@ class BoardJsx extends React.Component {
     this.setState({
       endpoint,
       tableName,
-      orders: []
+      data: []
     });
     let userInit = {
       headers: { 'Content-Type': 'application/json' }
     }
 
-    console.log(this.props.userData);
-    const user = 'photogrammetry';
-
-    if (user == 'photogrammetry') {
-      let pathName = `/${tableName}/read`;
+    const user = this.props.userData ? this.props.userData.identityId : '';
+    let pathName;
+    // this is the admin account, photogrammetry
+    if (user == 'us-west-2:130355da-2eec-4f35-8092-3eca4d22d8ea') {
+      pathName = `/${tableName}/read`;
       if (tableName == 'orders' || tableName == 'grouporders' || tableName == 'users')
         pathName = `/${tableName}/cms/read`;
 
-      API.get(endpoint, pathName, userInit).then(ordersResponse => {
-        if(ordersResponse && ordersResponse.rows && this._mounted) {
-          this.setState({ orders: ordersResponse.rows });
-          console.log(ordersResponse.rows)
+      API.get(endpoint, pathName, userInit).then(response => {
+        if(response && response.rows && this._mounted) {
+          this.setState({ data: response.rows });
+          console.log(response.rows)
         }
       }).catch((err) => {
         // console.log(err.stack);
       });
     } else {
+      if (tableName != 'users') return;
+      // get the array of ids that this user can see from rds. dynamodb might be good
+      // one user id -> many user ids
 
-      const cognitoId = [];
-      cognitoId.map(id => {
-        pathName = `/${tableName}/read/${id}`;
+      var dynamoDBObject = {};
+      await API.get('LambdaServer', `/access/${user}`).then(response => {
+        dynamoDBObject = response[0];
+      }).catch((err) => {
+        console.log(err);
+      });
 
-        API.get(endpoint, pathName, userInit).then(ordersResponse => {
-          if(ordersResponse && ordersResponse.rows && this._mounted) {
-            this.setState({ orders: [...this.state.orders, ...ordersResponse.rows] });
+      for (const key in dynamoDBObject) {
+        const value = dynamoDBObject[key];
+        if (key == user) continue;
+        pathName = `/${tableName}/read/${value}`;
+
+        API.get(endpoint, pathName, userInit).then(response => {
+          if(response && response.rows && this._mounted) {
+            this.setState({ data: [...this.state.data, ...response.rows] });
           }
         }).catch((err) => {
           console.log(err);
         });
-      });
+      }
     }
   }
 
@@ -240,15 +258,15 @@ class BoardJsx extends React.Component {
     let tableProps = [];
     let tablePropsType = [];
 
-    // const data = this.state.orders;
-    const data = this.state.orders.filter((row) => Object.values(row).some((rowItem) => {
-      if (!rowItem) return false;
-      if (typeof rowItem == 'number')
-        return rowItem.toString().toLowerCase().indexOf(this.state.searchValue) >= 0;
-      if (typeof rowItem == 'string')
-        return rowItem.toLowerCase().indexOf(this.state.searchValue) >= 0;
-      return false;
-    }));
+    const data = this.state.data;
+    // const data = this.state.data.filter((row) => Object.values(row).some((rowItem) => {
+    //   if (!rowItem) return false;
+    //   if (typeof rowItem == 'number')
+    //     return rowItem.toString().toLowerCase().indexOf(this.state.searchValue) >= 0;
+    //   if (typeof rowItem == 'string')
+    //     return rowItem.toLowerCase().indexOf(this.state.searchValue) >= 0;
+    //   return false;
+    // }));
     // console.log(data);
 
     if (this.props.id == 'orders') {

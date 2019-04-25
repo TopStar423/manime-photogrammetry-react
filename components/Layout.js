@@ -4,7 +4,7 @@ import { theme } from '../utils/theme';
 import Box from './Box';
 import Sidebar from './Sidebar';
 import { connect } from 'react-redux';
-import activeElement from '../reducers';
+import activeElement from '../reducers/activeElement';
 import { setDisplay, setKeyValue } from '../actions';
 import { StandardButton, StandardInput, StandardLabel } from './StyledComponents';
 import { API, Storage } from 'aws-amplify';
@@ -206,7 +206,7 @@ class Layout extends React.Component {
 }
 
 const mapStateToProps = state => ({
-  ...activeElement(state, '')
+  activeElement: activeElement(state.activeElement, { type: 'DEFAULT' })
 })
 
 const mapDispatchToProps = dispatch => ({

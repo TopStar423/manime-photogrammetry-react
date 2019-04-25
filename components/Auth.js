@@ -6,7 +6,7 @@ import { space } from 'styled-system';
 import { Auth } from 'aws-amplify';
 import { connect } from 'react-redux';
 import { setIsAuth } from '../actions';
-import userData from '../reducers';
+import userData from '../reducers/userData';
 
 const Label = styled.label`
   ${space}
@@ -158,7 +158,7 @@ class AuthComponent extends React.Component {
 }
 
 const mapStateToProps = state => ({
-  ...userData(state, '')
+  userData: userData(state.userData, { type: 'DEFAULT' })
 })
 
 const mapDispatchToProps = dispatch => ({

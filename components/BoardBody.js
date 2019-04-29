@@ -11,9 +11,12 @@ import userData from '../reducers/userData';
 import { DEFAULT } from '../actions';
 // import { connect } from "react-redux";
 
+
+const OPEN_PHOTOGRAMMETRY = 'OPEN_PHOTOGRAMMETRY';
+
 const ORDERS_COLUMN_DESCRIPTION = ['_Email', 'Order ID', 'Group Order ID', 'Nail Product ID', 'Nail Length', 'Nail Shape', 'Order Status', 'Date Created'];
 const GROUP_ORDERS_COLUMN_DESCRIPTION = ['Group Order ID', 'User ID', 'Group Order Status', 'Insurance', 'Shipping Address', 'Subtotal', 'Taxes'];
-const USERS_COLUMN_DESCRIPTION = ['User ID', 'First Name', 'Last Name', 'Email', 'Total Orders', 'Fitted', 'Date Created', 'Date Last Login', 'Description', 'Subscription', 'Design Pref 1', 'Design Pref 2', 'Design Pref 3'];
+const USERS_COLUMN_DESCRIPTION = ['', 'User ID', 'First Name', 'Last Name', 'Email', 'Total Orders', 'Fitted', 'Date Created', 'Date Last Login', 'Description', 'Subscription', 'Design Pref 1', 'Design Pref 2', 'Design Pref 3'];
 const ORDER_REVIEWS_COLUMN_DESCRIPTION = ['Review ID', 'Order ID', 'Finger Name', 'Review Description', 'Category 1', 'Category 2', 'Category 3'];
 const SHIPPING_ADDRESSES_COLUMN_DESCRIPTION = ['Shipping Address ID', 'User ID', 'Name', 'Address Line 1', 'Address Line 2', 'City', 'Zip Code', 'State', 'Country', 'Latitude', 'Longitude'];
 const PAYMENTS_COLUMN_DESCRIPTION = ['Payment ID', 'User ID', 'Name', 'Last 4', 'Refunded', 'Paid', 'Address Line 1', 'Address Line 2', 'City', 'Zip Code', 'State', 'Country'];
@@ -24,7 +27,7 @@ const NAIL_PRODUCT_CATEGORIES_COLUMN_DESCRIPTION = ['Nail Product ID', 'Category
 
 const ORDERS_COLUMN_PROPERTIES = ['email', 'orderid', 'grouporderid', 'nailproductid', 'naillength', 'nailshape', 'orderstatus', 'datecreated'];
 const GROUP_ORDERS_COLUMN_PROPERTIES = ['grouporderid', 'userid', 'grouporderstatus', 'insurance', 'shippingaddress', 'subtotal', 'taxes'];
-const USERS_COLUMN_PROPERTIES = ['userid', 'firstname', 'lastname', 'email', 'totalorders', 'fitted', 'datecreated', 'datelastlogin', 'description', 'subscription', 'designpref', 'designpref2', 'designpref3'];
+const USERS_COLUMN_PROPERTIES = ['userid', 'userid', 'firstname', 'lastname', 'email', 'totalorders', 'fitted', 'datecreated', 'datelastlogin', 'description', 'subscription', 'designpref', 'designpref2', 'designpref3'];
 const ORDER_REVIEWS_COLUMN_PROPERTIES = ['reviewid', 'orderid', 'fingername', 'reviewdescription', 'category1', 'category2', 'category3'];
 const SHIPPING_ADDRESSES_COLUMN_PROPERTIES = ['shippingaddressid', 'userid', 'name', 'addressline1', 'addressline2', 'city', 'addresszip', 'addresstate', 'addresscountry', 'addresslatitude', 'addresslongitude'];
 const PAYMENTS_COLUMN_PROPERTIES = ['paymentid'];
@@ -33,9 +36,9 @@ const NAIL_PRODUCTS_COLUMN_PROPERTIES = ['nailproductid', 'index', 'datecreated'
 const NAIL_CATEGORIES_COLUMN_PROPERTIES = ['categoryid', 'name'];
 const NAIL_PRODUCT_CATEGORIES_COLUMN_PROPERTIES = ['nailproductid', 'categoryid'];
 
-const ORDERS_COLUMN_PROPERTIES_TYPE = ['display', 'modal', 'modal', 'modal', 'text', 'text', 'menu', 'time'];
+const ORDERS_COLUMN_PROPERTIES_TYPE = ['text', 'modal', 'modal', 'modal', 'text', 'text', 'menu', 'time'];
 const GROUP_ORDERS_COLUMN_PROPERTIES_TYPE = ['modal', 'modal', 'menu', 'text', 'text', 'text', 'text'];
-const USERS_COLUMN_PROPERTIES_TYPE = ['modal', 'text', 'text', 'display', 'text', 'menu', 'time', 'time', 'text', 'text', 'display', 'display', 'display'];
+const USERS_COLUMN_PROPERTIES_TYPE = [OPEN_PHOTOGRAMMETRY, 'modal', 'text', 'text', 'text', 'text', 'menu', 'time', 'time', 'text', 'text', 'display', 'display', 'display'];
 const ORDER_REVIEWS_COLUMN_PROPERTIES_TYPE = ['modal', 'modal', 'text', 'text', 'text', 'text', 'text'];
 const SHIPPING_ADDRESSES_COLUMN_PROPERTIES_TYPE = ['modal'];
 const PAYMENTS_COLUMN_PROPERTIES_TYPE = ['modal'];
@@ -329,15 +332,15 @@ class BoardJsx extends React.Component {
           <BoardBodyContents>
             {
               data.map((item, i) =>
+                // data is the database table, and item is a row in that table
                 <Row table={table}>
                   {
                     tableProps.map((rowItem, j) => {
+                      // tableProps is an array containing each column's variable name, rowItem could be userid or nailproductid
                       const fieldNum = (i * numAttr) + j;
                       return (
-
-                        // give rowItem all of item and parse from there? ye.
-
-                        <RowItem item={item} id={item[tableProps[0]]} i={i} fieldNum={fieldNum} propertyName={tableProps[j]} propertyValue={item[tableProps[j]]} type={tablePropsType[j]} updateField={this.updateField} selectField={this.selectField} selectedField={this.state.selectedField}>
+                        // change
+                        <RowItem item={item} i={uuid.v1()} fieldNum={fieldNum} propertyName={tableProps[j]} propertyValue={item[tableProps[j]]} type={tablePropsType[j]} updateField={this.updateField} selectField={this.selectField} selectedField={this.state.selectedField}>
                           { tableProps[j] ==  'fitted' && item[tableProps[j]] == false ?
                               'false'
                             :

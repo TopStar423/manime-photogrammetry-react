@@ -149,18 +149,20 @@ export const StandardButton = styled(Button)`
   color: #fff;
   border-radius: 3px;
   border: none;
-  min-width: 45px;
-  padding: 0px 15px;
+  min-width: ${props => props.minWidth ? props.minWidth : '45px'};
+  padding: ${props => props.padding ? props.padding : '0px 15px'};;
   height: 25px;
-  background-color: ${(props) => props.disabled ? '#d1d1d1' : '#14aaf5'};
+  background-color: ${(props) => props.disabled ? '#d1d1d1' : props.backgroundColor ? props.backgroundColor : '#14aaf5'};
   &:focus {
     outline: none;
   }
   &:hover {
-    background-color: ${(props) => props.disabled ? '#d1d1d1' : '#1299dc'};
+    background-color: ${(props) => props.disabled ? '#d1d1d1' : props.backgroundColor ? props.backgroundColor : '#1299dc'};
+    opacity: ${(props) => props.backgroundColor ? 0.7 : 1};
   }
   &:active {
-    background-color:${(props) => props.disabled ? '#d1d1d1' : '#1088c4'};
+    background-color:${(props) => props.disabled ? '#d1d1d1' : props.backgroundColor ? props.backgroundColor : '#1088c4'};
+    opacity: ${(props) => props.backgroundColor ? 0.7 : 1};
   }
 `;
 

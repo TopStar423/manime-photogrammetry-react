@@ -144,15 +144,23 @@ class Layout extends React.Component {
               </DropDownMenu>
             </Box>
           }
+
           { this.props.activeElement.type == 'modal' &&
             <Box position='absolute' width='100%' height='100%' bg='rgba(0,0,0,0.4)' display='flex' justifyContent='center' alignItems='center' onClick={this.modalOnClick}>
               <Modal ref={(modalRef) => this.modalRef = modalRef} width={'500px'} bg='#fff' px={2} pt={3} pb={2} boxShadow='0 1px 3px 0 rgba(0,0,0,0.15)' borderRadius='3px'>
+
+
+
                 <Box display='flex' p={2} fontFamily='sansSerif' fontSize={4}>
-                  {this.props.activeElement.propertyName}: {this.props.activeElement.id}
+                  {this.props.activeElement.propertyName}: {this.props.activeElement.propertyValue}
                 </Box>
                 <Box p={2} display='flex' flexDirection='column'>
-
-                  { this.props.activeElement.propertyName == 'userid' &&
+                  {Object.keys(this.props.activeElement.item).map(key => {
+                    return (
+                      <div>{key} : {this.props.activeElement.item[key]}</div>
+                    );
+                  })}
+                  {/* { this.props.activeElement.propertyName == 'userid' &&
                     <Box mb={3}>
                       <Box>Enter Texture Name: </Box>
                       <Input pl={2} fontSize={4} value={this.state.texture} onChange={(ev) => this.setState({ texture: ev.target.value })}></Input>
@@ -161,12 +169,14 @@ class Layout extends React.Component {
                         Open Photogrammetry Workbench
                       </a>
                     </Box>
-                  }
+                  } */}
 
-                  <label>To do: populate object with {this.props.activeElement.propertyName} = {this.props.activeElement.id}</label>
+                  {/* <label>To do: populate object with {this.props.activeElement.propertyName} = {this.props.activeElement.id}</label>
                   <Box display='flex' width='100%' flexDirection='row' justifyContent='flex-end' mt={3}>
                     <StandardButton onClick={this.props.setActiveElementDisplay}>Save</StandardButton>
-                  </Box>
+                  </Box> */}
+
+
                 </Box>
               </Modal>
             </Box>

@@ -1,9 +1,13 @@
 import { space, width, fontSize, color, height, justifyContent, alignItems, display, fontFamily, fontWeight, boxShadow } from 'styled-system';
 import styled from 'styled-components';
-import Box from './Box';
 import { connect } from 'react-redux';
+import { CopyToClipboard } from 'react-copy-to-clipboard';
+import { FileCopy } from '@material-ui/icons';
+
+import Box from './Box';
 import activeElement from '../reducers/activeElement';
 import { setActiveElement } from '../actions';
+import { StandardButton } from './StyledComponents';
 
 
 export const MX_ROW = 3;
@@ -84,7 +88,11 @@ class RowItemClass extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      propertyValue: this.props.children ? this.props.children : ''
+      propertyValue: this.props.children ? this.props.children : '',
+
+
+      value: '',
+      copied: false,
     };
   }
 
@@ -110,18 +118,36 @@ class RowItemClass extends React.Component {
   render() {
     const { before, type, updateField, i, fieldNum, propertyName, selectField, selectedField, ...props } = this.props;
     const { activeElement } = this.props;
-
     // Temp before redux
     const imagePath = this.props.activeElement.fieldNum == this.props.fieldNum && this.props.activeElement.imagePath ? this.props.activeElement.imagePath : props.children;
 
     return (
-      <RowItem ref={(ref)=> this._ref = ref} ml={ML_ROW_ITEM} {...props} onClick={this.rowItemClick}>
-        { type == 'text' ? <Input pl={2} fontSize={1} value={this.state.propertyValue} onChange={(ev) => this.updateField(fieldNum, propertyName, ev.target.value)}></Input>
-          : type == 'menu' ? <Input pl={2} value={this.state.propertyValue} onChange={() => {}}></Input>
-          : type == 'image' ? <Box fontSize={1}>{imagePath}</Box>
-          // : type == 'image' ? <Input fontSize={1} value={imagePath} onChange={(ev) => this.updateField(fieldNum, propertyName, imagePath)}></Input>
-          : <Box fontSize={1}>{props.children}</Box>
+      <RowItem ref={(ref)=> this._ref = ref} ml={ML_ROW_ITEM} {...props} >
+
+        { type == 'OPEN_PHOTOGRAMMETRY' ?
+            <a target="_blank"
+               style={{ fontSize: 10 }}
+               href={`http://52.27.72.157/_v4G/workbench/mmw.php?measure=${this.props.propertyValue}&user=${this.props.item.email}&nailLength=3&shape=square&texture=test`}>
+              Open Photogrammetry Workbench
+            </a>
+          : type == 'display' ? <span /> :
+          <Box flex='0 0 auto'>
+            <CopyToClipboard text={this.props.propertyValue}
+              onCopy={() => this.setState({ copied: true })}>
+              <StandardButton minWidth='0px' padding='0px 5px' backgroundColor='#d1d1d1'><FileCopy nativeColor='#919191' fontSize='small'/></StandardButton>
+            </CopyToClipboard>
+          </Box>
         }
+        <Box onClick={this.rowItemClick}>
+          { type == 'modal' ? <div style={{ fontSize: 10 }}>{this.props.propertyValue}</div>
+            : type == 'text' ? <Input pl={2} fontSize={1} value={this.state.propertyValue} onChange={(ev) => this.updateField(fieldNum, propertyName, ev.target.value)}></Input>
+            : type == 'menu' ? <Input pl={2} value={this.state.propertyValue} onChange={() => {}}></Input>
+            : type == 'image' ? <Box fontSize={1}>{imagePath}</Box>
+            // : type == 'image' ? <Input fontSize={1} value={imagePath} onChange={(ev) => this.updateField(fieldNum, propertyName, imagePath)}></Input>
+            : type == 'time' ? <Box fontSize={1}>{props.children}</Box>
+            : type == 'display' && <Box fontSize={1}>{props.children}</Box>
+          }
+        </Box>
 
       </RowItem>
     );

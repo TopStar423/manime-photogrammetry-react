@@ -5,6 +5,7 @@ import { StandardButton, StandardInput } from './StyledComponents';
 import { RowJsx as Row, RowItemComponent as RowItem, MX_ROW, ML_ROW_ITEM, ROW_ITEM_WIDTH } from './Row';
 import { API, Storage } from 'aws-amplify';
 import uuid from 'uuid';
+import { CSVLink, CSVDownload } from "react-csv";
 
 import { connect } from 'react-redux';
 import userData from '../reducers/userData';
@@ -315,13 +316,16 @@ class BoardJsx extends React.Component {
     }
 
     const numAttr = table.length;
-
+    const date = new Date();
     return (
       <BoardBody width={1}>
         <Box display='flex' flexDirection='row' width='100%' position='absolute' pt={3} pb={2}>
           <StandardButton ml={3} onClick={() => this.getData(this.state.endpoint, this.state.tableName)}>Refresh</StandardButton>
           <StandardButton ml={3} onClick={this.createRow} disabled={this.props.id == 'nailproducts' ? false : true}>New</StandardButton>
           <StandardButton ml={3} disabled>Save</StandardButton>
+          <CSVLink data={data} filename={`${this.props.id}-${date.toString()}.csv`}>
+            <StandardButton ml={3} style={{ textDecoration: 'none' }}>Save CSV</StandardButton>
+          </CSVLink>
           <StandardInput ml={3} value={this.state.searchValue} onChange={(ev) => this.updateSearchBar(ev.target.value.toLowerCase())}></StandardInput>
         </Box>
         <Box height='25px' width='100%' pt={3} pb={2} />

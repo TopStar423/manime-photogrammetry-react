@@ -31,6 +31,7 @@
     "next-redux-wrapper": "^2.1.0",
     "react": "^16.6.3",
     "react-copy-to-clipboard": "^5.0.1",
+    "react-csv": "^1.1.1",
     "react-dom": "^16.6.3",
     "react-redux": "^6.0.0",
     "react-scroll": "^1.7.10",

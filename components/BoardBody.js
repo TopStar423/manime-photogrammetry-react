@@ -41,7 +41,7 @@ const ORDERS_COLUMN_PROPERTIES_TYPE = ['text', 'modal', 'modal', 'modal', 'text'
 const GROUP_ORDERS_COLUMN_PROPERTIES_TYPE = ['modal', 'modal', 'menu', 'text', 'text', 'text', 'text'];
 const USERS_COLUMN_PROPERTIES_TYPE = [OPEN_PHOTOGRAMMETRY, 'modal', 'text', 'text', 'text', 'text', 'menu', 'time', 'time', 'text', 'text', 'display', 'display', 'display'];
 const ORDER_REVIEWS_COLUMN_PROPERTIES_TYPE = ['modal', 'modal', 'text', 'text', 'text', 'text', 'text'];
-const SHIPPING_ADDRESSES_COLUMN_PROPERTIES_TYPE = ['modal'];
+const SHIPPING_ADDRESSES_COLUMN_PROPERTIES_TYPE = ['modal', 'text', 'text', 'text', 'text', 'text', 'text', 'text', 'text', 'text', 'text'];
 const PAYMENTS_COLUMN_PROPERTIES_TYPE = ['modal'];
 const DESIGNERS_COLUMN_PROPERTIES_TYPE = ['modal'];
 const NAIL_PRODUCTS_COLUMN_PROPERTIES_TYPE = ['modal', 'text', 'time', 'text', 'modal', 'text', 'text', 'text', 'text', 'text', 'text', 'text', 'image', 'image', 'image', 'image', 'image', 'image', 'text'];
@@ -257,6 +257,25 @@ class BoardJsx extends React.Component {
     });
   }
 
+  sortData = item => {
+    console.log('here');
+    console.log(item);
+    const newData = [ ...this.state.data ];
+    newData.sort((a, b) => {
+
+      if ( a[item] < b[item]){
+        return -1;
+      }
+      if ( a[item] > b[item] ){
+        return 1;
+      }
+      return 0;
+
+    });
+    console.log(newData);
+    this.setState({ data: newData });
+  }
+
   render() {
     let table = [];
     let tableProps = [];
@@ -319,7 +338,7 @@ class BoardJsx extends React.Component {
     const date = new Date();
     return (
       <BoardBody width={1}>
-        <Box display='flex' flexDirection='row' width='100%' position='absolute' pt={3} pb={2}>
+        <Box display='flex' flexDirection='row' width='100%' pt={3} pb={2}>
           <StandardButton ml={3} onClick={() => this.getData(this.state.endpoint, this.state.tableName)}>Refresh</StandardButton>
           <StandardButton ml={3} onClick={this.createRow} disabled={this.props.id == 'nailproducts' ? false : true}>New</StandardButton>
           <StandardButton ml={3} disabled>Save</StandardButton>
@@ -328,10 +347,9 @@ class BoardJsx extends React.Component {
           </CSVLink>
           <StandardInput ml={3} value={this.state.searchValue} onChange={(ev) => this.updateSearchBar(ev.target.value.toLowerCase())}></StandardInput>
         </Box>
-        <Box height='25px' width='100%' pt={3} pb={2} />
         <BoardBodyContainer table={table}>
           <Row table={table} description>
-            { table.map((item) => <RowItem type='display'>{item}</RowItem>) }
+            { table.map((item, i) => <RowItem type='display' onClick={() => this.sortData(tableProps[i])}>{item}</RowItem>) }
           </Row>
           <BoardBodyContents>
             {

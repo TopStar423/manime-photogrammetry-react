@@ -1,10 +1,14 @@
+import Link from 'next/link';
 import { space, width, fontSize, color, height, justifyContent, alignItems, display, fontFamily, fontWeight, boxShadow } from 'styled-system';
 import styled from 'styled-components';
 import { connect } from 'react-redux';
+import { Storage } from 'aws-amplify';
 import { CopyToClipboard } from 'react-copy-to-clipboard';
 import { FileCopy } from '@material-ui/icons';
 
 import Box from './Box';
+import { getQueryString } from '../utils/queryString';
+
 import activeElement from '../reducers/activeElement';
 import { setActiveElement } from '../actions';
 import { StandardButton } from './StyledComponents';
@@ -69,6 +73,15 @@ export const Input = styled.input`
   }
 `;
 
+export const A = styled.a`
+  font-size: 10px;
+  color: blue;
+  text-decoration: underline;
+  &:active &:visited &:hover {
+    color: purple;
+  }
+`;
+
 export const RowJsx = (props) => (
   <Row boxShadow={props.description ? 0 : 2} height={1} my={1} ml={MX_ROW} {...props}>
     {props.children}
@@ -115,6 +128,18 @@ class RowItemClass extends React.Component {
     this.props.updateField(this.props.id, propertyName, propertyValue);
   }
 
+  openUri = () => {
+    let leftFingers, leftThumb, rightFingers, rightThumb, side;
+
+    const uri = `http://52.27.72.157/_v4G/workbench/mmw.php?measure=${this.props.propertyValue}&user=${this.props.item.email}&nailLength=3&shape=square&texture=test`;
+
+    getQueryString(this.props.propertyValue);
+
+    var win = window.open(uri, '_blank');
+    win.focus();
+  }
+  // <Link href={this.openUri} target="_blank" style={{ fontSize: 10 }}>Open Photogrammetry Workbench</Link>
+
   render() {
     const { before, type, updateField, i, fieldNum, propertyName, selectField, selectedField, ...props } = this.props;
     const { activeElement } = this.props;
@@ -123,13 +148,11 @@ class RowItemClass extends React.Component {
 
     return (
       <RowItem ref={(ref)=> this._ref = ref} ml={ML_ROW_ITEM} {...props} >
-
         { type == 'OPEN_PHOTOGRAMMETRY' ?
-            <a target="_blank"
-               style={{ fontSize: 10 }}
-               href={`http://52.27.72.157/_v4G/workbench/mmw.php?measure=${this.props.propertyValue}&user=${this.props.item.email}&nailLength=3&shape=square&texture=test`}>
-              Open Photogrammetry Workbench
-            </a>
+          <A target="_blank"
+             onClick={this.openUri}>
+            Open Photogrammetry Workbench
+          </A>
           : type == 'display' ? <span /> :
           <Box flex='0 0 auto'>
             <CopyToClipboard text={this.props.propertyValue}

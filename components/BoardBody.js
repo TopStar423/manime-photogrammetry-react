@@ -6,12 +6,12 @@ import { RowJsx as Row, RowItemComponent as RowItem, MX_ROW, ML_ROW_ITEM, ROW_IT
 import { API, Storage } from 'aws-amplify';
 import uuid from 'uuid';
 import { CSVLink, CSVDownload } from "react-csv";
+import InfiniteLoader from './InfiniteLoader';
+import { List } from 'immutable';
 
 import { connect } from 'react-redux';
 import userData from '../reducers/userData';
 import { DEFAULT } from '../actions';
-// import { connect } from "react-redux";
-
 
 const OPEN_PHOTOGRAMMETRY = 'OPEN_PHOTOGRAMMETRY';
 
@@ -152,7 +152,8 @@ class BoardJsx extends React.Component {
       API.get(endpoint, pathName, userInit).then(response => {
         if(response && response.rows && this._mounted) {
           this.setState({ data: response.rows });
-          console.log(response.rows)
+          // console.log(response.rows)
+          console.log('data done');
         }
       }).catch((err) => {
         // console.log(err.stack);
@@ -276,6 +277,20 @@ class BoardJsx extends React.Component {
     this.setState({ data: newData });
   }
 
+  renderVirtualized = (tableProps, table) => {
+    const list = List(this.state.data);
+    if (!list || list.size <= 0) return;
+
+    return InfiniteLoader({
+      hasNextPage: true,
+      isNextPageLoading: false,
+      list,
+      loadNextPage: () => {},
+      tableProps,
+      table
+    });
+  }
+
   render() {
     let table = [];
     let tableProps = [];
@@ -290,7 +305,6 @@ class BoardJsx extends React.Component {
     //     return rowItem.toLowerCase().indexOf(this.state.searchValue) >= 0;
     //   return false;
     // }));
-    // console.log(data);
 
     if (this.props.id == 'orders') {
       table = ORDERS_COLUMN_DESCRIPTION;
@@ -348,32 +362,43 @@ class BoardJsx extends React.Component {
           <StandardInput ml={3} value={this.state.searchValue} onChange={(ev) => this.updateSearchBar(ev.target.value.toLowerCase())}></StandardInput>
         </Box>
         <BoardBodyContainer table={table}>
-          <Row table={table} description>
+          {/* <Row table={table} description>
             { table.map((item, i) => <RowItem type='display' onClick={() => this.sortData(tableProps[i])}>{item}</RowItem>) }
-          </Row>
+          </Row> */}
+          <div>
+            { table.map((item, i) => <div type='display' style={{ width: '200px', marginLeft: '10px', display: 'inline-block' }} onClick={() => this.sortData(tableProps[i])}>{item}</div>) }
+          </div>
           <BoardBodyContents>
             {
-              data.map((item, i) =>
-                // data is the database table, and item is a row in that table
-                <Row table={table}>
-                  {
-                    tableProps.map((rowItem, j) => {
-                      // tableProps is an array containing each column's variable name, rowItem could be userid or nailproductid
-                      const fieldNum = (i * numAttr) + j;
-                      return (
-                        // change
-                        <RowItem item={item} i={uuid.v1()} fieldNum={fieldNum} propertyName={tableProps[j]} propertyValue={item[tableProps[j]]} type={tablePropsType[j]} updateField={this.updateField} selectField={this.selectField} selectedField={this.state.selectedField}>
-                          { tableProps[j] ==  'fitted' && item[tableProps[j]] == false ?
-                              'false'
-                            :
-                              item[tableProps[j]]
-                          }
-                        </RowItem>
-                      );
-                    })
-                  }
-                </Row>
-              )
+              this.renderVirtualized(tableProps, table)
+
+              // data.map((item, i) =>
+              //   // data is the database table, and item is a row in that table
+              //   <Row table={table}>
+              //     {
+              //       tableProps.map((rowItem, j) => {
+              //         // tableProps is an array containing each column's variable name, rowItem could be userid or nailproductid
+              //         const fieldNum = (i * numAttr) + j;
+              //         return (
+              //
+              //           <RowItem>
+              //             {
+              //               item[tableProps[j]]
+              //             }
+              //           </RowItem>
+              //           // change
+              //           // <RowItem item={item} i={uuid.v1()} fieldNum={fieldNum} propertyName={tableProps[j]} propertyValue={item[tableProps[j]]} type={tablePropsType[j]} updateField={this.updateField} selectField={this.selectField} selectedField={this.state.selectedField}>
+              //           //   { tableProps[j] ==  'fitted' && item[tableProps[j]] == false ?
+              //           //       'false'
+              //           //     :
+              //           //       item[tableProps[j]]
+              //           //   }
+              //           // </RowItem>
+              //         );
+              //       })
+              //     }
+              //   </Row>
+              // )
             }
           </BoardBodyContents>
         </BoardBodyContainer>

@@ -23,6 +23,7 @@ export default class MyDocument extends Document {
             {`#__next {
               height: 100%;
               width: 100%;
+              overflow: hidden;
             }`}
           </style>
         </Head>

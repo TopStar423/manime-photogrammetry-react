@@ -52,10 +52,10 @@ export const Row = styled(Box)`
     const width = (props.theme.space[ML_ROW_ITEM] + ROW_ITEM_WIDTH) * numColumns;
     return width;
   }}px;
-  &:hover {
+  ${'' /* &:hover {
     box-shadow: ${(props) => !props.description ? '0 5px 10px 0 rgba(0,0,0,0.06)' : 'none'};
     transform: ${(props) =>  !props.description ? 'translateY(-1px)' : 'none'};
-  }
+  } */}
 `;
 
 export const Input = styled.input`
@@ -97,7 +97,21 @@ export const RowJsx = (props) => (
 //   </RowItem>
 // );
 
-class RowItemClass extends React.Component {
+export const RowItemComponent = props => (
+  <div style={{
+    whiteSpace: 'nowrap',
+    overflow: 'hidden',
+    fontWeight: props.description ? 400 : 200,
+    // flex: `0 0 ${ROW_ITEM_WIDTH}px`,
+    // height: '80%',
+    // alignItems: 'center',
+    // display: 'flex',
+    // borderRadius: '3px',
+    // boxSizing: 'border-box'
+  }} {...props} />
+);
+
+export class RowItemComponent2 extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -110,22 +124,22 @@ class RowItemClass extends React.Component {
   }
 
   rowItemClick = async () => {
-    const boundingRect = this._ref.getBoundingClientRect();
+    // const boundingRect = this._ref.getBoundingClientRect();
     // if (this.props.selectField)
     //   this.props.selectField(this.props.fieldNum, this.props.type, this._ref.getBoundingClientRect());
-    this.props.setActiveElement({id: this.props.id, item: this.props.item, fieldNum: this.props.fieldNum, propertyName: this.props.propertyName, propertyValue: this.props.propertyValue, type: this.props.type, top: boundingRect.top, left: boundingRect.left, right: boundingRect.right, bottom: boundingRect.bottom, options: []});
+    // this.props.setActiveElement({id: this.props.id, item: this.props.item, fieldNum: this.props.fieldNum, propertyName: this.props.propertyName, propertyValue: this.props.propertyValue, type: this.props.type, top: boundingRect.top, left: boundingRect.left, right: boundingRect.right, bottom: boundingRect.bottom, options: []});
   }
 
   componentDidUpdate(prevProps) {
-    if (this.props.activeElement.fieldNum == this.props.fieldNum && this.props.activeElement.imagePath && prevProps.activeElement.imagePath != this.props.activeElement.imagePath)
-      this.updateField(this.props.fieldNum, this.props.propertyName, this.props.activeElement.imagePath);
+    // if (this.props.activeElement.fieldNum == this.props.fieldNum && this.props.activeElement.imagePath && prevProps.activeElement.imagePath != this.props.activeElement.imagePath)
+    //   this.updateField(this.props.fieldNum, this.props.propertyName, this.props.activeElement.imagePath);
   }
 
   updateField = (index, propertyName, propertyValue) => {
     console.log(propertyName);
     console.log(propertyValue);
     this.setState({ propertyValue });
-    this.props.updateField(this.props.id, propertyName, propertyValue);
+    // this.props.updateField(this.props.id, propertyName, propertyValue);
   }
 
   openUri = () => {
@@ -133,7 +147,7 @@ class RowItemClass extends React.Component {
 
     const uri = `http://52.27.72.157/_v4G/workbench/mmw.php?measure=${this.props.propertyValue}&user=${this.props.item.email}&nailLength=3&shape=square&texture=test`;
 
-    getQueryString(this.props.propertyValue);
+    // getQueryString(this.props.propertyValue);
 
     var win = window.open(uri, '_blank');
     win.focus();
@@ -144,11 +158,11 @@ class RowItemClass extends React.Component {
     const { before, type, updateField, i, fieldNum, propertyName, selectField, selectedField, ...props } = this.props;
     const { activeElement } = this.props;
     // Temp before redux
-    const imagePath = this.props.activeElement.fieldNum == this.props.fieldNum && this.props.activeElement.imagePath ? this.props.activeElement.imagePath : props.children;
+    const imagePath = '';//this.props.activeElement.fieldNum == this.props.fieldNum && this.props.activeElement.imagePath ? this.props.activeElement.imagePath : props.children;
 
     return (
       <RowItem ref={(ref)=> this._ref = ref} ml={ML_ROW_ITEM} {...props} >
-        { type == 'OPEN_PHOTOGRAMMETRY' ?
+        {/* { type == 'OPEN_PHOTOGRAMMETRY' ?
           <A target="_blank"
              onClick={this.openUri}>
             Open Photogrammetry Workbench
@@ -170,7 +184,7 @@ class RowItemClass extends React.Component {
             : type == 'time' ? <Box fontSize={1}>{props.children}</Box>
             : type == 'display' && <Box fontSize={1}>{props.children}</Box>
           }
-        </Box>
+        </Box> */}
 
       </RowItem>
     );
@@ -179,15 +193,15 @@ class RowItemClass extends React.Component {
 
 // <svg width="24" height="24" viewBox="0 0 24 24"><path fill='#a1a1a1' d="M16 17.01V10h-2v7.01h-3L15 21l4-3.99h-3zM9 3L5 6.99h3V14h2V6.99h3L9 3z"/><path d="M0 0h24v24H0z" fill="none"/></svg>
 
-const mapStateToProps = state => ({
-  activeElement: activeElement(state.activeElement, { type: 'DEFAULT' })
-})
-
-const mapDispatchToProps = dispatch => ({
-  setActiveElement: element => dispatch(setActiveElement(element))
-})
-
-export const RowItemComponent = connect(
-  mapStateToProps,
-  mapDispatchToProps
-)(RowItemClass);
+// const mapStateToProps = state => ({
+//   activeElement: activeElement(state.activeElement, { type: 'DEFAULT' })
+// })
+//
+// const mapDispatchToProps = dispatch => ({
+//   setActiveElement: element => dispatch(setActiveElement(element))
+// })
+//
+// export const RowItemComponent = connect(
+//   mapStateToProps,
+//   mapDispatchToProps
+// )(RowItemClass);

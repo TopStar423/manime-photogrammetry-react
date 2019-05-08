@@ -65,8 +65,6 @@ export const getQueryString = async identityId => {
   const userFiles = await listUserFiles(identityId);
   const latestKeys = getLatestKeys(userFiles);
   const signedUris = await getLatestSignedUris(latestKeys, identityId);
-
-  console.log(signedUris);
 }
 
 

@@ -38,6 +38,12 @@ export function configureAmplify() {
                   region: "us-west-1"
               },
               {
+                name: 'LambdaRDS',
+                endpoint: 'https://2ehwnnicy0.execute-api.us-west-1.amazonaws.com/v1',
+                service: 'execute-api',
+                region: 'us-west-1'
+              },
+              {
                   name: "LambdaRDSClient",
                   endpoint: "https://2ehwnnicy0.execute-api.us-west-1.amazonaws.com/default",
                   service: 'execute-api',

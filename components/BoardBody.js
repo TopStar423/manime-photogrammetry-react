@@ -6,7 +6,7 @@ import { RowJsx as Row, RowItemComponent as RowItem, MX_ROW, ML_ROW_ITEM, ROW_IT
 import { API, Storage } from 'aws-amplify';
 import uuid from 'uuid';
 import { CSVLink, CSVDownload } from "react-csv";
-import InfiniteLoader from './InfiniteLoader';
+import { InfiniteLoaderComponent, ListComponent } from './InfiniteLoader';
 import { List } from 'immutable';
 
 import { connect } from 'react-redux';
@@ -281,11 +281,18 @@ class BoardJsx extends React.Component {
     const list = List(this.state.data);
     if (!list || list.size <= 0) return;
 
-    return InfiniteLoader({
-      hasNextPage: true,
-      isNextPageLoading: false,
+    // return InfiniteLoaderComponent({
+    //   hasNextPage: true,
+    //   isNextPageLoading: false,
+    //   list,
+    //   loadNextPage: () => {},
+    //   tableProps,
+    //   table,
+    //   user: this.props.userData.identityId
+    // });
+
+    return ListComponent({
       list,
-      loadNextPage: () => {},
       tableProps,
       table,
       user: this.props.userData.identityId

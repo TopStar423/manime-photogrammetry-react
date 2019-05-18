@@ -242,56 +242,45 @@ export const ListComponent = function ({
       const signedUriArray = await getSignedUriArray(measure);
       const uri = `http://52.27.72.157/_v4G/workbench/mmw.php?measure=${measure}&user=${email}&nailLength=3&shape=square&texture=test`;
 
-      // const currentWindow = uuid.v1();
+      const currentWindow = uuid.v1();
 
-      // var form = document.createElement('form');
-      // form.target = currentWindow;
-      // form.method = 'POST';
-      // form.action = uri;
-      //
-      // const keys = ['leftFingers', 'leftThumb', 'rightFingers', 'rightThumb', 'side'];
-      // keys.map((key, i) => {
-      //   var input = document.createElement('input');
-      //   input.type = 'text';
-      //   input.name = key;
-      //   input.value = signedUriArray[i];
-      //   form.appendChild(input);
-      //   document.body.appendChild(form);
-      // });
+      var form = document.createElement('form');
+      form.target = currentWindow;
+      form.method = 'POST';
+      form.action = uri;
 
-      var win = window.open(uri, '_target');
+      const keys = ['leftFingers', 'leftThumb', 'rightFingers', 'rightThumb', 'side'];
+      keys.map((key, i) => {
+        var input = document.createElement('input');
+        input.type = 'text';
+        input.name = key;
+        input.value = signedUriArray[i];
+        form.appendChild(input);
+        document.body.appendChild(form);
+      });
+
+      var win = window.open('', currentWindow);
+      // var win = window.open(uri, '_target');
       win.focus();
 
-      const images = {
-        image0: signedUriArray[0],
-        image1: signedUriArray[1],
-        image2: signedUriArray[2],
-        image3: signedUriArray[3],
-        image4: signedUriArray[4]
-      };
-
-      for (var i = 0; i < 10; ++i) {
-        setTimeout(() => {
-          win.postMessage(images, '*');
-        }, 1000 * i);
-      }      
-      {/* <script>
-        window.addEventListener("message", function (e) {
-          window.image0 = e.data.image0;
-          window.image1 = e.data.image1;
-          window.image2 = e.data.image2;
-          window.image3 = e.data.image3;
-          window.image4 = e.data.image4;
-          const testVariable = e.data.image0;
-        }, false);
-      </script> */}
-
-
-      // if (win) {
-      //   form.submit();
-      // } else {
-      //   alert('You must allow popups for this map to work.');
+      // const images = {
+      //   image0: signedUriArray[0],
+      //   image1: signedUriArray[1],
+      //   image2: signedUriArray[2],
+      //   image3: signedUriArray[3],
+      //   image4: signedUriArray[4]
+      // };
+      //
+      // for (var i = 0; i < 10; ++i) {
+      //   setTimeout(() => {
+      //     win.postMessage(images, '*');
+      //   }, 1000 * i);
       // }
+      if (win) {
+        form.submit();
+      } else {
+        alert('You must allow popups for this map to work.');
+      }
     }
 
     class SelectFitStatus extends React.PureComponent {

@@ -242,23 +242,24 @@ export const ListComponent = function ({
       const signedUriArray = await getSignedUriArray(measure);
       const uri = `http://52.27.72.157/_v4G/workbench/mmw.php?measure=${measure}&user=${email}&nailLength=3&shape=square&texture=test`;
 
-      const currentWindow = uuid.v1();
-      var form = document.createElement('form');
-      form.target = currentWindow;
-      form.method = 'POST';
-      form.action = uri;
+      // const currentWindow = uuid.v1();
 
-      const keys = ['leftFingers', 'leftThumb', 'rightFingers', 'rightThumb', 'side'];
-      keys.map((key, i) => {
-        var input = document.createElement('input');
-        input.type = 'text';
-        input.name = key;
-        input.value = signedUriArray[i];
-        form.appendChild(input);
-        document.body.appendChild(form);
-      });
+      // var form = document.createElement('form');
+      // form.target = currentWindow;
+      // form.method = 'POST';
+      // form.action = uri;
+      //
+      // const keys = ['leftFingers', 'leftThumb', 'rightFingers', 'rightThumb', 'side'];
+      // keys.map((key, i) => {
+      //   var input = document.createElement('input');
+      //   input.type = 'text';
+      //   input.name = key;
+      //   input.value = signedUriArray[i];
+      //   form.appendChild(input);
+      //   document.body.appendChild(form);
+      // });
 
-      var win = window.open('', currentWindow);
+      var win = window.open(uri, '_target');
       win.focus();
       win.image0 = signedUriArray[0];
       win.image1 = signedUriArray[1];
@@ -266,11 +267,11 @@ export const ListComponent = function ({
       win.image3 = signedUriArray[3];
       win.image4 = signedUriArray[4];
 
-      if (win) {
-        form.submit();
-      } else {
-        alert('You must allow popups for this map to work.');
-      }
+      // if (win) {
+      //   form.submit();
+      // } else {
+      //   alert('You must allow popups for this map to work.');
+      // }
     }
 
     class SelectFitStatus extends React.PureComponent {

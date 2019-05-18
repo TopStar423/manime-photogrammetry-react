@@ -3,6 +3,7 @@ import { InfiniteLoader, List } from 'react-virtualized';
 import { CopyToClipboard } from 'react-copy-to-clipboard';
 import uuid from 'uuid';
 
+import { getSignedUriArray } from '../utils/queryString';
 import { updateUserColumn, updateOrderColumn } from '../utils/lambdaFunctions';
 
 const ML_ROW_ITEM = 2;
@@ -79,7 +80,6 @@ export const InfiniteLoaderComponent = function ({
       const email = list.getIn([index, 'email']);
 
       const uri = `http://52.27.72.157/_v4G/workbench/mmw.php?measure=${measure}&user=${email}&nailLength=3&shape=square&texture=test`;
-      // getQueryString(this.props.propertyValue);
 
       var win = window.open(uri, '_blank');
       win.focus();
@@ -234,16 +234,37 @@ export const ListComponent = function ({
       marginBottom: '1px'
     };
 
-    function openUri() {
+    async function openUri() {
       let leftFingers, leftThumb, rightFingers, rightThumb, side;
       const measure = list.getIn([index, 'userid']);
       const email = list.getIn([index, 'email']);
 
+      const signedUriArray = await getSignedUriArray(measure);
       const uri = `http://52.27.72.157/_v4G/workbench/mmw.php?measure=${measure}&user=${email}&nailLength=3&shape=square&texture=test`;
-      // getQueryString(this.props.propertyValue);
 
-      var win = window.open(uri, '_blank');
+      var form = document.createElement('form');
+      form.target = 'Window';
+      form.method = 'POST';
+      form.action = uri;
+
+      const keys = ['leftFingers', 'leftThumb', 'rightFingers', 'rightThumb', 'side'];
+      keys.map((key, i) => {
+        var input = document.createElement('input');
+        input.type = 'text';
+        input.name = key;
+        input.value = signedUriArray[i];
+        form.appendChild(input);
+        document.body.appendChild(form);
+      });
+
+      var win = window.open('', 'Window');
       win.focus();
+
+      if (win) {
+        form.submit();
+      } else {
+        alert('You must allow popups for this map to work.');
+      }
     }
 
     class SelectFitStatus extends React.PureComponent {

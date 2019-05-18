@@ -52,19 +52,22 @@ const getUserFile = async (s3Key, identityId) => {
 
 const getLatestSignedUris = async (latestKeys, identityId) => {
   let signedUris = ['', '', '', '', ''];
-  latestKeys.map(async (item, i) => {
-    const uri = await getUserFile(item.key, identityId);
-    signedUris[i] = uri;
-  })
+  for (let i = 0; i < 5; ++i) {
+    signedUris[i] = await getUserFile(latestKeys[i].key, identityId);
+  }
+  // latestKeys.map(async (item, i) => {
+  //   const uri = await getUserFile(item.key, identityId);
+  //   signedUris[i] = uri;
+  // })
   return signedUris;
 }
 
-export const getQueryString = async identityId => {
+export const getSignedUriArray = async identityId => {
   setStorageBucket('mani-me-react-native-userfiles-1');
-  let queryString = '';
   const userFiles = await listUserFiles(identityId);
   const latestKeys = getLatestKeys(userFiles);
   const signedUris = await getLatestSignedUris(latestKeys, identityId);
+  return signedUris;
 }
 
 

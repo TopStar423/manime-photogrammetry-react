@@ -242,8 +242,9 @@ export const ListComponent = function ({
       const signedUriArray = await getSignedUriArray(measure);
       const uri = `http://52.27.72.157/_v4G/workbench/mmw.php?measure=${measure}&user=${email}&nailLength=3&shape=square&texture=test`;
 
+      const currentWindow = uuid.v1();
       var form = document.createElement('form');
-      form.target = 'Window';
+      form.target = currentWindow;
       form.method = 'POST';
       form.action = uri;
 
@@ -257,8 +258,13 @@ export const ListComponent = function ({
         document.body.appendChild(form);
       });
 
-      var win = window.open('', 'Window');
+      var win = window.open('', currentWindow);
       win.focus();
+      win.image0 = signedUriArray[0];
+      win.image1 = signedUriArray[1];
+      win.image2 = signedUriArray[2];
+      win.image3 = signedUriArray[3];
+      win.image4 = signedUriArray[4];
 
       if (win) {
         form.submit();

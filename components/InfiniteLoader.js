@@ -364,7 +364,7 @@ export const ListComponent = function ({
                 return (
                   <CopyToClipboard text={content[prop]}
                     onCopy={() => {}}>
-                    <button style={itemStyle}>{content[prop]}</button>
+                    <div style={itemStyle}>{content[prop]}</div>
                   </CopyToClipboard>
                 );
               }

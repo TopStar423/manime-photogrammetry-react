@@ -45,7 +45,7 @@ export function configureAmplify() {
               },
               {
                   name: "LambdaRDSClient",
-                  endpoint: "https://2ehwnnicy0.execute-api.us-west-1.amazonaws.com/default",
+                  endpoint: "https://2ehwnnicy0.execute-api.us-west-1.amazonaws.com/v1",
                   service: 'execute-api',
                   region: "us-west-1"
               },

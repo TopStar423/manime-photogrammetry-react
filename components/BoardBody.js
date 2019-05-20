@@ -15,6 +15,7 @@ import { DEFAULT } from '../actions';
 
 const OPEN_PHOTOGRAMMETRY = 'OPEN_PHOTOGRAMMETRY';
 
+const COMBINED_ORDERS_COLUMN_DESCRIPTION = ['_Email', 'Nail Description', 'Shipping Address', 'User ID', 'Order ID', 'Group Order ID', 'Nail Product ID', 'Nail Length', 'Nail Shape', 'Order Status', 'Date Created'];
 const ORDERS_COLUMN_DESCRIPTION = ['_Email', 'Order ID', 'Group Order ID', 'Nail Product ID', 'Nail Length', 'Nail Shape', 'Order Status', 'Date Created'];
 const GROUP_ORDERS_COLUMN_DESCRIPTION = ['Group Order ID', 'User ID', 'Group Order Status', 'Insurance', 'Shipping Address', 'Subtotal', 'Taxes'];
 const USERS_COLUMN_DESCRIPTION = ['', 'User ID', 'First Name', 'Last Name', 'Email', '# Pics', 'Fit Status', 'Total Orders', 'Fitted (Deprecated)', 'Date Created', 'Date Last Login', 'Description', 'Subscription', 'Design Pref 1', 'Design Pref 2', 'Design Pref 3'];
@@ -26,6 +27,7 @@ const NAIL_PRODUCTS_COLUMN_DESCRIPTION = ['Nail Product ID', 'Index','Date Creat
 const NAIL_CATEGORIES_COLUMN_DESCRIPTION = ['Category ID', 'Category Name'];
 const NAIL_PRODUCT_CATEGORIES_COLUMN_DESCRIPTION = ['Nail Product ID', 'Category ID'];
 
+const COMBINED_ORDERS_COLUMN_PROPERTIES = ['email', 'description', 'shippingaddress', 'userid', 'orderid', 'grouporderid', 'nailproductid', 'naillength', 'nailshape', 'orderstatus', 'datecreated'];
 const ORDERS_COLUMN_PROPERTIES = ['email', 'orderid', 'grouporderid', 'nailproductid', 'naillength', 'nailshape', 'orderstatus', 'datecreated'];
 const GROUP_ORDERS_COLUMN_PROPERTIES = ['grouporderid', 'userid', 'grouporderstatus', 'insurance', 'shippingaddress', 'subtotal', 'taxes'];
 const USERS_COLUMN_PROPERTIES = ['userid', 'userid', 'firstname', 'lastname', 'email', 'numpics', 'fitstatus','totalorders', 'fitted', 'datecreated', 'datelastlogin', 'description', 'subscription', 'designpref', 'designpref2', 'designpref3'];
@@ -37,6 +39,7 @@ const NAIL_PRODUCTS_COLUMN_PROPERTIES = ['nailproductid', 'index', 'datecreated'
 const NAIL_CATEGORIES_COLUMN_PROPERTIES = ['categoryid', 'name'];
 const NAIL_PRODUCT_CATEGORIES_COLUMN_PROPERTIES = ['nailproductid', 'categoryid'];
 
+const COMBINED_ORDERS_COLUMN_PROPERTIES_TYPE = ['text', 'text', 'text', 'modal', 'modal', 'modal', 'modal', 'text', 'text', 'menu', 'time'];
 const ORDERS_COLUMN_PROPERTIES_TYPE = ['text', 'modal', 'modal', 'modal', 'text', 'text', 'menu', 'time'];
 const GROUP_ORDERS_COLUMN_PROPERTIES_TYPE = ['modal', 'modal', 'menu', 'text', 'text', 'text', 'text'];
 const USERS_COLUMN_PROPERTIES_TYPE = [OPEN_PHOTOGRAMMETRY, 'modal', 'text', 'text', 'text', 'text', 'text', 'text', 'menu', 'time', 'time', 'text', 'text', 'display', 'display', 'display'];
@@ -124,7 +127,7 @@ class BoardJsx extends React.Component {
 
   getEndpoint = (id) => {
     let endpoint = 'LambdaRDSCompany';
-    if (id == 'orders' || id == 'grouporders' || id == 'users')
+    if (id == 'orders' || id == 'grouporders' || id == 'users' || id == 'combinedorders')
       endpoint = 'LambdaRDSClient';
     else if (id == 'shippingaddresses' || id == 'revieworders' || id == 'payments')
       endpoint = 'LambdaRDSClientNoncritical';
@@ -148,11 +151,13 @@ class BoardJsx extends React.Component {
       pathName = `/${tableName}/read`;
       if (tableName == 'orders' || tableName == 'grouporders' || tableName == 'users')
         pathName = `/${tableName}/cms/read`;
+      if (tableName == 'combinedorders')
+        pathName = `/orders/cms/read/combined`;
 
       API.get(endpoint, pathName, userInit).then(response => {
         if(response && response.rows && this._mounted) {
           this.setState({ data: response.rows });
-          // console.log(response.rows)
+          console.log(response.rows)
           console.log('data done');
         }
       }).catch((err) => {
@@ -242,21 +247,21 @@ class BoardJsx extends React.Component {
     this.setState({ searchValue });
   }
 
-  addColumnFromDiffTable = (tableName, id, propName) => {
-    if (typeof tableName != 'string' || typeof id != 'string' || typeof propName != 'string')
-      return {};
-
-    let userInit = {
-      headers: { 'Content-Type': 'application/json' }
-    }
-    API.get(this.getEndpoint(tableName), `/${tableName}/read/${id}`, userInit).then(response => {
-      // console.log(response);
-      if(response && response.rows && this._mounted) {
-      }
-    }).catch((err) => {
-      // console.log(err.stack);
-    });
-  }
+  // addColumnFromDiffTable = (tableName, id, propName) => {
+  //   if (typeof tableName != 'string' || typeof id != 'string' || typeof propName != 'string')
+  //     return {};
+  //
+  //   let userInit = {
+  //     headers: { 'Content-Type': 'application/json' }
+  //   }
+  //   API.get(this.getEndpoint(tableName), `/${tableName}/read/${id}`, userInit).then(response => {
+  //     // console.log(response);
+  //     if(response && response.rows && this._mounted) {
+  //     }
+  //   }).catch((err) => {
+  //     // console.log(err.stack);
+  //   });
+  // }
 
   sortData = item => {
     console.log('here');
@@ -314,7 +319,11 @@ class BoardJsx extends React.Component {
     //   return false;
     // }));
 
-    if (this.props.id == 'orders') {
+    if (this.props.id == 'combinedorders') {
+      table = COMBINED_ORDERS_COLUMN_DESCRIPTION;
+      tableProps = COMBINED_ORDERS_COLUMN_PROPERTIES;
+      tablePropsType = COMBINED_ORDERS_COLUMN_PROPERTIES_TYPE;
+    } else if (this.props.id == 'orders') {
       table = ORDERS_COLUMN_DESCRIPTION;
       tableProps = ORDERS_COLUMN_PROPERTIES;
       tablePropsType = ORDERS_COLUMN_PROPERTIES_TYPE;

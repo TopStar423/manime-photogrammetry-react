@@ -43,6 +43,11 @@ class Sidebar extends React.Component {
         </Box>
 
         <Box py={1}>
+          <Link as={`/d/combinedorders`} href={`/data?id=combinedorders`}>
+            <MenuItem py={1} px={3} color='whites.11' fontSize={0} onClick={() => this.selectLink('combinedorders')} bg={this.state.selectedLink == 'combinedorders' ? '#313131' : 'transparent'}>
+              COMBINED ORDERS
+            </MenuItem>
+          </Link>
           <Link as={`/d/orders`} href={`/data?id=orders`}>
             <MenuItem py={1} px={3} color='whites.11' fontSize={0} onClick={() => this.selectLink('orders')} bg={this.state.selectedLink == 'orders' ? '#313131' : 'transparent'}>
               ORDERS

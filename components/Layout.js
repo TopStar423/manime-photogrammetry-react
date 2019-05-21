@@ -125,7 +125,7 @@ class Layout extends React.Component {
 
     return (
       <ThemeProvider theme={theme}>
-        <Container height={this.state.height} width={this.state.width}>
+        <Container id='layout' height={this.state.height} width={this.state.width}>
           { !before &&
             <Sidebar />
           }

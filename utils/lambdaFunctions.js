@@ -121,7 +121,7 @@ export const rotateImage = async (identityId, angle, fileName) => {
   };
   const response = await API.post(
     'LambdaServer',
-    '/image/rotate',
+    '/image/rotate/manual',
     userInit
   );
   return response;

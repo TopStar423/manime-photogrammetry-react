@@ -66,8 +66,8 @@ export const getSignedUriArray = async identityId => {
   setStorageBucket('mani-me-react-native-userfiles-1');
   const userFiles = await listUserFiles(identityId);
   const latestKeys = getLatestKeys(userFiles);
-  const signedUris = await getLatestSignedUris(latestKeys, identityId);
-  return signedUris;
+  const signedUriArray = await getLatestSignedUris(latestKeys, identityId);
+  return { latestKeys, signedUriArray };
 }
 
 

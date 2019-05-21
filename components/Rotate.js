@@ -8,29 +8,25 @@ export default class Rotate extends React.Component {
     super(props);
   }
 
-  rotateImage = async () => {
-    const fileName = 'leftFingers.png';
+  rotateImage = async key => {
     const angle = 90;
-    const identityId = 'us-west-2:77ab69f9-7829-4873-9f4a-5dc330af652a';
-    await rotateImage(identityId, angle, fileName);
+    await rotateImage(this.props.measure, angle, key);
     // refresh image
   }
 
   render() {
-
     return (
-      <Box position='absolute' width='100%' height='100%' display='flex' justifyContent='center' alignItems='center' bg='rgba(0,0,0,0.7)' onClick={this.props.onClick}>
+      <Box position='absolute' width='100%' height='100%' display='flex' justifyContent='center' alignItems='center' bg='rgba(0,0,0,0.7)'>
         <Box width={500} bg='#ffffff' display='flex' flexDirection='row' flexWrap='wrap' zIndex={100}>
           {
-            this.props.signedUriArray.map(uri => (
+            this.props.signedUriArray.map((uri, index) => (
               <Box flex='0 1 50%' pt='50%' border='0.5px solid #000000' position='relative' style={{ boxSizing: 'border-box' }}>
-                <Box position='absolute' width='100%' height='100%' top='0'>
+                <Box position='absolute' width='100%' height='100%' top='0' zIndex={-100}>
                   <img src={uri} style={{ maxWidth: '100%', maxHeight: '100%' }}/>
                 </Box>
                 <Box width='100%' display='flex' flexDirection='row' justifyContent='center' mb={2}>
-                  <StandardButton>Rotate</StandardButton>
+                  <StandardButton onClick={() => this.rotateImage(this.props.latestKeys[index].key)}>Rotate</StandardButton>
                 </Box>
-
               </Box>
             ))
           }
@@ -39,6 +35,3 @@ export default class Rotate extends React.Component {
     );
   }
 }
-
-{/* <img src={uri} style={{ width: '100%' }}/>
-<StandardButton></StandardButton> */}

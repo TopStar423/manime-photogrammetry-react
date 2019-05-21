@@ -239,15 +239,16 @@ export const ListComponent = function ({
     class Workbench extends React.Component {
       state = {
         showPortal: false,
-        signedUriArray: []
+        signedUriArray: [],
+        latestKeys: []
       };
       openWorkbench = async () => {
         let leftFingers, leftThumb, rightFingers, rightThumb, side;
         const measure = list.getIn([index, 'userid']);
         const email = list.getIn([index, 'email']);
 
-        const signedUriArray = await getSignedUriArray(measure);
-        this.setState({ showPortal: true, signedUriArray });
+        const { latestKeys, signedUriArray } = await getSignedUriArray(measure);
+        this.setState({ showPortal: true, signedUriArray, latestKeys, measure });
         // create portal.
 
         // // rotate images...2
@@ -299,7 +300,7 @@ export const ListComponent = function ({
             <button style={itemStyle} onClick={this.openWorkbench}>Open Photogrammetry Workbench</button>
             { this.state.showPortal &&
               ReactDOM.createPortal(
-                <Rotate onClick={() => this.setState({ showPortal: false })} signedUriArray={this.state.signedUriArray}/>,
+                <Rotate onClick={() => this.setState({ showPortal: false })} signedUriArray={this.state.signedUriArray} latestKeys={this.state.latestKeys} measure={this.state.measure}/>,
                 document.getElementById('layout')
               )
             }

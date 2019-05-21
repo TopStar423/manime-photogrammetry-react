@@ -157,7 +157,7 @@ class BoardJsx extends React.Component {
       API.get(endpoint, pathName, userInit).then(response => {
         if(response && response.rows && this._mounted) {
           this.setState({ data: response.rows });
-          console.log(response.rows)
+          // console.log(response.rows)
           console.log('data done');
         }
       }).catch((err) => {

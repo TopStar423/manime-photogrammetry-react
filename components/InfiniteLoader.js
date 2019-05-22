@@ -240,7 +240,9 @@ export const ListComponent = function ({
       state = {
         showPortal: false,
         signedUriArray: [],
-        latestKeys: []
+        latestKeys: [],
+        email: '',
+        measure: ''
       };
       openWorkbench = async () => {
         let leftFingers, leftThumb, rightFingers, rightThumb, side;
@@ -248,51 +250,7 @@ export const ListComponent = function ({
         const email = list.getIn([index, 'email']);
 
         const { latestKeys, signedUriArray } = await getSignedUriArray(measure);
-        this.setState({ showPortal: true, signedUriArray, latestKeys, measure });
-        // create portal.
-
-        // // rotate images...2
-        // const uri = `http://52.27.72.157/_v4G/workbench/mmw.php?measure=${measure}&user=${email}&nailLength=3&shape=square&texture=test`;
-        //
-        // const currentWindow = uuid.v1();
-        //
-        // var form = document.createElement('form');
-        // form.target = currentWindow;
-        // form.method = 'POST';
-        // form.action = uri;
-        //
-        // const keys = ['leftFingers', 'leftThumb', 'rightFingers', 'rightThumb', 'side'];
-        // keys.map((key, i) => {
-        //   var input = document.createElement('input');
-        //   input.type = 'text';
-        //   input.name = key;
-        //   input.value = signedUriArray[i];
-        //   form.appendChild(input);
-        //   document.body.appendChild(form);
-        // });
-        //
-        // var win = window.open('', currentWindow);
-        // // var win = window.open(uri, '_target');
-        // win.focus();
-        //
-        // // const images = {
-        // //   image0: signedUriArray[0],
-        // //   image1: signedUriArray[1],
-        // //   image2: signedUriArray[2],
-        // //   image3: signedUriArray[3],
-        // //   image4: signedUriArray[4]
-        // // };
-        // //
-        // // for (var i = 0; i < 10; ++i) {
-        // //   setTimeout(() => {
-        // //     win.postMessage(images, '*');
-        // //   }, 1000 * i);
-        // // }
-        // if (win) {
-        //   form.submit();
-        // } else {
-        //   alert('You must allow popups for this map to work.');
-        // }
+        this.setState({ showPortal: true, signedUriArray, latestKeys, measure, email });
       }
       render() {
         return (
@@ -300,7 +258,7 @@ export const ListComponent = function ({
             <button style={itemStyle} onClick={this.openWorkbench}>Open Photogrammetry Workbench</button>
             { this.state.showPortal &&
               ReactDOM.createPortal(
-                <Rotate onClick={() => this.setState({ showPortal: false })} signedUriArray={this.state.signedUriArray} latestKeys={this.state.latestKeys} measure={this.state.measure}/>,
+                <Rotate onClick={() => this.setState({ showPortal: false })} openWorkbench={this.openWorkbench} {...this.state}/>,
                 document.getElementById('layout')
               )
             }

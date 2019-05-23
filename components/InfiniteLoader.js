@@ -322,6 +322,7 @@ export const ListComponent = function ({
         style={style}
       >
         <React.Fragment>
+          <div style={{ width: 35, fontSize: 12, display: 'flex', justifyContent: 'center', alignItems: 'center' }}>{list.size - index}</div>
           {
             tableProps.map((prop, i) => {
               if (table[i] == '') {

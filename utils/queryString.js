@@ -24,11 +24,16 @@ const getLatestKeys = userFiles => {
   if (!Array.isArray(userFiles)) return listedKeys;
 
   userFiles.map(item => {
-    const key = item.key;
+    let key = item.key;
     if (key) {
       // item.key is leftFingers.png -> _keyArray is [leftFingers, .png]
       const _keyArray = key.split('.');
       const fileName = _keyArray[0];
+
+      const compressedKey = _keyArray[0] + '@1x.' + _keyArray[1];
+      userFiles.map(item2 => {
+        if (item2.key == compressedKey) key = compressedKey;
+      });
 
       // If it is a valid key, check for duplicates and if newer file, replace.
       if (IMAGE_KEY_MAP.has(fileName)) {

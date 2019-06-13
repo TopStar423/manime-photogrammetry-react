@@ -1,5 +1,6 @@
 import { Storage } from 'aws-amplify';
 import { setStorageBucket, setDefaultBucket } from '../components/Aws';
+import { presignedImageUri } from './lambdaFunctions';
 
 const IMAGE_KEY_MAP = new Map();
 IMAGE_KEY_MAP.set('leftFingers', 0);
@@ -55,6 +56,7 @@ const getUserFile = async (s3Key, identityId) => {
   return result;
 }
 
+// get this from a lambda function (adminIdentityId, userIdentityId, latestKeys), these two functions
 const getLatestSignedUris = async (latestKeys, identityId) => {
   let signedUris = ['', '', '', '', ''];
   for (let i = 0; i < 5; ++i) {
@@ -67,11 +69,12 @@ const getLatestSignedUris = async (latestKeys, identityId) => {
   return signedUris;
 }
 
-export const getSignedUriArray = async identityId => {
+export const getSignedUriArray = async (adminIdentityId, clientIdentityId) => {
   setStorageBucket('mani-me-react-native-userfiles-1');
-  const userFiles = await listUserFiles(identityId);
+  const userFiles = await listUserFiles(clientIdentityId);
   const latestKeys = getLatestKeys(userFiles);
-  const signedUriArray = await getLatestSignedUris(latestKeys, identityId);
+  // const signedUriArray = await getLatestSignedUris(latestKeys, clientIdentityId);
+  const signedUriArray = await presignedImageUri(adminIdentityId, clientIdentityId, latestKeys);
   return { latestKeys, signedUriArray };
 }
 

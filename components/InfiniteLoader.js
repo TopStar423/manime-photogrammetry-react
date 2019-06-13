@@ -249,7 +249,7 @@ export const ListComponent = function ({
         const measure = list.getIn([index, 'userid']);
         const email = list.getIn([index, 'email']);
 
-        const { latestKeys, signedUriArray } = await getSignedUriArray(measure);
+        const { latestKeys, signedUriArray } = await getSignedUriArray(user, measure); // user is adminIdentityId, measure is clientIdentityId
         this.setState({ showPortal: true, signedUriArray, latestKeys, measure, email });
       }
       render() {

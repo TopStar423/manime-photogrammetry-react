@@ -138,6 +138,14 @@ export const sendEmail = async dynamicData => {
   return null;
 }
 
+export const presignedImageUri = async (adminIdentityId, clientIdentityId, latestKeys) => {
+  const init = {
+    body: { adminIdentityId, clientIdentityId, latestKeys },
+    headers: { 'Content-Type': 'application/json' }
+  };
+  const response = await API.post('LambdaServer', '/presigned', init);
+  return response;
+}
 
 // Subscription
 export const getSubscription = async stripeId => {

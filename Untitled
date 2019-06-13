@@ -1,13 +1,40 @@
 removed from auth admin in IAM
+
 {
-    "Effect": "Allow",
-    "Action": [
-        "s3:GetObject"
-    ],
-    "Resource": [
-        "arn:aws:s3:::mani-me-react-native-userfiles-1/*"
+    "Version": "2012-10-17",
+    "Statement": [
+        {
+            "Effect": "Allow",
+            "Action": [
+                "s3:GetObject"
+            ],
+            "Resource": [
+                "arn:aws:s3:::mani-me-react-native-userfiles-1/*"
+            ]
+        },
+        {
+            "Effect": "Allow",
+            "Action": [
+                "s3:ListBucket"
+            ],
+            "Resource": [
+                "arn:aws:s3:::mani-me-react-native-userfiles-1"
+            ],
+            "Condition": {
+                "StringLike": {
+                    "s3:prefix": [
+                        "public/",
+                        "public/*",
+                        "protected/",
+                        "protected/*",
+                        "private/",
+                        "private/*"
+                    ]
+                }
+            }
+        }
     ]
-},
+}
 
 
 "arn:aws:execute-api:region:account-id:api-id/stage/METHOD_HTTP_VERB/Resource-path"

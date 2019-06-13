@@ -1,3 +1,14 @@
+removed from auth admin in IAM
+{
+    "Effect": "Allow",
+    "Action": [
+        "s3:GetObject"
+    ],
+    "Resource": [
+        "arn:aws:s3:::mani-me-react-native-userfiles-1/*"
+    ]
+},
+
 
 "arn:aws:execute-api:region:account-id:api-id/stage/METHOD_HTTP_VERB/Resource-path"
 

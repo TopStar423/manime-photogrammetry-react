@@ -15,13 +15,6 @@ const Container = styled(Box)`
   background-color: #101214;
 `;
 
-// <Box p={2} width='100%' position='relative'>
-//   <img src='https://s3-us-west-2.amazonaws.com/mani-me-app/manimelogo.png' style={{width: '60%', height: 'auto'}}/>
-//   <Box position='absolute' style={{ right: 0, top: 0 }}>
-//     <svg width="24" height="24" viewBox="0 0 24 24"><path fill='#fff' d="M2 15.5v2h20v-2H2zm0-5v2h20v-2H2zm0-5v2h20v-2H2z"/><path d="M0 0h24v24H0z" fill="none"/></svg>
-//   </Box>
-// </Box>
-
 class Sidebar extends React.Component {
   constructor(props) {
     super(props);
@@ -33,7 +26,6 @@ class Sidebar extends React.Component {
   selectLink = selectedLink => {
     this.setState({ selectedLink });
   };
-  // onClick={() => this.selectedLink('orders')}
 
   render() {
     return (

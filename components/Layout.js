@@ -8,7 +8,6 @@ import activeElement from '../reducers/activeElement';
 import { setDisplay, setKeyValue } from '../actions';
 import { StandardButton, StandardInput, StandardLabel } from './StyledComponents';
 import { API, Storage } from 'aws-amplify';
-import { Input } from './Row';
 
 const Container = styled.div`
   display: flex;
@@ -188,21 +187,6 @@ class Layout extends React.Component {
                       </div>
                     );
                   })}
-                  {/* { this.props.activeElement.propertyName == 'userid' &&
-                    <Box mb={3}>
-                      <Box>Enter Texture Name: </Box>
-                      <Input pl={2} fontSize={4} value={this.state.texture} onChange={(ev) => this.setState({ texture: ev.target.value })}></Input>
-                      <a target="_blank"
-                         href={`http://52.27.72.157/_v4G/workbench/mmw.php?measure=${this.props.activeElement.id}&user=${this.props.activeElement.item.email}&nailLength=3&shape=square&texture=${this.state.texture}`}>
-                        Open Photogrammetry Workbench
-                      </a>
-                    </Box>
-                  } */}
-
-                  {/* <label>To do: populate object with {this.props.activeElement.propertyName} = {this.props.activeElement.id}</label>
-                  <Box display='flex' width='100%' flexDirection='row' justifyContent='flex-end' mt={3}>
-                    <StandardButton onClick={this.props.setActiveElementDisplay}>Save</StandardButton>
-                  </Box> */}
                 </Box>
               </Modal>
             </Box>

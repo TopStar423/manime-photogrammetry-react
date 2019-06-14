@@ -69,19 +69,6 @@ class AuthComponent extends React.Component {
   constructor(props) {
     super(props);
     this.state = { width: 0, height: 0, email: '', password: '' };
-    this.updateWindowDimensions = this.updateWindowDimensions.bind(this);
-  }
-  componentDidMount() {
-    this.updateWindowDimensions();
-    window.addEventListener('resize', this.updateWindowDimensions);
-  }
-
-  componentWillUnmount() {
-    window.removeEventListener('resize', this.updateWindowDimensions);
-  }
-
-  updateWindowDimensions() {
-    this.setState({ width: window.innerWidth, height: window.innerHeight });
   }
 
   updateAuth = (key, value) => {
@@ -93,42 +80,18 @@ class AuthComponent extends React.Component {
   signIn = ev => {
     ev.preventDefault();
 
-    // Auth.signOut().then(() => {
-    //   Auth.signUp({
-    //     username: this.state.email,
-    //     password: this.state.password,
-    //     attributes: {
-    //     },
-    //     validationData: []
-    //   })
-    //   .then(data => {
-    //
-    //     Auth.signIn(this.state.email, this.state.password)
-    //     .then(user => {
-    //       this.props.setIsAuth(true);
-    //       Auth.currentCredentials().then((res) => console.log(res));
-    //       Auth.currentSession().then((res) => console.log(res));
-    //     })
-    //     .catch(err => console.log(err.stack));
-    //   })
-    //   .catch(err => console.log(err));
-    // }).catch(e => {
-    // });
-
     Auth.signIn(this.state.email, this.state.password)
-      .then(user => {
-        this.props.setIsAuth(true);
-        Auth.currentCredentials().then(credentials => {
-          this.props.dispatchSetIdentityId(credentials.identityId);
-        });
-        // Auth.currentSession().then((res) => console.log(res));
-      })
-      .catch(err => console.log(err.stack));
+    .then(user => {
+      this.props.setIsAuth(true);
+      Auth.currentCredentials().then(credentials => {
+        this.props.dispatchSetIdentityId(credentials.identityId);
+      });
+    })
+    .catch(err => console.log(err.stack));
   };
 
   render() {
     const { before, isAuth, ...props } = this.props;
-    const { height, width } = this.state;
     return (
       <ThemeProvider theme={theme}>
         <Container

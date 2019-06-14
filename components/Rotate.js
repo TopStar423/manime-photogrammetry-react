@@ -36,22 +36,8 @@ export default class Rotate extends React.Component {
     });
 
     var win = window.open('', currentWindow);
-    // var win = window.open(uri, '_target');
     win.focus();
 
-    // const images = {
-    //   image0: signedUriArray[0],
-    //   image1: signedUriArray[1],
-    //   image2: signedUriArray[2],
-    //   image3: signedUriArray[3],
-    //   image4: signedUriArray[4]
-    // };
-    //
-    // for (var i = 0; i < 10; ++i) {
-    //   setTimeout(() => {
-    //     win.postMessage(images, '*');
-    //   }, 1000 * i);
-    // }
     if (win) {
       form.submit();
     } else {

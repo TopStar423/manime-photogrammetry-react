@@ -4,6 +4,8 @@ const userData = (state = { isAuth: false }, action) => {
       return { ...state, isAuth: action.isAuth };
     case 'SET_IDENTITY_ID':
       return { ...state, identityId: action.identityId };
+    case 'SET_KEY_VALUE':
+      return { ...state, [action.key]: action.value };
     case 'DEFAULT':
       return state;
     default:

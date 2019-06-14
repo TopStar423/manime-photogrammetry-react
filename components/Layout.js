@@ -4,7 +4,6 @@ import { theme } from '../utils/theme';
 import Box from './Box';
 import Sidebar from './Sidebar';
 import { connect } from 'react-redux';
-import activeElement from '../reducers/activeElement';
 import { setDisplay, setKeyValue } from '../actions';
 import { StandardButton, StandardInput, StandardLabel } from './StyledComponents';
 import { API, Storage } from 'aws-amplify';
@@ -75,12 +74,12 @@ class Layout extends React.Component {
   }
 
   modalOnClick = e => {
-    if (this.modalRef.contains(e.target)) console.log('inside');
-    else this.props.setActiveElementDisplay();
+    // if (this.modalRef.contains(e.target)) console.log('inside');
+    // else this.props.setActiveElementDisplay();
   };
   menuOnClick = e => {
-    if (this.menuRef.contains(e.target)) console.log('inside');
-    else this.props.setActiveElementDisplay();
+    // if (this.menuRef.contains(e.target)) console.log('inside');
+    // else this.props.setActiveElementDisplay();
   };
   chooseImage = e => {
     const file = e.target.files[0];
@@ -101,11 +100,11 @@ class Layout extends React.Component {
       contentType: 'image/png'
     })
       .then(result => {
-        this.props.setActiveElementDisplay();
-        this.props.setActiveElementKeyValue(
-          'imagePath',
-          `https://s3-us-west-2.amazonaws.com/mani-me-app/public/${this.state.uploadImageName}.png`
-        );
+        // this.props.setActiveElementDisplay();
+        // this.props.setActiveElementKeyValue(
+        //   'imagePath',
+        //   `https://s3-us-west-2.amazonaws.com/mani-me-app/public/${this.state.uploadImageName}.png`
+        // );
       })
       .catch(err => {
         this.setState({ errorMessage: 'Upload failed, check console.' });
@@ -140,6 +139,9 @@ class Layout extends React.Component {
               alignItems='center'></Header>
             {props.children}
           </Box>
+
+
+          {/* Replace this with portal
 
           {this.props.activeElement.type == 'menu' && (
             <Box position='absolute' width='100%' height='100%' onClick={this.menuOnClick}>
@@ -241,7 +243,7 @@ class Layout extends React.Component {
                 </Box>
               </Modal>
             </Box>
-          )}
+          )} */}
         </Container>
       </ThemeProvider>
     );
@@ -249,12 +251,12 @@ class Layout extends React.Component {
 }
 
 const mapStateToProps = state => ({
-  activeElement: activeElement(state.activeElement, { type: 'DEFAULT' })
+  // activeElement: activeElement(state.activeElement, { type: 'DEFAULT' })
 });
 
 const mapDispatchToProps = dispatch => ({
-  setActiveElementDisplay: () => dispatch(setDisplay()),
-  setActiveElementKeyValue: (key, value) => dispatch(setKeyValue(key, value))
+  // setActiveElementDisplay: () => dispatch(setDisplay()),
+  // setActiveElementKeyValue: (key, value) => dispatch(setKeyValue(key, value))
 });
 
 export default connect(

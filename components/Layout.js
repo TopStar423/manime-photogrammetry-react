@@ -250,16 +250,18 @@ class Layout extends React.Component {
   }
 }
 
-const mapStateToProps = state => ({
-  // activeElement: activeElement(state.activeElement, { type: 'DEFAULT' })
-});
+// const mapStateToProps = state => ({
+//   activeElement: activeElement(state.activeElement, { type: 'DEFAULT' })
+// });
 
-const mapDispatchToProps = dispatch => ({
-  // setActiveElementDisplay: () => dispatch(setDisplay()),
-  // setActiveElementKeyValue: (key, value) => dispatch(setKeyValue(key, value))
-});
+// const mapDispatchToProps = dispatch => ({
+//   setActiveElementDisplay: () => dispatch(setDisplay()),
+//   setActiveElementKeyValue: (key, value) => dispatch(setKeyValue(key, value))
+// });
 
-export default connect(
-  mapStateToProps,
-  mapDispatchToProps
-)(Layout);
+// export default connect(
+//   mapStateToProps,
+//   mapDispatchToProps
+// )(Layout);
+
+export default Layout;

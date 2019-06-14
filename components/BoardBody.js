@@ -216,16 +216,9 @@ class BoardJsx extends React.Component {
       selectedFieldType: type,
       selectedBoundingRect: boundingRect
     });
-    // console.log(boundingRect);
   }
 
   updateField = (id, propertyName, propertyValue) => {
-    // let _orders = this.state.orders;
-    // _orders[index][propertyName] = propertyValue;
-    // this.setState({
-    //   orders: _orders
-    // });
-
     // LAMBDA
     if (this.props.id == 'nailproducts') {
       let userData = {
@@ -249,28 +242,9 @@ class BoardJsx extends React.Component {
     this.setState({ searchValue });
   }
 
-  // addColumnFromDiffTable = (tableName, id, propName) => {
-  //   if (typeof tableName != 'string' || typeof id != 'string' || typeof propName != 'string')
-  //     return {};
-  //
-  //   let userInit = {
-  //     headers: { 'Content-Type': 'application/json' }
-  //   }
-  //   API.get(this.getEndpoint(tableName), `/${tableName}/read/${id}`, userInit).then(response => {
-  //     // console.log(response);
-  //     if(response && response.rows && this._mounted) {
-  //     }
-  //   }).catch((err) => {
-  //     // console.log(err.stack);
-  //   });
-  // }
-
   sortData = item => {
-    console.log('here');
-    console.log(item);
     const newData = [ ...this.state.data ];
     newData.sort((a, b) => {
-
       if ( a[item] < b[item]){
         return -1;
       }
@@ -280,7 +254,6 @@ class BoardJsx extends React.Component {
       return 0;
 
     });
-    console.log(newData);
     this.setState({ data: newData });
   }
 
@@ -381,43 +354,12 @@ class BoardJsx extends React.Component {
           <StandardInput ml={3} value={this.state.searchValue} onChange={(ev) => this.updateSearchBar(ev.target.value.toLowerCase())}></StandardInput>
         </Box>
         <BoardBodyContainer table={table}>
-          {/* <Row table={table} description>
-            { table.map((item, i) => <RowItem type='display' onClick={() => this.sortData(tableProps[i])}>{item}</RowItem>) }
-          </Row> */}
           <div>
             { table.map((item, i) => <div type='display' style={{ width: '200px', marginLeft: '10px', display: 'inline-block' }} onClick={() => this.sortData(tableProps[i])}>{item}</div>) }
           </div>
           <BoardBodyContents>
             {
               this.renderVirtualized(tableProps, table)
-
-              // data.map((item, i) =>
-              //   // data is the database table, and item is a row in that table
-              //   <Row table={table}>
-              //     {
-              //       tableProps.map((rowItem, j) => {
-              //         // tableProps is an array containing each column's variable name, rowItem could be userid or nailproductid
-              //         const fieldNum = (i * numAttr) + j;
-              //         return (
-              //
-              //           <RowItem>
-              //             {
-              //               item[tableProps[j]]
-              //             }
-              //           </RowItem>
-              //           // change
-              //           // <RowItem item={item} i={uuid.v1()} fieldNum={fieldNum} propertyName={tableProps[j]} propertyValue={item[tableProps[j]]} type={tablePropsType[j]} updateField={this.updateField} selectField={this.selectField} selectedField={this.state.selectedField}>
-              //           //   { tableProps[j] ==  'fitted' && item[tableProps[j]] == false ?
-              //           //       'false'
-              //           //     :
-              //           //       item[tableProps[j]]
-              //           //   }
-              //           // </RowItem>
-              //         );
-              //       })
-              //     }
-              //   </Row>
-              // )
             }
           </BoardBodyContents>
         </BoardBodyContainer>

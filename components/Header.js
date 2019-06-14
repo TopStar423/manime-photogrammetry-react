@@ -2,10 +2,10 @@ import Link from 'next/link';
 
 const Header = () => (
   <div>
-    <Link href="/">
+    <Link href='/'>
       <a>Home</a>
     </Link>
-    <Link href="/about">
+    <Link href='/about'>
       <a>About</a>
     </Link>
   </div>

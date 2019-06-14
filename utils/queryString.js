@@ -16,7 +16,7 @@ IMAGE_KEY_MAP.set('right_thumb', 3);
 const listUserFiles = async identityId => {
   const result = await Storage.list(``, { level: 'private', identityId });
   return result;
-}
+};
 
 const getLatestKeys = userFiles => {
   // listedKeys[0] == {key: leftFingers, lastModified: }... leftThumb, rightFingers, rightThumb, side
@@ -41,7 +41,11 @@ const getLatestKeys = userFiles => {
         const lastModified = item.lastModified.getTime();
         const index = IMAGE_KEY_MAP.get(fileName);
 
-        if (!latestKeys[index] || !latestKeys[index].lastModified || lastModified > latestKeys[index].lastModified) {
+        if (
+          !latestKeys[index] ||
+          !latestKeys[index].lastModified ||
+          lastModified > latestKeys[index].lastModified
+        ) {
           const newKey = { key, lastModified };
           latestKeys[index] = newKey;
         }
@@ -54,7 +58,7 @@ const getLatestKeys = userFiles => {
 const getUserFile = async (s3Key, identityId) => {
   const result = await Storage.get(s3Key, { level: 'private', identityId }, { expires: 60 * 10 });
   return result;
-}
+};
 
 // get this from a lambda function (adminIdentityId, userIdentityId, latestKeys), these two functions
 const getLatestSignedUris = async (latestKeys, identityId) => {
@@ -67,7 +71,7 @@ const getLatestSignedUris = async (latestKeys, identityId) => {
   //   signedUris[i] = uri;
   // })
   return signedUris;
-}
+};
 
 export const getSignedUriArray = async (adminIdentityId, clientIdentityId) => {
   setStorageBucket('mani-me-react-native-userfiles-1');
@@ -76,38 +80,37 @@ export const getSignedUriArray = async (adminIdentityId, clientIdentityId) => {
   // const signedUriArray = await getLatestSignedUris(latestKeys, clientIdentityId);
   const signedUriArray = await presignedImageUri(adminIdentityId, clientIdentityId, latestKeys);
   return { latestKeys, signedUriArray };
-}
+};
 
-
-  // if (checkS3Exists($s3, $bucket, $userid, "leftFingers.jpg") == true)
-  //   $queryString .= "&image0=".urlencode(getS3Presigned($s3, $bucket, $userid, "leftFingers.jpg"));
-  // else if (checkS3Exists($s3, $bucket, $userid, "left_fingers.png") == true)
-  //   $queryString .= "&image0=".urlencode(getS3Presigned($s3, $bucket, $userid, "left_fingers.png"));
-  // else
-  //   $queryString .= "&image0=".urlencode(getS3Presigned($s3, $bucket, $userid, "leftFingers.png"));
-  //
-  // if (checkS3Exists($s3, $bucket, $userid, "leftThumb.jpg") == true)
-  //   $queryString .= "&image1=".urlencode(getS3Presigned($s3, $bucket, $userid, "leftThumb.jpg"));
-  // else if (checkS3Exists($s3, $bucket, $userid, "left_thumb.png") == true)
-  //   $queryString .= "&image1=".urlencode(getS3Presigned($s3, $bucket, $userid, "left_thumb.png"));
-  // else
-  //   $queryString .= "&image1=".urlencode(getS3Presigned($s3, $bucket, $userid, "leftThumb.png"));
-  //
-  // if (checkS3Exists($s3, $bucket, $userid, "rightFingers.jpg") == true)
-  //   $queryString .= "&image2=".urlencode(getS3Presigned($s3, $bucket, $userid, "rightFingers.jpg"));
-  // else if (checkS3Exists($s3, $bucket, $userid, "right_fingers.png") == true)
-  //   $queryString .= "&image2=".urlencode(getS3Presigned($s3, $bucket, $userid, "right_fingers.png"));
-  // else
-  //   $queryString .= "&image2=".urlencode(getS3Presigned($s3, $bucket, $userid, "rightFingers.png"));
-  //
-  // if (checkS3Exists($s3, $bucket, $userid, "rightThumb.jpg") == true)
-  //   $queryString .= "&image3=".urlencode(getS3Presigned($s3, $bucket, $userid, "rightThumb.jpg"));
-  // else if (checkS3Exists($s3, $bucket, $userid, "right_thumb.png") == true)
-  //   $queryString .= "&image3=".urlencode(getS3Presigned($s3, $bucket, $userid, "right_thumb.png"));
-  // else
-  //   $queryString .= "&image3=".urlencode(getS3Presigned($s3, $bucket, $userid, "rightThumb.png"));
-  //
-  // if (checkS3Exists($s3, $bucket, $userid, "side.jpg") == true)
-  //   $queryString .= "&image4=".urlencode(getS3Presigned($s3, $bucket, $userid, "side.jpg"));
-  // else
-  //   $queryString .= "&image4=".urlencode(getS3Presigned($s3, $bucket, $userid, "side.png"));
+// if (checkS3Exists($s3, $bucket, $userid, "leftFingers.jpg") == true)
+//   $queryString .= "&image0=".urlencode(getS3Presigned($s3, $bucket, $userid, "leftFingers.jpg"));
+// else if (checkS3Exists($s3, $bucket, $userid, "left_fingers.png") == true)
+//   $queryString .= "&image0=".urlencode(getS3Presigned($s3, $bucket, $userid, "left_fingers.png"));
+// else
+//   $queryString .= "&image0=".urlencode(getS3Presigned($s3, $bucket, $userid, "leftFingers.png"));
+//
+// if (checkS3Exists($s3, $bucket, $userid, "leftThumb.jpg") == true)
+//   $queryString .= "&image1=".urlencode(getS3Presigned($s3, $bucket, $userid, "leftThumb.jpg"));
+// else if (checkS3Exists($s3, $bucket, $userid, "left_thumb.png") == true)
+//   $queryString .= "&image1=".urlencode(getS3Presigned($s3, $bucket, $userid, "left_thumb.png"));
+// else
+//   $queryString .= "&image1=".urlencode(getS3Presigned($s3, $bucket, $userid, "leftThumb.png"));
+//
+// if (checkS3Exists($s3, $bucket, $userid, "rightFingers.jpg") == true)
+//   $queryString .= "&image2=".urlencode(getS3Presigned($s3, $bucket, $userid, "rightFingers.jpg"));
+// else if (checkS3Exists($s3, $bucket, $userid, "right_fingers.png") == true)
+//   $queryString .= "&image2=".urlencode(getS3Presigned($s3, $bucket, $userid, "right_fingers.png"));
+// else
+//   $queryString .= "&image2=".urlencode(getS3Presigned($s3, $bucket, $userid, "rightFingers.png"));
+//
+// if (checkS3Exists($s3, $bucket, $userid, "rightThumb.jpg") == true)
+//   $queryString .= "&image3=".urlencode(getS3Presigned($s3, $bucket, $userid, "rightThumb.jpg"));
+// else if (checkS3Exists($s3, $bucket, $userid, "right_thumb.png") == true)
+//   $queryString .= "&image3=".urlencode(getS3Presigned($s3, $bucket, $userid, "right_thumb.png"));
+// else
+//   $queryString .= "&image3=".urlencode(getS3Presigned($s3, $bucket, $userid, "rightThumb.png"));
+//
+// if (checkS3Exists($s3, $bucket, $userid, "side.jpg") == true)
+//   $queryString .= "&image4=".urlencode(getS3Presigned($s3, $bucket, $userid, "side.jpg"));
+// else
+//   $queryString .= "&image4=".urlencode(getS3Presigned($s3, $bucket, $userid, "side.png"));

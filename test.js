@@ -1,4 +1,3 @@
-
 // const searchValue = '';
 //
 // const tempArray = [];
@@ -27,7 +26,6 @@
 const asyncSub = async () => {
   const test = [0, 1, 2, 3, 4];
   test.map(async item => {
-
     const test = new Promise(function(resolve, reject) {
       setTimeout(() => {
         console.log(item);
@@ -38,7 +36,6 @@ const asyncSub = async () => {
     await test;
   });
   console.log('here');
-}
-
+};
 
 asyncSub();

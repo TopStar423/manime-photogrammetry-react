@@ -93,11 +93,7 @@ export const getGroupOrders = async identityId => {
   const userInit = {
     headers: { 'Content-Type': 'application/json' }
   };
-  const response = await API.get(
-    'LambdaRDS',
-    `/grouporders/read/${identityId}`,
-    userInit
-  );
+  const response = await API.get('LambdaRDS', `/grouporders/read/${identityId}`, userInit);
   return response;
 };
 
@@ -105,11 +101,7 @@ export const getOrders = async groupOrderId => {
   const userInit = {
     headers: { 'Content-Type': 'application/json' }
   };
-  const response = await API.get(
-    'LambdaRDS',
-    `/orders/read/${groupOrderId}`,
-    userInit
-  );
+  const response = await API.get('LambdaRDS', `/orders/read/${groupOrderId}`, userInit);
   return response;
 };
 
@@ -119,11 +111,7 @@ export const rotateImage = async (identityId, angle, fileName) => {
     body: { identityId, angle, fileName },
     headers: { 'Content-Type': 'application/json' }
   };
-  const response = await API.post(
-    'LambdaServer',
-    '/image/rotate/manual',
-    userInit
-  );
+  const response = await API.post('LambdaServer', '/image/rotate/manual', userInit);
   return response;
 };
 
@@ -136,7 +124,7 @@ export const sendEmail = async dynamicData => {
   // const response = await API.post('LambdaServer', '/email', userInit);
   // return response;
   return null;
-}
+};
 
 export const presignedImageUri = async (adminIdentityId, clientIdentityId, latestKeys) => {
   const init = {
@@ -145,27 +133,27 @@ export const presignedImageUri = async (adminIdentityId, clientIdentityId, lates
   };
   const response = await API.post('LambdaServer', '/presigned', init);
   return response;
-}
+};
 
 // Subscription
 export const getSubscription = async stripeId => {
   if (!stripeId) return null;
   const response = await API.get('LambdaPayment', `/subscription/retrieve/${stripeId}`);
   return response;
-}
+};
 
 export const cancelSubscription = async subscriptionId => {
   if (!subscriptionId) return null;
   const response = await API.post('LambdaPayment', `/subscription/cancel/${subscriptionId}`);
   return response;
-}
+};
 
 export const resumeSubscription = async subscriptionId => {
   if (!subscriptionId) return null;
   // if null, that means this user does not have any subscriptions, we need to subscribe this user to a new subscription with the right plan.
   const response = await API.post('LambdaPayment', `/subscription/resume/${subscriptionId}`);
   return response;
-}
+};
 
 // Test this function
 export const startSubscription = async (subscriptionPlan, customerId, discountCode) => {
@@ -180,25 +168,26 @@ export const startSubscription = async (subscriptionPlan, customerId, discountCo
   };
 
   API.post('LambdaPayment', '/subscription/subscribe', userInit)
-  .then(response => {
-    console.log(response);
-  })
-  .catch(error => {
-    console.log(error);
-  });
-}
+    .then(response => {
+      console.log(response);
+    })
+    .catch(error => {
+      console.log(error);
+    });
+};
 
 // Retry
 const API_RETRIES = 7;
 const INIT_TIMEOUT = 2000;
 
-function wait(waitTime) { return new Promise(resolve => setTimeout(resolve, waitTime)) }
+function wait(waitTime) {
+  return new Promise(resolve => setTimeout(resolve, waitTime));
+}
 
 function retryAPI(apiName, path, myInit, waitTime, retry) {
-  if (retry < 0) return Promise.reject(apiName+path);
+  if (retry < 0) return Promise.reject(apiName + path);
 
-  return API.post(apiName, path, myInit)
-  .catch(error => {
+  return API.post(apiName, path, myInit).catch(error => {
     return wait(waitTime).then(() => retryAPI(apiName, path, myInit, waitTime * 2, retry - 1));
   });
 }

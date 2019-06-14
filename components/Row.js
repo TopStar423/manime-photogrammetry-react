@@ -1,5 +1,17 @@
 import Link from 'next/link';
-import { space, width, fontSize, color, height, justifyContent, alignItems, display, fontFamily, fontWeight, boxShadow } from 'styled-system';
+import {
+  space,
+  width,
+  fontSize,
+  color,
+  height,
+  justifyContent,
+  alignItems,
+  display,
+  fontFamily,
+  fontWeight,
+  boxShadow
+} from 'styled-system';
 import styled from 'styled-components';
 import { connect } from 'react-redux';
 import { Storage } from 'aws-amplify';
@@ -12,7 +24,6 @@ import { getQueryString } from '../utils/queryString';
 import activeElement from '../reducers/activeElement';
 import { setActiveElement } from '../actions';
 import { StandardButton } from './StyledComponents';
-
 
 export const MX_ROW = 3;
 export const ML_ROW_ITEM = 2;
@@ -29,7 +40,7 @@ export const ROW_ITEM_WIDTH = 200;
 export const RowItem = styled(Box)`
   white-space: nowrap;
   overflow: hidden;
-  font-weight: ${(props) => props.description ? 400 : 200};
+  font-weight: ${props => (props.description ? 400 : 200)};
   flex: 0 0 ${ROW_ITEM_WIDTH}px;
   height: 80%;
   align-items: center;
@@ -39,15 +50,14 @@ export const RowItem = styled(Box)`
 `;
 // border: ${(props) => props.selected ? 1 : 0}px solid #313131;
 
-
 // New Row requires horizontal margins
 export const Row = styled(Box)`
   display: flex;
   flex-direction: row;
   flex: 0 0 40px;
   align-items: center;
-  background-color: ${(props) => props.description ? 'transparent' : '#ffffff'};
-  width: ${(props) => {
+  background-color: ${props => (props.description ? 'transparent' : '#ffffff')};
+  width: ${props => {
     const numColumns = props.table.length;
     const width = (props.theme.space[ML_ROW_ITEM] + ROW_ITEM_WIDTH) * numColumns;
     return width;
@@ -61,7 +71,7 @@ export const Row = styled(Box)`
 export const Input = styled.input`
   ${space}
   ${fontSize}
-  font-weight: ${(props) => props.description ? 400 : 200};
+  font-weight: ${props => (props.description ? 400 : 200)};
   border: none;
   box-sizing: border-box;
   border-radius: 3px;
@@ -82,7 +92,7 @@ export const A = styled.a`
   }
 `;
 
-export const RowJsx = (props) => (
+export const RowJsx = props => (
   <Row boxShadow={props.description ? 0 : 2} height={1} my={1} ml={MX_ROW} {...props}>
     {props.children}
   </Row>
@@ -98,17 +108,20 @@ export const RowJsx = (props) => (
 // );
 
 export const RowItemComponent = props => (
-  <div style={{
-    whiteSpace: 'nowrap',
-    overflow: 'hidden',
-    fontWeight: props.description ? 400 : 200,
-    // flex: `0 0 ${ROW_ITEM_WIDTH}px`,
-    // height: '80%',
-    // alignItems: 'center',
-    // display: 'flex',
-    // borderRadius: '3px',
-    // boxSizing: 'border-box'
-  }} {...props} />
+  <div
+    style={{
+      whiteSpace: 'nowrap',
+      overflow: 'hidden',
+      fontWeight: props.description ? 400 : 200
+      // flex: `0 0 ${ROW_ITEM_WIDTH}px`,
+      // height: '80%',
+      // alignItems: 'center',
+      // display: 'flex',
+      // borderRadius: '3px',
+      // boxSizing: 'border-box'
+    }}
+    {...props}
+  />
 );
 
 export class RowItemComponent2 extends React.Component {
@@ -117,9 +130,8 @@ export class RowItemComponent2 extends React.Component {
     this.state = {
       propertyValue: this.props.children ? this.props.children : '',
 
-
       value: '',
-      copied: false,
+      copied: false
     };
   }
 
@@ -128,7 +140,7 @@ export class RowItemComponent2 extends React.Component {
     // if (this.props.selectField)
     //   this.props.selectField(this.props.fieldNum, this.props.type, this._ref.getBoundingClientRect());
     // this.props.setActiveElement({id: this.props.id, item: this.props.item, fieldNum: this.props.fieldNum, propertyName: this.props.propertyName, propertyValue: this.props.propertyValue, type: this.props.type, top: boundingRect.top, left: boundingRect.left, right: boundingRect.right, bottom: boundingRect.bottom, options: []});
-  }
+  };
 
   componentDidUpdate(prevProps) {
     // if (this.props.activeElement.fieldNum == this.props.fieldNum && this.props.activeElement.imagePath && prevProps.activeElement.imagePath != this.props.activeElement.imagePath)
@@ -140,7 +152,7 @@ export class RowItemComponent2 extends React.Component {
     console.log(propertyValue);
     this.setState({ propertyValue });
     // this.props.updateField(this.props.id, propertyName, propertyValue);
-  }
+  };
 
   openUri = () => {
     let leftFingers, leftThumb, rightFingers, rightThumb, side;
@@ -151,17 +163,27 @@ export class RowItemComponent2 extends React.Component {
 
     var win = window.open(uri, '_blank');
     win.focus();
-  }
+  };
   // <Link href={this.openUri} target="_blank" style={{ fontSize: 10 }}>Open Photogrammetry Workbench</Link>
 
   render() {
-    const { before, type, updateField, i, fieldNum, propertyName, selectField, selectedField, ...props } = this.props;
+    const {
+      before,
+      type,
+      updateField,
+      i,
+      fieldNum,
+      propertyName,
+      selectField,
+      selectedField,
+      ...props
+    } = this.props;
     const { activeElement } = this.props;
     // Temp before redux
-    const imagePath = '';//this.props.activeElement.fieldNum == this.props.fieldNum && this.props.activeElement.imagePath ? this.props.activeElement.imagePath : props.children;
+    const imagePath = ''; //this.props.activeElement.fieldNum == this.props.fieldNum && this.props.activeElement.imagePath ? this.props.activeElement.imagePath : props.children;
 
     return (
-      <RowItem ref={(ref)=> this._ref = ref} ml={ML_ROW_ITEM} {...props} >
+      <RowItem ref={ref => (this._ref = ref)} ml={ML_ROW_ITEM} {...props}>
         {/* { type == 'OPEN_PHOTOGRAMMETRY' ?
           <A target="_blank"
              onClick={this.openUri}>
@@ -185,7 +207,6 @@ export class RowItemComponent2 extends React.Component {
             : type == 'display' && <Box fontSize={1}>{props.children}</Box>
           }
         </Box> */}
-
       </RowItem>
     );
   }

@@ -4,7 +4,7 @@ import fetch from 'isomorphic-unfetch';
 // import Amplify from '../components/Aws';
 import BoardBody from '../components/BoardBody';
 
-const PostLink = (props) => (
+const PostLink = props => (
   <li>
     <Link as={`/p/${props.id}`} href={`/post?title=${props.title}`}>
       <a>{props.title}</a>
@@ -12,12 +12,11 @@ const PostLink = (props) => (
   </li>
 );
 
-const Data = (props) => (
+const Data = props => (
   <Layout before={false}>
     <BoardBody {...props}></BoardBody>
   </Layout>
 );
-
 
 // <p>Index</p>
 // <ul>
@@ -37,11 +36,10 @@ const Data = (props) => (
 //   ))}
 // </ul>
 
-
 Data.getInitialProps = async function(context) {
   const { id } = context.query;
   // console.log(`ID: ${id}`);
   return { id };
-}
+};
 
 export default Data;

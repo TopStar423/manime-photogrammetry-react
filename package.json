@@ -30,6 +30,7 @@
     "isomorphic-unfetch": "^3.0.0",
     "next": "^7.0.2",
     "next-redux-wrapper": "^2.1.0",
+    "prettier": "^1.18.2",
     "react": "^16.6.3",
     "react-copy-to-clipboard": "^5.0.1",
     "react-csv": "^1.1.1",

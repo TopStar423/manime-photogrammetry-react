@@ -4,7 +4,7 @@ import fetch from 'isomorphic-unfetch';
 // import Amplify from '../components/Aws';
 // import { withAuthenticator } from 'aws-amplify-react';
 
-const PostLink = (props) => (
+const PostLink = props => (
   <li>
     <Link as={`/p/${props.id}`} href={`/post?title=${props.title}`}>
       <a>{props.title}</a>
@@ -12,11 +12,7 @@ const PostLink = (props) => (
   </li>
 );
 
-const Index = (props) => (
-  <Layout before={false}>
-  </Layout>
-);
-
+const Index = props => <Layout before={false}></Layout>;
 
 // <p>Index</p>
 // <ul>
@@ -36,7 +32,6 @@ const Index = (props) => (
 //   ))}
 // </ul>
 
-
 Index.getInitialProps = async function() {
   const res = await fetch('https://api.tvmaze.com/search/shows?q=batman');
   const data = await res.json();
@@ -46,6 +41,6 @@ Index.getInitialProps = async function() {
   return {
     shows: data
   };
-}
+};
 
 export default Index;

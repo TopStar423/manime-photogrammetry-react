@@ -4,4 +4,4 @@ export default () => (
   <Layout>
     <p>About</p>
   </Layout>
-)
+);

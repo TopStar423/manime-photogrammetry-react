@@ -9,6 +9,6 @@ const activeElement = (state = { id: -1, type: 'display' }, action) => {
     default:
       return state;
   }
-}
+};
 
 export default activeElement;

@@ -6,28 +6,20 @@ export const theme = {
   lineHeights: {
     solid: 1,
     title: 1.25,
-    copy: 1.5,
+    copy: 1.5
   },
   letterSpacings: {
     normal: 'normal',
     tracked: '0.1em',
     tight: '-0.05em',
-    mega: '0.25em',
+    mega: '0.25em'
   },
   fonts: {
     serif: 'athelas, georgia, times, serif',
     sansSerif:
-      '-apple-system, BlinkMacSystemFont, "Helvetica Neue", Helvetica, "avenir next", avenir, "Segoe UI", Arial, sans-serif',
+      '-apple-system, BlinkMacSystemFont, "Helvetica Neue", Helvetica, "avenir next", avenir, "Segoe UI", Arial, sans-serif'
   },
-  borders: [
-    0,
-    '1px solid',
-    '2px solid',
-    '4px solid',
-    '8px solid',
-    '16px solid',
-    '32px solid',
-  ],
+  borders: [0, '1px solid', '2px solid', '4px solid', '8px solid', '16px solid', '32px solid'],
   radii: [0, 2, 4, 16, 9999, '100%'],
   width: [16, 32, 64, 128, 256],
   heights: [16, 32, 64, 128, 256],
@@ -57,7 +49,7 @@ export const theme = {
       'rgba(0,0,0,.6)',
       'rgba(0,0,0,.7)',
       'rgba(0,0,0,.8)',
-      'rgba(0,0,0,.9)',
+      'rgba(0,0,0,.9)'
     ],
     whites: [
       'rgba(255,255,255,.0125)',
@@ -71,14 +63,14 @@ export const theme = {
       'rgba(255,255,255,.6)',
       'rgba(255,255,255,.7)',
       'rgba(255,255,255,.8)',
-      'rgba(255,255,255,.9)',
-    ],
+      'rgba(255,255,255,.9)'
+    ]
   },
   shadows: [
     '0 1px 3px 0 rgba(0,0,0,0.00)',
     '0 1px 3px 0 rgba(0,0,0,0.05)',
     '0 1px 3px 0 rgba(0,0,0,0.10)',
     '0 1px 3px 0 rgba(0,0,0,0.15)',
-    '0 1px 3px 0 rgba(0,0,0,0.20)',
+    '0 1px 3px 0 rgba(0,0,0,0.20)'
   ]
 };

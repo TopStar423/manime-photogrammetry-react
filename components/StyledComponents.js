@@ -97,7 +97,7 @@ export const StandardInput = styled(Input)`
   padding: 5px 10px;
   font-size: 13px;
   &:focus {
-      outline: none;
+    outline: none;
   }
 `;
 
@@ -149,20 +149,23 @@ export const StandardButton = styled(Button)`
   color: #fff;
   border-radius: 3px;
   border: none;
-  min-width: ${props => props.minWidth ? props.minWidth : '45px'};
-  padding: ${props => props.padding ? props.padding : '0px 15px'};;
+  min-width: ${props => (props.minWidth ? props.minWidth : '45px')};
+  padding: ${props => (props.padding ? props.padding : '0px 15px')};
   height: 25px;
-  background-color: ${(props) => props.disabled ? '#d1d1d1' : props.backgroundColor ? props.backgroundColor : '#14aaf5'};
+  background-color: ${props =>
+    props.disabled ? '#d1d1d1' : props.backgroundColor ? props.backgroundColor : '#14aaf5'};
   &:focus {
     outline: none;
   }
   &:hover {
-    background-color: ${(props) => props.disabled ? '#d1d1d1' : props.backgroundColor ? props.backgroundColor : '#1299dc'};
-    opacity: ${(props) => props.backgroundColor ? 0.7 : 1};
+    background-color: ${props =>
+      props.disabled ? '#d1d1d1' : props.backgroundColor ? props.backgroundColor : '#1299dc'};
+    opacity: ${props => (props.backgroundColor ? 0.7 : 1)};
   }
   &:active {
-    background-color:${(props) => props.disabled ? '#d1d1d1' : props.backgroundColor ? props.backgroundColor : '#1088c4'};
-    opacity: ${(props) => props.backgroundColor ? 0.7 : 1};
+    background-color: ${props =>
+      props.disabled ? '#d1d1d1' : props.backgroundColor ? props.backgroundColor : '#1088c4'};
+    opacity: ${props => (props.backgroundColor ? 0.7 : 1)};
   }
 `;
 
@@ -209,7 +212,7 @@ export const Label = styled.label`
 
 export const StandardLabel = styled(Label)`
   font-family: '-apple-system, BlinkMacSystemFont, "Helvetica Neue", Helvetica, "avenir next", avenir, "Segoe UI", Arial, sans-serif';
-  color: ${(props) => props.color ? props.color : '#808590'};
+  color: ${props => (props.color ? props.color : '#808590')};
   font-size: 12px;
   font-weight: 500;
   margin-bottom: 5px;

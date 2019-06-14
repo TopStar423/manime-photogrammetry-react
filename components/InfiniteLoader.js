@@ -10,7 +10,7 @@ import { updateUserColumn, updateOrderColumn } from '../utils/lambdaFunctions';
 
 const ML_ROW_ITEM = 2;
 const ROW_ITEM_WIDTH = 200;
-const space = [0, 4, 8, 16, 32, 64, 128, 256, 512]
+const space = [0, 4, 8, 16, 32, 64, 128, 256, 512];
 
 // export const InfiniteLoaderComponent = function ({
 //   /** Are there more items to load? (This information comes from the most recent API request.) */
@@ -205,14 +205,7 @@ const space = [0, 4, 8, 16, 32, 64, 128, 256, 512]
 //   )
 // }
 
-
-export const ListComponent = function ({
-  list,
-  tableProps,
-  table,
-  user
-}) {
-
+export const ListComponent = function({ list, tableProps, table, user }) {
   const rowRenderer = ({ index, key, style, content }) => {
     const itemStyle = {
       padding: '0px',
@@ -251,17 +244,22 @@ export const ListComponent = function ({
 
         const { latestKeys, signedUriArray } = await getSignedUriArray(user, measure); // user is adminIdentityId, measure is clientIdentityId
         this.setState({ showPortal: true, signedUriArray, latestKeys, measure, email });
-      }
+      };
       render() {
         return (
           <React.Fragment>
-            <button style={itemStyle} onClick={this.openWorkbench}>Open Photogrammetry Workbench</button>
-            { this.state.showPortal &&
+            <button style={itemStyle} onClick={this.openWorkbench}>
+              Open Photogrammetry Workbench
+            </button>
+            {this.state.showPortal &&
               ReactDOM.createPortal(
-                <Rotate onClick={() => this.setState({ showPortal: false })} openWorkbench={this.openWorkbench} {...this.state}/>,
+                <Rotate
+                  onClick={() => this.setState({ showPortal: false })}
+                  openWorkbench={this.openWorkbench}
+                  {...this.state}
+                />,
                 document.getElementById('layout')
-              )
-            }
+              )}
           </React.Fragment>
         );
       }
@@ -279,7 +277,7 @@ export const ListComponent = function ({
         }
         this.setState({ value: ev.target.value });
         updateUserColumn(this.props.userId, this.props.columnName, ev.target.value);
-      }
+      };
       render() {
         // const locked = this.state.isAdmin ? { backgroundColor: '#ff0000' } : { backgroundColor: '#ff0000' };
         return (
@@ -302,7 +300,7 @@ export const ListComponent = function ({
         if (user != 'us-west-2:130355da-2eec-4f35-8092-3eca4d22d8ea') return;
         this.setState({ value: ev.target.value });
         updateOrderColumn(this.props.orderId, this.props.columnName, ev.target.value);
-      }
+      };
       render() {
         return (
           <select style={selectStyle} onChange={this.onChange} value={this.state.value}>
@@ -317,48 +315,45 @@ export const ListComponent = function ({
     }
 
     return (
-      <div
-        key={key}
-        style={style}
-      >
+      <div key={key} style={style}>
         <React.Fragment>
-          <div style={{ width: 35, fontSize: 12, display: 'flex', justifyContent: 'center', alignItems: 'center' }}>{list.size - index}</div>
-          {
-            tableProps.map((prop, i) => {
-              if (table[i] == '') {
-                return (
-                  <Workbench />
-                );
-              } else if (tableProps[i] == 'fitstatus') {
-                const userId = content['userid'];
-                const value = content[prop] ? content[prop] : '';
-                const columnName = tableProps[i];
+          <div
+            style={{
+              width: 35,
+              fontSize: 12,
+              display: 'flex',
+              justifyContent: 'center',
+              alignItems: 'center'
+            }}>
+            {list.size - index}
+          </div>
+          {tableProps.map((prop, i) => {
+            if (table[i] == '') {
+              return <Workbench />;
+            } else if (tableProps[i] == 'fitstatus') {
+              const userId = content['userid'];
+              const value = content[prop] ? content[prop] : '';
+              const columnName = tableProps[i];
 
-                return (
-                  <SelectFitStatus userId={userId} value={value} columnName={columnName}/>
-                );
-              } else if (tableProps[i] == 'orderstatus') {
-                const orderId = content['orderid'];
-                const value = content[prop] ? content[prop] : '';
-                const columnName = tableProps[i];
+              return <SelectFitStatus userId={userId} value={value} columnName={columnName} />;
+            } else if (tableProps[i] == 'orderstatus') {
+              const orderId = content['orderid'];
+              const value = content[prop] ? content[prop] : '';
+              const columnName = tableProps[i];
 
-                return (
-                  <SelectOrderStatus orderId={orderId} value={value} columnName={columnName}/>
-                );
-              } else {
-                return (
-                  <CopyToClipboard text={content[prop]}
-                    onCopy={() => {}}>
-                    <div style={itemStyle}>{content[prop]}</div>
-                  </CopyToClipboard>
-                );
-              }
-            })
-          }
+              return <SelectOrderStatus orderId={orderId} value={value} columnName={columnName} />;
+            } else {
+              return (
+                <CopyToClipboard text={content[prop]} onCopy={() => {}}>
+                  <div style={itemStyle}>{content[prop]}</div>
+                </CopyToClipboard>
+              );
+            }
+          })}
         </React.Fragment>
       </div>
-    )
-  }
+    );
+  };
 
   const numColumns = tableProps.length;
   const width = (space[ML_ROW_ITEM] + ROW_ITEM_WIDTH) * numColumns;
@@ -368,9 +363,7 @@ export const ListComponent = function ({
     display: 'flex'
   };
 
-  return (
-    list.map((item, index) => {
-      return rowRenderer({ index, key: uuid.v1(), style, content: item });
-    })
-  )
-}
+  return list.map((item, index) => {
+    return rowRenderer({ index, key: uuid.v1(), style, content: item });
+  });
+};

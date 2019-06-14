@@ -9,6 +9,6 @@ const userData = (state = { isAuth: false }, action) => {
     default:
       return state;
   }
-}
+};
 
 export default userData;

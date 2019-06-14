@@ -31,7 +31,7 @@ const Input = styled.input`
   font-size: 13px;
   width: 100%;
   &:focus {
-      outline: none;
+    outline: none;
   }
 `;
 
@@ -87,10 +87,10 @@ class AuthComponent extends React.Component {
   updateAuth = (key, value) => {
     this.setState({
       [key]: value
-    })
-  }
+    });
+  };
 
-  signIn = (ev) => {
+  signIn = ev => {
     ev.preventDefault();
 
     // Auth.signOut().then(() => {
@@ -116,37 +116,68 @@ class AuthComponent extends React.Component {
     // });
 
     Auth.signIn(this.state.email, this.state.password)
-    .then(user => {
-      this.props.setIsAuth(true);
-      Auth.currentCredentials().then(credentials => {
-        this.props.dispatchSetIdentityId(credentials.identityId);
-      });
-      // Auth.currentSession().then((res) => console.log(res));
-    })
-    .catch(err => console.log(err.stack));
-  }
+      .then(user => {
+        this.props.setIsAuth(true);
+        Auth.currentCredentials().then(credentials => {
+          this.props.dispatchSetIdentityId(credentials.identityId);
+        });
+        // Auth.currentSession().then((res) => console.log(res));
+      })
+      .catch(err => console.log(err.stack));
+  };
 
   render() {
     const { before, isAuth, ...props } = this.props;
     const { height, width } = this.state;
     return (
       <ThemeProvider theme={theme}>
-        <Container display='flex' flexDirection='column' justifyContent='center' alignItems='center' width='100%' height='100%'>
-          <Box width={'500px'} display='flex' flexDirection='column' alignItems='center' mb={3} pb={2}>
-            <img src='https://s3-us-west-2.amazonaws.com/mani-me-app/manimelogo.png' style={{width: '35%', height: 'auto'}}/>
+        <Container
+          display='flex'
+          flexDirection='column'
+          justifyContent='center'
+          alignItems='center'
+          width='100%'
+          height='100%'>
+          <Box
+            width={'500px'}
+            display='flex'
+            flexDirection='column'
+            alignItems='center'
+            mb={3}
+            pb={2}>
+            <img
+              src='https://s3-us-west-2.amazonaws.com/mani-me-app/manimelogo.png'
+              style={{ width: '35%', height: 'auto' }}
+            />
           </Box>
-          <Box width={'500px'} bg='#fff' boxShadow='0 1px 3px 0 rgba(0,0,0,0.15)' borderRadius='3px'>
+          <Box
+            width={'500px'}
+            bg='#fff'
+            boxShadow='0 1px 3px 0 rgba(0,0,0,0.15)'
+            borderRadius='3px'>
             <Box display='flex' justifyContent='center' pt={4} fontFamily='sansSerif' fontSize={5}>
               Log In
             </Box>
             <Box mx={4} mb={3} p={4} display='flex' flexDirection='column'>
               <form>
                 <Label>Email Address</Label>
-                <Input value={this.state.email} onChange={(ev) => this.updateAuth('email', ev.target.value)}></Input>
+                <Input
+                  value={this.state.email}
+                  onChange={ev => this.updateAuth('email', ev.target.value)}></Input>
                 <Label>Password</Label>
-                <Input type='password' value={this.state.password} onChange={(ev) => this.updateAuth('password', ev.target.value)}></Input>
-                <Box display='flex' width='100%' flexDirection='row' justifyContent='flex-end' mt={3}>
-                  <Button type='submit' onClick={this.signIn}>Log in</Button>
+                <Input
+                  type='password'
+                  value={this.state.password}
+                  onChange={ev => this.updateAuth('password', ev.target.value)}></Input>
+                <Box
+                  display='flex'
+                  width='100%'
+                  flexDirection='row'
+                  justifyContent='flex-end'
+                  mt={3}>
+                  <Button type='submit' onClick={this.signIn}>
+                    Log in
+                  </Button>
                 </Box>
               </form>
             </Box>
@@ -159,12 +190,12 @@ class AuthComponent extends React.Component {
 
 const mapStateToProps = state => ({
   userData: userData(state.userData, { type: 'DEFAULT' })
-})
+});
 
 const mapDispatchToProps = dispatch => ({
   setIsAuth: isAuth => dispatch(setIsAuth(isAuth)),
   dispatchSetIdentityId: identityId => dispatch({ type: 'SET_IDENTITY_ID', identityId })
-})
+});
 
 export default connect(
   mapStateToProps,

@@ -16,43 +16,43 @@ const OPEN_PHOTOGRAMMETRY = 'OPEN_PHOTOGRAMMETRY';
 
 const COMBINED_ORDERS_COLUMN_DESCRIPTION = ['_Email', 'Nail Description', 'Shipping Address', 'User ID', 'Order ID', 'Group Order ID', 'Nail Product ID', 'Nail Length', 'Nail Shape', 'Order Status', 'Date Created'];
 const ORDERS_COLUMN_DESCRIPTION = ['_Email', 'Order ID', 'Group Order ID', 'Nail Product ID', 'Nail Length', 'Nail Shape', 'Order Status', 'Date Created'];
-const GROUP_ORDERS_COLUMN_DESCRIPTION = ['Group Order ID', 'User ID', 'Group Order Status', 'Insurance', 'Shipping Address', 'Subtotal', 'Taxes'];
+const GROUP_ORDERS_COLUMN_DESCRIPTION = ['', 'Group Order ID', 'User ID', 'Group Order Status', 'Insurance', 'Shipping Address', 'Subtotal', 'Taxes'];
 const USERS_COLUMN_DESCRIPTION = ['', 'User ID', 'First Name', 'Last Name', 'Email', '# Pics', 'Fit Status', 'Total Orders', 'Fitted (Deprecated)', 'Date Created', 'Date Last Login', 'Description', 'Subscription', 'Design Pref 1', 'Design Pref 2', 'Design Pref 3'];
 const ORDER_REVIEWS_COLUMN_DESCRIPTION = ['Review ID', 'Order ID', 'Finger Name', 'Review Description', 'Category 1', 'Category 2', 'Category 3'];
 const SHIPPING_ADDRESSES_COLUMN_DESCRIPTION = ['Shipping Address ID', 'User ID', 'Name', 'Address Line 1', 'Address Line 2', 'City', 'Zip Code', 'State', 'Country', 'Latitude', 'Longitude'];
 const PAYMENTS_COLUMN_DESCRIPTION = ['Payment ID', 'User ID', 'Name', 'Last 4', 'Refunded', 'Paid', 'Address Line 1', 'Address Line 2', 'City', 'Zip Code', 'State', 'Country'];
 const DESIGNERS_COLUMN_DESCRIPTION = ['Designer ID', 'First Name', 'Last Name', 'Total Reviews', 'Total Designs', 'Profile Picture', 'Description', 'Location', 'Url 1', 'Url 2', 'Url 3', 'Url 4', 'Url 5', 'Url 6'];
-const NAIL_PRODUCTS_COLUMN_DESCRIPTION = ['Nail Product ID', 'Index','Date Created', 'Description', 'Designer ID', 'Name', 'Price', 'Total Hates', 'Total Likes', 'Total Manime', 'Total Purchases', 'Visible', 'Pic Url 1', 'Pic Url 2', 'Pic Url 3', 'Pic Url 4', 'Pic Url 5', 'Overlay Url', 'Version'];
+const NAIL_PRODUCTS_COLUMN_DESCRIPTION = ['Preview', 'Nail Product ID', 'Index','Date Created', 'Description', 'Designer ID', 'Name', 'Price', 'Total Hates', 'Total Likes', 'Total Manime', 'Total Purchases', 'Visible', 'Pic Url 1', 'Pic Url 2', 'Pic Url 3', 'Pic Url 4', 'Pic Url 5', 'Overlay Url', 'Version'];
 const NAIL_CATEGORIES_COLUMN_DESCRIPTION = ['Category ID', 'Category Name'];
 const NAIL_PRODUCT_CATEGORIES_COLUMN_DESCRIPTION = ['Nail Product ID', 'Category ID'];
 
 const COMBINED_ORDERS_COLUMN_PROPERTIES = ['email', 'description', 'shippingaddress', 'userid', 'orderid', 'grouporderid', 'nailproductid', 'naillength', 'nailshape', 'orderstatus', 'datecreated'];
 const ORDERS_COLUMN_PROPERTIES = ['email', 'orderid', 'grouporderid', 'nailproductid', 'naillength', 'nailshape', 'orderstatus', 'datecreated'];
-const GROUP_ORDERS_COLUMN_PROPERTIES = ['grouporderid', 'userid', 'grouporderstatus', 'insurance', 'shippingaddress', 'subtotal', 'taxes'];
+const GROUP_ORDERS_COLUMN_PROPERTIES = ['userid', 'grouporderid', 'userid', 'grouporderstatus', 'insurance', 'shippingaddress', 'subtotal', 'taxes'];
 const USERS_COLUMN_PROPERTIES = ['userid', 'userid', 'firstname', 'lastname', 'email', 'numpics', 'fitstatus','totalorders', 'fitted', 'datecreated', 'datelastlogin', 'description', 'subscription', 'designpref', 'designpref2', 'designpref3'];
 const ORDER_REVIEWS_COLUMN_PROPERTIES = ['reviewid', 'orderid', 'fingername', 'reviewdescription', 'category1', 'category2', 'category3'];
 const SHIPPING_ADDRESSES_COLUMN_PROPERTIES = ['shippingaddressid', 'userid', 'name', 'addressline1', 'addressline2', 'city', 'addresszip', 'addresstate', 'addresscountry', 'addresslatitude', 'addresslongitude'];
 const PAYMENTS_COLUMN_PROPERTIES = ['paymentid'];
 const DESIGNERS_COLUMN_PROPERTIES = ['designerid'];
-const NAIL_PRODUCTS_COLUMN_PROPERTIES = ['nailproductid', 'index', 'datecreated', 'description', 'designerid', 'name', 'price', 'totalhates', 'totalmanime', 'totalmanime', 'totalpurchases', 'visible', 'picuri1', 'picuri2', 'picuri3', 'picuri4', 'picuri5', 'overlayuri', 'version'];
+const NAIL_PRODUCTS_COLUMN_PROPERTIES = ['picuri1', 'nailproductid', 'index', 'datecreated', 'description', 'designerid', 'name', 'price', 'totalhates', 'totalmanime', 'totalmanime', 'totalpurchases', 'visible', 'picuri1', 'picuri2', 'picuri3', 'picuri4', 'picuri5', 'overlayuri', 'version'];
 const NAIL_CATEGORIES_COLUMN_PROPERTIES = ['categoryid', 'name'];
 const NAIL_PRODUCT_CATEGORIES_COLUMN_PROPERTIES = ['nailproductid', 'categoryid'];
 
 const COMBINED_ORDERS_COLUMN_PROPERTIES_TYPE = ['text', 'text', 'text', 'modal', 'modal', 'modal', 'modal', 'text', 'text', 'menu', 'time'];
 const ORDERS_COLUMN_PROPERTIES_TYPE = ['text', 'modal', 'modal', 'modal', 'text', 'text', 'menu', 'time'];
-const GROUP_ORDERS_COLUMN_PROPERTIES_TYPE = ['modal', 'modal', 'menu', 'text', 'text', 'text', 'text'];
+const GROUP_ORDERS_COLUMN_PROPERTIES_TYPE = [OPEN_PHOTOGRAMMETRY, 'modal', 'modal', 'menu', 'text', 'text', 'text', 'text'];
 const USERS_COLUMN_PROPERTIES_TYPE = [OPEN_PHOTOGRAMMETRY, 'modal', 'text', 'text', 'text', 'text', 'text', 'text', 'menu', 'time', 'time', 'text', 'text', 'display', 'display', 'display'];
 const ORDER_REVIEWS_COLUMN_PROPERTIES_TYPE = ['modal', 'modal', 'text', 'text', 'text', 'text', 'text'];
 const SHIPPING_ADDRESSES_COLUMN_PROPERTIES_TYPE = ['modal', 'text', 'text', 'text', 'text', 'text', 'text', 'text', 'text', 'text', 'text'];
 const PAYMENTS_COLUMN_PROPERTIES_TYPE = ['modal'];
 const DESIGNERS_COLUMN_PROPERTIES_TYPE = ['modal'];
-const NAIL_PRODUCTS_COLUMN_PROPERTIES_TYPE = ['modal', 'text', 'time', 'text', 'modal', 'text', 'text', 'text', 'text', 'text', 'text', 'text', 'image', 'image', 'image', 'image', 'image', 'image', 'text'];
+const NAIL_PRODUCTS_COLUMN_PROPERTIES_TYPE = ['preview', 'modal', 'text', 'time', 'text', 'modal', 'text', 'text', 'text', 'text', 'text', 'text', 'text', 'image', 'image', 'image', 'image', 'image', 'image', 'text'];
 const NAIL_CATEGORIES_COLUMN_PROPERTIES_TYPE = ['modal', 'text'];
 const NAIL_PRODUCT_CATEGORIES_COLUMN_PROPERTIES_TYPE = ['modal', 'modal'];
 
 const MX_ROW = 3;
 const ML_ROW_ITEM = 2;
-const ROW_ITEM_WIDTH = 200;
+const ROW_ITEM_WIDTH = 220;
 
 const BoardBody = styled.div`
   display: flex;
@@ -257,7 +257,7 @@ class BoardJsx extends React.Component {
     this.setState({ data: newData });
   }
 
-  renderVirtualized = (tableProps, table) => {
+  renderVirtualized = (tableProps, table, tablePropsType) => {
     const list = List(this.state.data);
     if (!list || list.size <= 0) return;
 
@@ -275,6 +275,7 @@ class BoardJsx extends React.Component {
       list,
       tableProps,
       table,
+      tablePropsType,
       user: this.props.userData.identityId
     });
   }
@@ -359,7 +360,7 @@ class BoardJsx extends React.Component {
           </div>
           <BoardBodyContents>
             {
-              this.renderVirtualized(tableProps, table)
+              this.renderVirtualized(tableProps, table, tablePropsType)
             }
           </BoardBodyContents>
         </BoardBodyContainer>

@@ -97,7 +97,7 @@ class SelectOrderStatus extends React.PureComponent {
   }
 }
 
-export const ListComponent = function({ list, tableProps, table, user }) {
+export const ListComponent = function({ list, tableProps, table, tablePropsType, user }) {
   const rowRenderer = ({ index, key, style, content }) => {
     const itemStyle = {
       padding: '0px',
@@ -149,6 +149,12 @@ export const ListComponent = function({ list, tableProps, table, user }) {
               const columnName = tableProps[i];
 
               return <SelectOrderStatus selectStyle={selectStyle} user={user} orderId={orderId} value={value} columnName={columnName} />;
+            } else if (tablePropsType[i] == 'preview') {
+              return (
+                <div style={{ width: '200px', overflow: 'hidden' }}>
+                  <img src={content['picuri1']} style={{ minWidth: '50%', minHeight: '50%' }}/>
+                </div>
+              );
             } else {
               return (
                 <CopyToClipboard text={content[prop]} onCopy={() => {}}>
@@ -164,7 +170,7 @@ export const ListComponent = function({ list, tableProps, table, user }) {
 
   const numColumns = tableProps.length;
   const style = {
-    height: '20px',
+    height: '60px',
     width: '100%',
     display: 'flex'
   };

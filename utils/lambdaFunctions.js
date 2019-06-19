@@ -135,6 +135,34 @@ export const presignedImageUri = async (adminIdentityId, clientIdentityId, lates
   return response;
 };
 
+export const queryAdminDynamoDB = async (user) => {
+  const response = await API.get('LambdaServer', `/access/${user}`);
+  return response[0];
+};
+
+export const listAdminDynamoDB = async () => {
+  const response = await API.get('LambdaServer', `/access`);
+  return response;
+};
+
+export const addAttributeAdminDynamoDB = async (adminIdentityId, clientIdentityId) => {
+  const init = {
+    body: { adminIdentityId, clientIdentityId },
+    headers: { 'Content-Type': 'application/json' }
+  };
+  const response = await API.put('LambdaServer', `/access/modify`, init);
+  return response;
+};
+
+export const deleteAttributeAdminDynamoDB = async (adminIdentityId, clientIdentityId) => {
+  const init = {
+    body: { adminIdentityId, clientIdentityId },
+    headers: { 'Content-Type': 'application/json' }
+  };
+  const response = await API.del('LambdaServer', `/access/modify`, init);
+  return response;
+};
+
 // Subscription
 export const getSubscription = async stripeId => {
   if (!stripeId) return null;

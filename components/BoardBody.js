@@ -7,6 +7,7 @@ import uuid from 'uuid';
 import { CSVLink, CSVDownload } from 'react-csv';
 import { InfiniteLoaderComponent, ListComponent } from './InfiniteLoader';
 import { List } from 'immutable';
+import { queryAdminDynamoDB, listAdminDynamoDB, addAttributeAdminDynamoDB, deleteAttributeAdminDynamoDB } from '../utils/lambdaFunctions';
 
 import { connect } from 'react-redux';
 import userData from '../reducers/userData';
@@ -105,6 +106,19 @@ class BoardJsx extends React.Component {
     this._mounted = true;
     const endpoint = this.getEndpoint(this.props.id);
     this.getData(endpoint, this.props.id);
+
+    this.testLambdaFunctions();
+  }
+
+  testLambdaFunctions = async () => {
+    let result = await queryAdminDynamoDB('us-west-2:55304bbc-7b41-4a3f-9f9a-450575713561');
+    console.log(result);
+    result = await listAdminDynamoDB();
+    console.log(result);
+    result = await deleteAttributeAdminDynamoDB('us-west-2:55304bbc-7b41-4a3f-9f9a-450575713561', 'us-west-2:e65c7538-06eb-4e74-9ef1-4bd25a7283b1');
+    console.log(result);
+    result = await addAttributeAdminDynamoDB('us-west-2:55304bbc-7b41-4a3f-9f9a-450575713561', 'us-west-2:e65c7538-06eb-4e74-9ef1-4bd25a7283b1');
+    console.log(result);
   }
 
   componentDidUpdate(prevProps) {

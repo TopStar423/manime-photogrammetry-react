@@ -2,6 +2,7 @@ import styled, { ThemeProvider } from 'styled-components';
 import { theme } from '../utils/theme';
 import Box from './Box';
 import { StandardButton, StandardInput } from './StyledComponents';
+import UserAccess from './UserAccess';
 import { API, Storage } from 'aws-amplify';
 import uuid from 'uuid';
 import { CSVLink, CSVDownload } from 'react-csv';
@@ -271,6 +272,15 @@ class BoardJsx extends React.Component {
     this.setState({ data: newData });
   }
 
+
+  renderUserAccessPage = () => {
+    if (this.props.id !== 'useraccess') return <div />
+
+    return (
+      <UserAccess />
+    )
+  }
+
   renderVirtualized = (tableProps, table, tablePropsType) => {
     const list = List(this.state.data);
     if (!list || list.size <= 0) return;
@@ -353,6 +363,8 @@ class BoardJsx extends React.Component {
       table = NAIL_PRODUCT_CATEGORIES_COLUMN_DESCRIPTION;
       tableProps = NAIL_PRODUCT_CATEGORIES_COLUMN_PROPERTIES;
       tablePropsType = NAIL_PRODUCT_CATEGORIES_COLUMN_PROPERTIES_TYPE;
+    } else if (this.props.id == 'useraccess') {
+      table.length = 3;
     }
 
     const numAttr = table.length;
@@ -373,6 +385,7 @@ class BoardJsx extends React.Component {
             { table.map((item, i) => <div type='display' style={{ width: '200px', marginLeft: '10px', display: 'inline-block' }} onClick={() => this.sortData(tableProps[i])}>{item}</div>) }
           </div>
           <BoardBodyContents>
+            {this.renderUserAccessPage()}
             {
               this.renderVirtualized(tableProps, table, tablePropsType)
             }

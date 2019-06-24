@@ -7,7 +7,7 @@ import uuid from 'uuid';
 import { CSVLink, CSVDownload } from 'react-csv';
 import { InfiniteLoaderComponent, ListComponent } from './InfiniteLoader';
 import { List } from 'immutable';
-import { queryAdminDynamoDB, listAdminDynamoDB, addAttributeAdminDynamoDB, deleteAttributeAdminDynamoDB } from '../utils/lambdaFunctions';
+import { queryAdminDynamoDB, listAdminDynamoDB, addAttributeAdminDynamoDB, deleteAttributeAdminDynamoDB, updateUserColumn } from '../utils/lambdaFunctions';
 
 import { connect } from 'react-redux';
 import userData from '../reducers/userData';
@@ -98,7 +98,8 @@ class BoardJsx extends React.Component {
       selectedBoundingRect: {},
       endpoint: '',
       tableName: '',
-      searchValue: ''
+      searchValue: '',
+      showRemoved: false
     };
   }
 
@@ -271,7 +272,12 @@ class BoardJsx extends React.Component {
     this.setState({ data: newData });
   }
 
-  renderVirtualized = (tableProps, table, tablePropsType) => {
+  toggleVisible = (tableId, uuid, columnName, columnValue) => {
+    if (tableId == 'users')
+      updateUserColumn(uuid, columnName, columnValue);
+  }
+
+  renderVirtualized = (tableProps, table, tablePropsType, tableId) => {
     const list = List(this.state.data);
     if (!list || list.size <= 0) return;
 
@@ -290,7 +296,10 @@ class BoardJsx extends React.Component {
       tableProps,
       table,
       tablePropsType,
-      user: this.props.userData.identityId
+      user: this.props.userData.identityId,
+      tableId,
+      showRemoved: this.state.showRemoved,
+      toggleVisible: this.toggleVisible
     });
   }
 
@@ -362,6 +371,7 @@ class BoardJsx extends React.Component {
         <Box display='flex' flexDirection='row' width='100%' pt={3} pb={2}>
           <StandardButton ml={3} onClick={() => this.getData(this.state.endpoint, this.state.tableName)}>Refresh</StandardButton>
           <StandardButton ml={3} onClick={this.createRow} disabled={this.props.id == 'nailproducts' ? false : true}>New</StandardButton>
+          <StandardButton ml={3} onClick={() => this.setState({ showRemoved: !this.state.showRemoved })}>Toggle Removed</StandardButton>
           <StandardButton ml={3} disabled>Save</StandardButton>
           <CSVLink data={data} filename={`${this.props.id}-${date.toString()}.csv`}>
             <StandardButton ml={3} style={{ textDecoration: 'none' }}>Save CSV</StandardButton>
@@ -374,7 +384,7 @@ class BoardJsx extends React.Component {
           </div>
           <BoardBodyContents>
             {
-              this.renderVirtualized(tableProps, table, tablePropsType)
+              this.renderVirtualized(tableProps, table, tablePropsType, this.props.id)
             }
           </BoardBodyContents>
         </BoardBodyContainer>

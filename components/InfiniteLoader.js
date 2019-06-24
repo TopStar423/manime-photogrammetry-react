@@ -97,8 +97,12 @@ class SelectOrderStatus extends React.PureComponent {
   }
 }
 
-export const ListComponent = function({ list, tableProps, table, tablePropsType, user }) {
+export const ListComponent = function({ list, tableProps, table, tablePropsType, user, tableId, showRemoved, toggleVisible }) {
   const rowRenderer = ({ index, key, style, content }) => {
+    // if visible is false don't display
+    if (content['visible'] == false && !showRemoved)
+      return <div />;
+
     const itemStyle = {
       padding: '0px',
       display: 'inline-block',
@@ -134,6 +138,9 @@ export const ListComponent = function({ list, tableProps, table, tablePropsType,
             }}>
             {list.size - index}
           </div>
+          { tableId == 'users' &&
+            <button onClick={() => toggleVisible(tableId, content['userid'], 'visible', !content['visible'])}>REMOVE</button>
+          }
           {tableProps.map((prop, i) => {
             if (table[i] == '') {
               return <Workbench itemStyle={itemStyle} index={index} user={user} list={list}/>;

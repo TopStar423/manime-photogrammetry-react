@@ -161,6 +161,17 @@ class Sidebar extends React.Component {
               NAIL PRODUCT CATEGORIES
             </MenuItem>
           </Link>
+          <Link as={`/d/useraccess`} href={`/data?id=useraccess`}>
+            <MenuItem
+              py={1}
+              px={3}
+              color='whites.11'
+              fontSize={0}
+              onClick={() => this.selectLink('useraccess')}
+              bg={this.state.selectedLink == 'useraccess' ? '#313131' : 'transparent'}>
+              User Access
+            </MenuItem>
+          </Link>
         </Box>
       </Container>
     );

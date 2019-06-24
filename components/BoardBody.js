@@ -273,8 +273,17 @@ class BoardJsx extends React.Component {
   }
 
   toggleVisible = (tableId, uuid, columnName, columnValue) => {
-    if (tableId == 'users')
+    if (tableId == 'users') {
       updateUserColumn(uuid, columnName, columnValue);
+      // // change state
+      // let newData = [ ...this.state.data ];
+      // const index = newData.findIndex(item => {
+      //   return item.userid == 'us-west-2:c6b83d25-a47b-476b-8aa9-0f63f83d2f9e';
+      // });
+      // let visible = newData[index]['visible'];
+      // newData[index] = { ...newData[index], visible: !visible };
+      // this.setState({ data: newData });
+    }
   }
 
   renderVirtualized = (tableProps, table, tablePropsType, tableId) => {
@@ -366,6 +375,7 @@ class BoardJsx extends React.Component {
 
     const numAttr = table.length;
     const date = new Date();
+
     return (
       <BoardBody width={1}>
         <Box display='flex' flexDirection='row' width='100%' pt={3} pb={2}>

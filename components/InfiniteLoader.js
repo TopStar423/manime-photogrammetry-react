@@ -98,82 +98,102 @@ class SelectOrderStatus extends React.PureComponent {
 }
 
 export const ListComponent = function({ list, tableProps, table, tablePropsType, user, tableId, showRemoved, toggleVisible }) {
-  const rowRenderer = ({ index, key, style, content }) => {
-    // if visible is false don't display
-    if (content['visible'] == false && !showRemoved)
-      return <div />;
+  class RowRenderer extends React.Component {
+    constructor(props) {
+      super(props);
+      this.state = {
+        visible: true
+      };
+    }
 
-    const itemStyle = {
-      padding: '0px',
-      display: 'inline-block',
-      width: '200px',
-      whiteSpace: 'nowrap',
-      overflow: 'hidden',
-      boxSizing: 'border-box',
-      marginLeft: '8px'
-    };
+    clickToggleVisible = () => {
+      this.setState({ visible: !this.state.visible });
+      toggleVisible(tableId, this.props.content['userid'], 'visible', !this.props.content['visible']);
+    }
 
-    const selectStyle = {
-      display: 'inline-block',
-      width: '200px',
-      whiteSpace: 'nowrap',
-      overflow: 'hidden',
-      boxSizing: 'border-box',
-      marginLeft: '8px',
-      backgroundColor: 'rgba(255,0,0,0.3)',
-      marginTop: '1px',
-      marginBottom: '1px'
-    };
+    render() {
+      const index = this.props.index;
+      const key = this.props.key;
+      const style = this.props.style;
+      const content = this.props.content;
+      // if visible is false don't display
+      if (content['visible'] == false && !showRemoved)
+        return <div />;
+      if (!this.state.visible)
+        return <div />;
 
-    return (
-      <div key={key} style={style}>
-        <React.Fragment>
-          <div
-            style={{
-              width: 35,
-              fontSize: 12,
-              display: 'flex',
-              justifyContent: 'center',
-              alignItems: 'center'
-            }}>
-            {list.size - index}
-          </div>
-          { tableId == 'users' &&
-            <button onClick={() => toggleVisible(tableId, content['userid'], 'visible', !content['visible'])}>REMOVE</button>
-          }
-          {tableProps.map((prop, i) => {
-            if (table[i] == '') {
-              return <Workbench itemStyle={itemStyle} index={index} user={user} list={list}/>;
-            } else if (tableProps[i] == 'fitstatus') {
-              const userId = content['userid'];
-              const value = content[prop] ? content[prop] : '';
-              const columnName = tableProps[i];
+      const itemStyle = {
+        padding: '0px',
+        display: 'inline-block',
+        width: '200px',
+        whiteSpace: 'nowrap',
+        overflow: 'hidden',
+        boxSizing: 'border-box',
+        marginLeft: '8px'
+      };
 
-              return <SelectFitStatus selectStyle={selectStyle} user={user} userId={userId} value={value} columnName={columnName} />;
-            } else if (tableProps[i] == 'orderstatus') {
-              const orderId = content['orderid'];
-              const value = content[prop] ? content[prop] : '';
-              const columnName = tableProps[i];
+      const selectStyle = {
+        display: 'inline-block',
+        width: '200px',
+        whiteSpace: 'nowrap',
+        overflow: 'hidden',
+        boxSizing: 'border-box',
+        marginLeft: '8px',
+        backgroundColor: 'rgba(255,0,0,0.3)',
+        marginTop: '1px',
+        marginBottom: '1px'
+      };
 
-              return <SelectOrderStatus selectStyle={selectStyle} user={user} orderId={orderId} value={value} columnName={columnName} />;
-            } else if (tablePropsType[i] == 'preview') {
-              return (
-                <div style={{ width: '200px', overflow: 'hidden' }}>
-                  <img src={content['picuri1']} style={{ minWidth: '50%', minHeight: '50%' }}/>
-                </div>
-              );
-            } else {
-              return (
-                <CopyToClipboard text={content[prop]} onCopy={() => {}}>
-                  <div style={itemStyle}>{content[prop]}</div>
-                </CopyToClipboard>
-              );
+      return (
+        <div key={key} style={style}>
+          <React.Fragment>
+            <div
+              style={{
+                width: 35,
+                fontSize: 12,
+                display: 'flex',
+                justifyContent: 'center',
+                alignItems: 'center'
+              }}>
+              {list.size - index}
+            </div>
+            { tableId == 'users' &&
+              <button onClick={this.clickToggleVisible}>REMOVE</button>
             }
-          })}
-        </React.Fragment>
-      </div>
-    );
-  };
+            {tableProps.map((prop, i) => {
+              if (table[i] == '') {
+                return <Workbench itemStyle={itemStyle} index={index} user={user} list={list}/>;
+              } else if (tableProps[i] == 'fitstatus') {
+                const userId = content['userid'];
+                const value = content[prop] ? content[prop] : '';
+                const columnName = tableProps[i];
+
+                return <SelectFitStatus selectStyle={selectStyle} user={user} userId={userId} value={value} columnName={columnName} />;
+              } else if (tableProps[i] == 'orderstatus') {
+                const orderId = content['orderid'];
+                const value = content[prop] ? content[prop] : '';
+                const columnName = tableProps[i];
+
+                return <SelectOrderStatus selectStyle={selectStyle} user={user} orderId={orderId} value={value} columnName={columnName} />;
+              } else if (tablePropsType[i] == 'preview') {
+                return (
+                  <div style={{ width: '200px', overflow: 'hidden' }}>
+                    <img src={content['picuri1']} style={{ minWidth: '50%', minHeight: '50%' }}/>
+                  </div>
+                );
+              } else {
+                return (
+                  <CopyToClipboard text={content[prop]} onCopy={() => {}}>
+                    <div style={itemStyle}>{content[prop]}</div>
+                  </CopyToClipboard>
+                );
+              }
+            })}
+          </React.Fragment>
+        </div>
+      );
+    }
+  }
 
   const numColumns = tableProps.length;
   const style = {
@@ -183,7 +203,8 @@ export const ListComponent = function({ list, tableProps, table, tablePropsType,
   };
 
   return list.map((item, index) => {
-    return rowRenderer({ index, key: uuid.v1(), style, content: item });
+    return <RowRenderer index={index} key={uuid.v1()} style={style} content={item} />;
+    // return rowRenderer({ index, key: uuid.v1(), style, content: item });
   });
 };
 

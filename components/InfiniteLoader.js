@@ -101,8 +101,10 @@ export const ListComponent = function({ list, tableProps, table, tablePropsType,
   class RowRenderer extends React.Component {
     constructor(props) {
       super(props);
+      let visible = true;
+      if (tableId == 'users') visible = props.content['visible'];
       this.state = {
-        visible: true
+        visible
       };
     }
 
@@ -119,7 +121,7 @@ export const ListComponent = function({ list, tableProps, table, tablePropsType,
       // if visible is false don't display
       if (content['visible'] == false && !showRemoved)
         return <div />;
-      if (!this.state.visible)
+      if (!this.state.visible && !showRemoved)
         return <div />;
 
       const itemStyle = {
@@ -129,7 +131,8 @@ export const ListComponent = function({ list, tableProps, table, tablePropsType,
         whiteSpace: 'nowrap',
         overflow: 'hidden',
         boxSizing: 'border-box',
-        marginLeft: '8px'
+        marginLeft: '8px',
+        backgroundColor: !this.state.visible ? '#ff0000' : 'transparent'
       };
 
       const selectStyle = {
@@ -144,6 +147,7 @@ export const ListComponent = function({ list, tableProps, table, tablePropsType,
         marginBottom: '1px'
       };
 
+      const toggleText = !this.state.visible ? 'ADD' : 'REMOVE';
       return (
         <div key={key} style={style}>
           <React.Fragment>
@@ -158,7 +162,7 @@ export const ListComponent = function({ list, tableProps, table, tablePropsType,
               {list.size - index}
             </div>
             { tableId == 'users' &&
-              <button onClick={this.clickToggleVisible}>REMOVE</button>
+              <button onClick={this.clickToggleVisible}>{toggleText}</button>
             }
             {tableProps.map((prop, i) => {
               if (table[i] == '') {

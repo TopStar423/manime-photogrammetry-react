@@ -75,7 +75,7 @@ export class UserAccess extends Component {
       const adminIdList = result.map(item => {
         return item.userId;
       });
-      this.setState({ adminList, adminIdList });
+      this.setState({ adminList: result });
     }
 
     selectAdmin = async selectedAdmin => {
@@ -133,7 +133,7 @@ export class UserAccess extends Component {
                 <DndColumn>
                     <h3>Admin</h3>
                     { adminList.map((item, i) => (
-                        <Item key={item} onClick={() => this.selectAdmin(this.state.adminIdList[i])}>{item}</Item>
+                        <Item key={item.userId} onClick={() => this.selectAdmin(item.userId)}>{item.username}</Item>
                     ))}
                 </DndColumn>
                 <DndColumn>

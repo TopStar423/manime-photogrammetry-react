@@ -34,9 +34,9 @@ export class UserAccess extends Component {
             users: [],
             adminList: [],
             adminIdList: [],
-            userList: ['Fancy@gmail.com', 'Rude@gmail.com', 'Plucky@gmail.com'],
+            userList: [],
             userObjectList: [],
-            accessList: ['Elastic@gmail.com', 'Spicy@gmail.com', 'Drab@gmail.com', 'Noxious@gmail.com'],
+            accessList: [],
         }
     }
 
@@ -83,17 +83,17 @@ export class UserAccess extends Component {
       // const resultKeys = Object.values(result);
       const { userId, username, ...accessObject } = result;
       let accessList = Object.values(accessObject);
-      console.log(accessList);
+      // console.log(accessList);
 
       // split into two tables -> userlist and accessList
       const userObjectList = this.state.users.filter(user => {
         if (accessList.includes(user.userId)) return false;
         else return true;
       });
-      console.log(userObjectList);
-
+      // console.log(userObjectList);
+      // FIXME:  this sets it to userId instead of email
       const userList = userObjectList.map(user => {
-        return user.email;
+        return user.userId;
       });
 
       this.setState({ accessList, userList, selectedAdmin });
@@ -116,10 +116,12 @@ export class UserAccess extends Component {
 
         if (removedIndex !== null) {
             itemToAdd = result.splice(removedIndex, 1)[0];
+            this.adminAccessRemoveClient(itemToAdd);
         }
 
         if (addedIndex !== null) {
             result.splice(addedIndex, 0, itemToAdd);
+            this.adminAccessAddClient(itemToAdd);
         }
 
         return result;

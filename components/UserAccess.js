@@ -1,6 +1,8 @@
 import React, { Component } from 'react';
 import styled from 'styled-components';
 import { Container, Draggable } from 'react-smooth-dnd';
+import { queryAdminDynamoDB, listAdminDynamoDB, addAttributeAdminDynamoDB, deleteAttributeAdminDynamoDB, updateUserColumn } from '../utils/lambdaFunctions';
+import { API, Storage } from 'aws-amplify';
 
 const DndContainer = styled.div`
     display: flex;
@@ -28,10 +30,81 @@ export class UserAccess extends Component {
         super(props);
 
         this.state = {
-            adminList: ['Admin 1', 'Admin 2', 'Admin 3'],
+            selectedAdmin: '',
+            users: [],
+            adminList: [],
+            adminIdList: [],
             userList: ['Fancy@gmail.com', 'Rude@gmail.com', 'Plucky@gmail.com'],
+            userObjectList: [],
             accessList: ['Elastic@gmail.com', 'Spicy@gmail.com', 'Drab@gmail.com', 'Noxious@gmail.com'],
         }
+    }
+
+    componentDidMount() {
+      this.getUsers();
+      this.testLambdaFunctions();
+    }
+
+    getUsers = () => {
+      // store in state all client id
+      let userInit = {
+        headers: { 'Content-Type': 'application/json' }
+      }
+      API.get('LambdaRDSClient', '/users/cms/read', userInit).then(response => {
+        if(response && response.rows) {
+          const users = response.rows.map(item => {
+            return {
+              userId: item.userid,
+              email: item.email
+            };
+          })
+          this.setState({ users });
+        }
+      }).catch((err) => {
+        console.log(err);
+      });
+    }
+
+    testLambdaFunctions = async () => {
+      let result;
+      // store admin users
+      result = await listAdminDynamoDB();
+      const adminList = result.map(item => {
+        return item.username;
+      });
+      const adminIdList = result.map(item => {
+        return item.userId;
+      });
+      this.setState({ adminList, adminIdList });
+    }
+
+    selectAdmin = async selectedAdmin => {
+      let result = await queryAdminDynamoDB(selectedAdmin);
+      // const resultKeys = Object.values(result);
+      const { userId, username, ...accessObject } = result;
+      let accessList = Object.values(accessObject);
+      console.log(accessList);
+
+      // split into two tables -> userlist and accessList
+      const userObjectList = this.state.users.filter(user => {
+        if (accessList.includes(user.userId)) return false;
+        else return true;
+      });
+      console.log(userObjectList);
+
+      const userList = userObjectList.map(user => {
+        return user.email;
+      });
+
+      this.setState({ accessList, userList, selectedAdmin });
+    }
+
+    adminAccessAddClient = async clientId => {
+      return await addAttributeAdminDynamoDB(this.state.selectedAdmin, clientId);
+    }
+
+    adminAccessRemoveClient = async clientId => {
+      return await deleteAttributeAdminDynamoDB(this.state.selectedAdmin, clientId);
     }
 
     applyDrag = (arr, dragResult) => {
@@ -59,8 +132,8 @@ export class UserAccess extends Component {
             <DndContainer>
                 <DndColumn>
                     <h3>Admin</h3>
-                    { adminList.map(item => (
-                        <Item key={item}>{item}</Item>
+                    { adminList.map((item, i) => (
+                        <Item key={item} onClick={() => this.selectAdmin(this.state.adminIdList[i])}>{item}</Item>
                     ))}
                 </DndColumn>
                 <DndColumn>

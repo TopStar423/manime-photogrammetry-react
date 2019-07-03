@@ -140,7 +140,6 @@ class Layout extends React.Component {
             {props.children}
           </Box>
 
-
           {/* Replace this with portal
 
           {this.props.activeElement.type == 'menu' && (

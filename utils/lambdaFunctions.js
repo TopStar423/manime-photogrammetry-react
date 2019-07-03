@@ -135,7 +135,7 @@ export const presignedImageUri = async (adminIdentityId, clientIdentityId, lates
   return response;
 };
 
-export const queryAdminDynamoDB = async (user) => {
+export const queryAdminDynamoDB = async user => {
   const response = await API.get('LambdaServer', `/access/${user}`);
   return response[0];
 };

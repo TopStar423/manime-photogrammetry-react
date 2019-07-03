@@ -97,7 +97,16 @@ class SelectOrderStatus extends React.PureComponent {
   }
 }
 
-export const ListComponent = function({ list, tableProps, table, tablePropsType, user, tableId, showRemoved, toggleVisible }) {
+export const ListComponent = function({
+  list,
+  tableProps,
+  table,
+  tablePropsType,
+  user,
+  tableId,
+  showRemoved,
+  toggleVisible
+}) {
   class RowRenderer extends React.Component {
     constructor(props) {
       super(props);
@@ -110,8 +119,13 @@ export const ListComponent = function({ list, tableProps, table, tablePropsType,
 
     clickToggleVisible = () => {
       this.setState({ visible: !this.state.visible });
-      toggleVisible(tableId, this.props.content['userid'], 'visible', !this.props.content['visible']);
-    }
+      toggleVisible(
+        tableId,
+        this.props.content['userid'],
+        'visible',
+        !this.props.content['visible']
+      );
+    };
 
     render() {
       const index = this.props.index;
@@ -119,10 +133,8 @@ export const ListComponent = function({ list, tableProps, table, tablePropsType,
       const style = this.props.style;
       const content = this.props.content;
       // if visible is false don't display
-      if (content['visible'] == false && !showRemoved)
-        return <div />;
-      if (!this.state.visible && !showRemoved)
-        return <div />;
+      if (content['visible'] == false && !showRemoved) return <div />;
+      if (!this.state.visible && !showRemoved) return <div />;
 
       const itemStyle = {
         padding: '0px',
@@ -161,28 +173,42 @@ export const ListComponent = function({ list, tableProps, table, tablePropsType,
               }}>
               {list.size - index}
             </div>
-            { tableId == 'users' &&
-              <button onClick={this.clickToggleVisible}>{toggleText}</button>
-            }
+            {tableId == 'users' && <button onClick={this.clickToggleVisible}>{toggleText}</button>}
             {tableProps.map((prop, i) => {
               if (table[i] == '') {
-                return <Workbench itemStyle={itemStyle} index={index} user={user} list={list}/>;
+                return <Workbench itemStyle={itemStyle} index={index} user={user} list={list} />;
               } else if (tableProps[i] == 'fitstatus') {
                 const userId = content['userid'];
                 const value = content[prop] ? content[prop] : '';
                 const columnName = tableProps[i];
 
-                return <SelectFitStatus selectStyle={selectStyle} user={user} userId={userId} value={value} columnName={columnName} />;
+                return (
+                  <SelectFitStatus
+                    selectStyle={selectStyle}
+                    user={user}
+                    userId={userId}
+                    value={value}
+                    columnName={columnName}
+                  />
+                );
               } else if (tableProps[i] == 'orderstatus') {
                 const orderId = content['orderid'];
                 const value = content[prop] ? content[prop] : '';
                 const columnName = tableProps[i];
 
-                return <SelectOrderStatus selectStyle={selectStyle} user={user} orderId={orderId} value={value} columnName={columnName} />;
+                return (
+                  <SelectOrderStatus
+                    selectStyle={selectStyle}
+                    user={user}
+                    orderId={orderId}
+                    value={value}
+                    columnName={columnName}
+                  />
+                );
               } else if (tablePropsType[i] == 'preview') {
                 return (
                   <div style={{ width: '200px', overflow: 'hidden' }}>
-                    <img src={content['picuri1']} style={{ minWidth: '50%', minHeight: '50%' }}/>
+                    <img src={content['picuri1']} style={{ minWidth: '50%', minHeight: '50%' }} />
                   </div>
                 );
               } else {
@@ -211,8 +237,6 @@ export const ListComponent = function({ list, tableProps, table, tablePropsType,
     // return rowRenderer({ index, key: uuid.v1(), style, content: item });
   });
 };
-
-
 
 // if we need the infiniteloader again
 

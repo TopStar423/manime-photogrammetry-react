@@ -134,12 +134,12 @@ export class UserAccess extends Component {
 
     if (removedIndex !== null) {
       itemToAdd = result.splice(removedIndex, 1)[0];
-      this.adminAccessRemoveClient(itemToAdd);
+      this.adminAccessRemoveClient(itemToAdd.userId);
     }
 
     if (addedIndex !== null) {
       result.splice(addedIndex, 0, itemToAdd);
-      this.adminAccessAddClient(itemToAdd);
+      this.adminAccessAddClient(itemToAdd.userId);
     }
 
     return result;

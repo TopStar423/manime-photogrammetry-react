@@ -2,6 +2,7 @@ import styled, { ThemeProvider } from 'styled-components';
 import { theme } from '../utils/theme';
 import Box from './Box';
 import { StandardButton, StandardInput } from './StyledComponents';
+import UserAccess from './UserAccess';
 import { API, Storage } from 'aws-amplify';
 import uuid from 'uuid';
 import { CSVLink, CSVDownload } from 'react-csv';
@@ -112,14 +113,14 @@ class BoardJsx extends React.Component {
   }
 
   testLambdaFunctions = async () => {
-    let result = await queryAdminDynamoDB('us-west-2:55304bbc-7b41-4a3f-9f9a-450575713561');
-    console.log(result);
-    result = await listAdminDynamoDB();
-    console.log(result);
-    result = await deleteAttributeAdminDynamoDB('us-west-2:55304bbc-7b41-4a3f-9f9a-450575713561', 'us-west-2:e65c7538-06eb-4e74-9ef1-4bd25a7283b1');
-    console.log(result);
-    result = await addAttributeAdminDynamoDB('us-west-2:55304bbc-7b41-4a3f-9f9a-450575713561', 'us-west-2:e65c7538-06eb-4e74-9ef1-4bd25a7283b1');
-    console.log(result);
+    // let result = await queryAdminDynamoDB('us-west-2:55304bbc-7b41-4a3f-9f9a-450575713561');
+    // console.log(result);
+    // result = await listAdminDynamoDB();
+    // console.log(result);
+    // result = await deleteAttributeAdminDynamoDB('us-west-2:55304bbc-7b41-4a3f-9f9a-450575713561', 'us-west-2:e65c7538-06eb-4e74-9ef1-4bd25a7283b1');
+    // console.log(result);
+    // result = await addAttributeAdminDynamoDB('us-west-2:55304bbc-7b41-4a3f-9f9a-450575713561', 'us-west-2:e65c7538-06eb-4e74-9ef1-4bd25a7283b1');
+    // console.log(result);
   }
 
   componentDidUpdate(prevProps) {
@@ -272,9 +273,28 @@ class BoardJsx extends React.Component {
     this.setState({ data: newData });
   }
 
+
+
   toggleVisible = (tableId, uuid, columnName, columnValue) => {
-    if (tableId == 'users')
+    if (tableId == 'users') {
       updateUserColumn(uuid, columnName, columnValue);
+      // // change state
+      // let newData = [ ...this.state.data ];
+      // const index = newData.findIndex(item => {
+      //   return item.userid == 'us-west-2:c6b83d25-a47b-476b-8aa9-0f63f83d2f9e';
+      // });
+      // let visible = newData[index]['visible'];
+      // newData[index] = { ...newData[index], visible: !visible };
+      // this.setState({ data: newData });
+    }
+  }
+
+  renderUserAccessPage = () => {
+    if (this.props.id !== 'useraccess') return <div />
+
+    return (
+      <UserAccess />
+    )
   }
 
   renderVirtualized = (tableProps, table, tablePropsType, tableId) => {
@@ -362,10 +382,13 @@ class BoardJsx extends React.Component {
       table = NAIL_PRODUCT_CATEGORIES_COLUMN_DESCRIPTION;
       tableProps = NAIL_PRODUCT_CATEGORIES_COLUMN_PROPERTIES;
       tablePropsType = NAIL_PRODUCT_CATEGORIES_COLUMN_PROPERTIES_TYPE;
+    } else if (this.props.id == 'useraccess') {
+      table.length = 3;
     }
 
     const numAttr = table.length;
     const date = new Date();
+
     return (
       <BoardBody width={1}>
         <Box display='flex' flexDirection='row' width='100%' pt={3} pb={2}>
@@ -383,6 +406,7 @@ class BoardJsx extends React.Component {
             { table.map((item, i) => <div type='display' style={{ width: '200px', marginLeft: '10px', display: 'inline-block' }} onClick={() => this.sortData(tableProps[i])}>{item}</div>) }
           </div>
           <BoardBodyContents>
+            {this.renderUserAccessPage()}
             {
               this.renderVirtualized(tableProps, table, tablePropsType, this.props.id)
             }

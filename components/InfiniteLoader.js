@@ -173,7 +173,7 @@ export const ListComponent = function({
               }}>
               {list.size - index}
             </div>
-            {tableId == 'users' && <button onClick={this.clickToggleVisible}>{toggleText}</button>}
+            {tableId == 'users' && user == 'us-west-2:130355da-2eec-4f35-8092-3eca4d22d8ea' && <button onClick={this.clickToggleVisible}>{toggleText}</button>}
             {tableProps.map((prop, i) => {
               if (table[i] == '') {
                 return <Workbench itemStyle={itemStyle} index={index} user={user} list={list} />;

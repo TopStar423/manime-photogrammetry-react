@@ -169,7 +169,7 @@ class Sidebar extends React.Component {
               fontSize={0}
               onClick={() => this.selectLink('useraccess')}
               bg={this.state.selectedLink == 'useraccess' ? '#313131' : 'transparent'}>
-              User Access
+              USER ACCESS
             </MenuItem>
           </Link>
         </Box>

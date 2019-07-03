@@ -4,6 +4,10 @@ import { Container, Draggable } from 'react-smooth-dnd';
 import { queryAdminDynamoDB, listAdminDynamoDB, addAttributeAdminDynamoDB, deleteAttributeAdminDynamoDB, updateUserColumn } from '../utils/lambdaFunctions';
 import { API, Storage } from 'aws-amplify';
 
+import { connect } from 'react-redux';
+import userData from '../reducers/userData';
+import { DEFAULT } from '../actions';
+
 const DndContainer = styled.div`
     display: flex;
 `;
@@ -130,39 +134,55 @@ export class UserAccess extends Component {
     render() {
         const { adminList, userList, accessList } = this.state;
 
+        const user = this.props.userData ? this.props.userData.identityId : '';
+        // this is the admin account, photogrammetry
+
         return (
-            <DndContainer>
-                <DndColumn>
-                    <h3>Admin</h3>
-                    { adminList.map((item, i) => (
-                        <Item key={item.userId} onClick={() => this.selectAdmin(item.userId)}>{item.username}</Item>
-                    ))}
-                </DndColumn>
-                <DndColumn>
-                    <h3>User List</h3>
-                    <Container groupName="1" getChildPayload={i => userList[i]} onDrop={e => this.setState({ userList: this.applyDrag(userList, e) })}>
-                        { userList.map(item => (
-                                <Draggable key={item}>
-                                    <Item>{item}</Item>
-                                </Draggable>
-                            )
-                        )}
-                    </Container>
-                </DndColumn>
-                <DndColumn>
-                    <h3>Access List</h3>
-                    <Container groupName="1" getChildPayload={i => accessList[i]} onDrop={e => this.setState({ accessList: this.applyDrag(accessList, e) })}>
-                        { accessList.map(item => (
-                                <Draggable key={item}>
-                                    <Item>{item}</Item>
-                                </Draggable>
-                            )
-                        )}
-                    </Container>
-                </DndColumn>
-            </DndContainer>
+          <React.Fragment>
+            { user == 'us-west-2:130355da-2eec-4f35-8092-3eca4d22d8ea' ?
+             <DndContainer>
+                 <DndColumn>
+                     <h3>Admin</h3>
+                     { adminList.map((item, i) => (
+                         <Item key={item.userId} onClick={() => this.selectAdmin(item.userId)}>{item.username}</Item>
+                     ))}
+                 </DndColumn>
+                 <DndColumn>
+                     <h3>User List</h3>
+                     <Container groupName="1" getChildPayload={i => userList[i]} onDrop={e => this.setState({ userList: this.applyDrag(userList, e) })}>
+                         { userList.map(item => (
+                                 <Draggable key={item}>
+                                     <Item>{item}</Item>
+                                 </Draggable>
+                             )
+                         )}
+                     </Container>
+                 </DndColumn>
+                 <DndColumn>
+                     <h3>Access List</h3>
+                     <Container groupName="1" getChildPayload={i => accessList[i]} onDrop={e => this.setState({ accessList: this.applyDrag(accessList, e) })}>
+                         { accessList.map(item => (
+                                 <Draggable key={item}>
+                                     <Item>{item}</Item>
+                                 </Draggable>
+                             )
+                         )}
+                     </Container>
+                 </DndColumn>
+             </DndContainer>
+             :
+             <div></div>
+           }
+          </React.Fragment>
         )
     }
 }
 
-export default UserAccess
+const mapStateToProps = state => ({
+  userData: userData(state.userData, { type: 'DEFAULT' })
+})
+
+export default connect(
+  mapStateToProps,
+  null,
+)(UserAccess);

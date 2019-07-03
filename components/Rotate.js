@@ -72,7 +72,7 @@ export default class Rotate extends React.Component {
           {this.props.signedUriArray.map((uri, index) => (
             <Box
               flex='0 1 50%'
-              pt='50%'
+              pt='20vh'
               border='0.5px solid #000000'
               position='relative'
               style={{ boxSizing: 'border-box' }}>

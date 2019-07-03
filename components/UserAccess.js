@@ -94,21 +94,27 @@ export class UserAccess extends Component {
     let result = await queryAdminDynamoDB(selectedAdmin);
     // const resultKeys = Object.values(result);
     const { userId, username, ...accessObject } = result;
-    let accessList = Object.values(accessObject);
+    const accessValues = Object.values(accessObject);
+    let accessList = [];
     // console.log(accessList);
 
     // split into two tables -> userlist and accessList
     const userObjectList = this.state.users.filter(user => {
-      if (accessList.includes(user.userId)) return false;
+      if (accessValues.includes(user.userId)) {
+        accessList.push(user);
+        return false;
+      }
       else return true;
     });
+
+
     // console.log(userObjectList);
     // FIXME:  this sets it to userId instead of email
-    const userList = userObjectList.map(user => {
-      return user.userId;
-    });
+    // const userList = userObjectList.map(user => {
+    //   return user.userId;
+    // });
 
-    this.setState({ accessList, userList, selectedAdmin });
+    this.setState({ accessList, userList: userObjectList, selectedAdmin });
   };
 
   adminAccessAddClient = async clientId => {
@@ -164,8 +170,8 @@ export class UserAccess extends Component {
                 getChildPayload={i => userList[i]}
                 onDrop={e => this.setState({ userList: this.applyDrag(userList, e) })}>
                 {userList.map(item => (
-                  <Draggable key={item}>
-                    <Item>{item}</Item>
+                  <Draggable key={item.userId}>
+                    <Item>{item.email}</Item>
                   </Draggable>
                 ))}
               </Container>
@@ -177,8 +183,8 @@ export class UserAccess extends Component {
                 getChildPayload={i => accessList[i]}
                 onDrop={e => this.setState({ accessList: this.applyDrag(accessList, e) })}>
                 {accessList.map(item => (
-                  <Draggable key={item}>
-                    <Item>{item}</Item>
+                  <Draggable key={item.userId}>
+                    <Item>{item.email}</Item>
                   </Draggable>
                 ))}
               </Container>

@@ -1,5 +1,24 @@
 import { API } from 'aws-amplify';
 
+export const RDSLambda = async (method, path, body) => {
+  const apiName = 'LambdaRDSDev';
+  const userInit = {
+    body,
+    headers: { 'Content-Type': 'application/json' }
+  };
+  if (method == 'post') {
+    return await API.post(apiName, path, userInit);
+  } else if (method == 'get') {
+    return await API.get(apiName, path, userInit);
+  } else if (method == 'put') {
+    return await API.put(apiName, path, userInit);
+  } else if (method == 'delete') {
+    return await API.del(apiName, path, userInit);
+  } else {
+    return null;
+  }
+}
+
 export const updateUserColumn = (identityId, columnName, columnValue) => {
   let userData = {
     userid: identityId,

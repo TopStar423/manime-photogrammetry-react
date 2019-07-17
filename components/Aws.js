@@ -26,6 +26,12 @@ export function configureAmplify() {
     API: {
       endpoints: [
         {
+          name: 'LambdaRDSDev',
+          endpoint: 'https://4vitfcmpx9.execute-api.us-west-1.amazonaws.com/dev',
+          service: 'execute-api',
+          region: 'us-west-1'
+        },
+        {
           name: 'LambdaDDB',
           endpoint: 'https://9r8dtkpky7.execute-api.us-west-1.amazonaws.com/default',
           service: 'execute-api',

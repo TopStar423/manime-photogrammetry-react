@@ -8,7 +8,7 @@ import uuid from 'uuid';
 import { CSVLink, CSVDownload } from 'react-csv';
 import { InfiniteLoaderComponent, ListComponent } from './InfiniteLoader';
 import { List } from 'immutable';
-import { queryAdminDynamoDB, listAdminDynamoDB, addAttributeAdminDynamoDB, deleteAttributeAdminDynamoDB, updateUserColumn } from '../utils/lambdaFunctions';
+import { queryAdminDynamoDB, listAdminDynamoDB, addAttributeAdminDynamoDB, deleteAttributeAdminDynamoDB, updateUserColumn, RDSLambda } from '../utils/lambdaFunctions';
 
 import { connect } from 'react-redux';
 import userData from '../reducers/userData';
@@ -113,6 +113,13 @@ class BoardJsx extends React.Component {
   }
 
   testLambdaFunctions = async () => {
+
+    let result = await RDSLambda('post', '/nailproductstocategory/create', {
+      nailproductid: '3', // 2-30
+      categoryid: '1' // 0, 1
+    });
+    console.log(result);
+
     // let result = await queryAdminDynamoDB('us-west-2:55304bbc-7b41-4a3f-9f9a-450575713561');
     // console.log(result);
     // result = await listAdminDynamoDB();

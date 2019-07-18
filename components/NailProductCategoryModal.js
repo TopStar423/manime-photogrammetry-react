@@ -1,5 +1,4 @@
 import React, { PureComponent, Fragment } from "react";
-import ReactDOM from "react-dom";
 
 import Box from "./Box";
 import {
@@ -9,42 +8,7 @@ import {
 } from "./StyledComponents";
 import { RDSLambda } from '../utils/lambdaFunctions';
 
-
 export default class NailProductCategoryModal extends PureComponent {
-  state = {
-    showPortal: false
-  };
-  openModal = () => {
-    this.setState({
-      showPortal: true
-    });
-  };
-  closeModal = () => {
-    this.setState({ 
-      showPortal: false 
-    });
-  };
-  render() {
-    return (
-      <Fragment>
-        <StandardButton ml={3} onClick={this.openModal}>
-          Open Nail Product Categories Modal
-        </StandardButton>
-        {this.state.showPortal &&
-          ReactDOM.createPortal(
-            <ModalWindow
-              onClose={this.closeModal}
-              openModal={this.openModal}
-              {...this.state}
-            />,
-            document.getElementById("layout")
-          )}
-      </Fragment>
-    );
-  }
-}
-
-class ModalWindow extends PureComponent {
   constructor(props) {
     super(props);
     this.state = {

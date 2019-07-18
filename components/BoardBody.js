@@ -7,7 +7,7 @@ import { API, Storage } from 'aws-amplify';
 import uuid from 'uuid';
 import { CSVLink, CSVDownload } from 'react-csv';
 import { InfiniteLoaderComponent, ListComponent } from './InfiniteLoader';
-import NailProductCategoryModal from './NailProductCategoryModal';
+import Portal from './Portal';
 import { List } from 'immutable';
 import { queryAdminDynamoDB, listAdminDynamoDB, addAttributeAdminDynamoDB, deleteAttributeAdminDynamoDB, updateUserColumn, RDSLambda } from '../utils/lambdaFunctions';
 
@@ -217,22 +217,22 @@ class BoardJsx extends React.Component {
     }
   }
 
-  createRow = () => {
-    if (this.props.id == 'nailproducts') {
-      let userData = {
-        nailproductid: uuid.v1(),
-      }
-      let userInit = {
-          body: userData,
-          headers: { 'Content-Type': 'application/json' }
-      }
-      API.post(this.state.endpoint, '/nailproducts/create', userInit).then(response => {
-          console.log(response);
-      }).catch(error => {
-          console.log(error.stack);
-      });
-    }
-  }
+  // createRow = () => {
+  //   if (this.props.id == 'nailproducts') {
+  //     let userData = {
+  //       nailproductid: uuid.v1(),
+  //     }
+  //     let userInit = {
+  //         body: userData,
+  //         headers: { 'Content-Type': 'application/json' }
+  //     }
+  //     API.post(this.state.endpoint, '/nailproducts/create', userInit).then(response => {
+  //         console.log(response);
+  //     }).catch(error => {
+  //         console.log(error.stack);
+  //     });
+  //   }
+  // }
 
   selectField = (index, type, boundingRect) => {
     this.setState({
@@ -242,25 +242,25 @@ class BoardJsx extends React.Component {
     });
   }
 
-  updateField = (id, propertyName, propertyValue) => {
-    // LAMBDA
-    if (this.props.id == 'nailproducts') {
-      let userData = {
-        nailproductid: id,
-        columnname: propertyName,
-        columnvalue: propertyValue
-      }
-      let userInit = {
-          body: userData,
-          headers: { 'Content-Type': 'application/json' }
-      }
-      API.post(this.state.endpoint, '/nailproducts/update/column', userInit).then(response => {
-          console.log(response);
-      }).catch(error => {
-          console.log(error.stack);
-      });
-    }
-  }
+  // updateField = (id, propertyName, propertyValue) => {
+  //   // LAMBDA
+  //   if (this.props.id == 'nailproducts') {
+  //     let userData = {
+  //       nailproductid: id,
+  //       columnname: propertyName,
+  //       columnvalue: propertyValue
+  //     }
+  //     let userInit = {
+  //         body: userData,
+  //         headers: { 'Content-Type': 'application/json' }
+  //     }
+  //     API.post(this.state.endpoint, '/nailproducts/update/column', userInit).then(response => {
+  //         console.log(response);
+  //     }).catch(error => {
+  //         console.log(error.stack);
+  //     });
+  //   }
+  // }
 
   updateSearchBar = (searchValue) => {
     this.setState({ searchValue });
@@ -401,13 +401,14 @@ class BoardJsx extends React.Component {
       <BoardBody width={1}>
         <Box display='flex' flexDirection='row' width='100%' pt={3} pb={2}>
           <StandardButton ml={3} onClick={() => this.getData(this.state.endpoint, this.state.tableName)}>Refresh</StandardButton>
-          <StandardButton ml={3} onClick={this.createRow} disabled={this.props.id == 'nailproducts' ? false : true}>New</StandardButton>
+          {this.props.id === 'nailproducts' && <Portal buttonText={"New"} type={"AddNailProductModal"} />}
+          {/* <StandardButton ml={3} onClick={this.createRow} disabled={this.props.id == 'nailproducts' ? false : true}>New</StandardButton> */}
           <StandardButton ml={3} onClick={() => this.setState({ showRemoved: !this.state.showRemoved })}>Toggle Removed</StandardButton>
           <StandardButton ml={3} disabled>Save</StandardButton>
           <CSVLink data={data} filename={`${this.props.id}-${date.toString()}.csv`}>
             <StandardButton ml={3} style={{ textDecoration: 'none' }}>Save CSV</StandardButton>
           </CSVLink>
-          {this.props.id === 'nailproductstocategory' && <NailProductCategoryModal />}
+          {this.props.id === 'nailproductstocategory' && <Portal buttonText={"Open Nail Product Category Modal"} type={"NailProductCategoryModal"} />}
           <StandardInput ml={3} value={this.state.searchValue} onChange={(ev) => this.updateSearchBar(ev.target.value.toLowerCase())}></StandardInput>
         </Box>
         <BoardBodyContainer table={table}>

@@ -2,56 +2,123 @@ import { Storage } from 'aws-amplify';
 import { setStorageBucket, setDefaultBucket } from '../components/Aws';
 import { presignedImageUri } from './lambdaFunctions';
 
-const IMAGE_KEY_MAP = new Map();
-IMAGE_KEY_MAP.set('leftFingers', 0);
-IMAGE_KEY_MAP.set('leftThumb', 1);
-IMAGE_KEY_MAP.set('rightFingers', 2);
-IMAGE_KEY_MAP.set('rightThumb', 3);
-IMAGE_KEY_MAP.set('side', 4);
-IMAGE_KEY_MAP.set('left_fingers', 0);
-IMAGE_KEY_MAP.set('left_thumb', 1);
-IMAGE_KEY_MAP.set('right_fingers', 2);
-IMAGE_KEY_MAP.set('right_thumb', 3);
+// const IMAGE_KEY_MAP = new Map();
+// IMAGE_KEY_MAP.set('leftFingers', 0);
+// IMAGE_KEY_MAP.set('leftThumb', 1);
+// IMAGE_KEY_MAP.set('rightFingers', 2);
+// IMAGE_KEY_MAP.set('rightThumb', 3);
+// IMAGE_KEY_MAP.set('side', 4);
+// IMAGE_KEY_MAP.set('left_fingers', 0);
+// IMAGE_KEY_MAP.set('left_thumb', 1);
+// IMAGE_KEY_MAP.set('right_fingers', 2);
+// IMAGE_KEY_MAP.set('right_thumb', 3);
+
+const KEY_MAP = [
+  {
+    camelCase: 'leftFingers',
+    statusCamel: 'statusLeftFingers',
+    versionLower: 'versionleftfingers',
+    versionCamel: 'versionLeftFingers',
+  },
+  {
+    camelCase: 'leftThumb',
+    statusCamel: 'statusLeftThumb',
+    versionLower: 'versionleftthumb',
+    versionCamel: 'versionLeftThumb',
+  },
+  {
+    camelCase: 'rightFingers',
+    statusCamel: 'statusRightFingers',
+    versionLower: 'versionrightfingers',
+    versionCamel: 'versionRightFingers',
+  },
+  {
+    camelCase: 'rightThumb',
+    statusCamel: 'statusRightThumb',
+    versionLower: 'versionrightthumb',
+    versionCamel: 'versionRightThumb',
+  },
+  {
+    camelCase: 'side',
+    statusCamel: 'statusSide',
+    versionLower: 'versionside',
+    versionCamel: 'versionSide',
+  }
+];
 
 const listUserFiles = async identityId => {
   const result = await Storage.list(``, { level: 'private', identityId });
   return result;
 };
 
-const getLatestKeys = userFiles => {
+const getLatestKeys = (userFiles, userData) => {
   // listedKeys[0] == {key: leftFingers, lastModified: }... leftThumb, rightFingers, rightThumb, side
   let latestKeys = [{}, {}, {}, {}, {}];
 
   if (!Array.isArray(userFiles)) return listedKeys;
 
-  userFiles.map(item => {
-    let key = item.key;
-    if (key) {
-      // item.key is leftFingers.png -> _keyArray is [leftFingers, .png]
-      const _keyArray = key.split('.');
-      const fileName = _keyArray[0];
+  // we want to use version, use image name, then most recent.
+  // so we check for all 4 types in the entire storage, and retrieve the most recent,
+  // do for all 5 Pictures
+  // move map
 
-      const compressedKey = _keyArray[0] + '@1x.' + _keyArray[1];
-      userFiles.map(item2 => {
-        if (item2.key == compressedKey) key = compressedKey;
-      });
+  KEY_MAP.map((item, i) => {
+    const version = typeof userData[item.versionLower] == 'number' && userData[item.versionLower] > 1 ?
+      '.' + userData[item.versionLower] : '';
+    const lowJpg = item.camelCase + '@1x' + version + '.jpg';
+    const lowPng = item.camelCase + '@1x' + version + '.png';
+    const highJpg = item.camelCase + version + '.jpg';
+    const highPng = item.camelCase + version + '.png';
 
-      // If it is a valid key, check for duplicates and if newer file, replace.
-      if (IMAGE_KEY_MAP.has(fileName)) {
-        const lastModified = item.lastModified.getTime();
-        const index = IMAGE_KEY_MAP.get(fileName);
+    const imagePriority = [lowJpg, lowPng, highJpg, highPng];
+    let imageObject = null;
 
-        if (
-          !latestKeys[index] ||
-          !latestKeys[index].lastModified ||
-          lastModified > latestKeys[index].lastModified
-        ) {
-          const newKey = { key, lastModified };
-          latestKeys[index] = newKey;
+    imagePriority.map(generatedItem => {
+      userFiles.map(storageItem => {
+        if (storageItem.key == generatedItem && (imageObject == null || storageItem.lastModified.getTime() > imageObject.lastModified.getTime())) {
+          imageObject = storageItem;
         }
-      }
+      });
+    });
+
+    if (imageObject) {
+      latestKeys[i] = imageObject;
     }
   });
+
+
+  // it is going through every file in the storage and storing the latest one in the array of objects
+  // userFiles.map(item => {
+  //   let key = item.key;
+  //   if (key) {
+  //     // item.key is leftFingers.png -> _keyArray is [leftFingers, .png]
+  //     const _keyArray = key.split('.');
+  //     const fileName = _keyArray[0];
+  //
+  //     const compressedKey = _keyArray[0] + '@1x.' + _keyArray[1];
+  //     userFiles.map(item2 => {
+  //       if (item2.key == compressedKey) key = compressedKey;
+  //     });
+  //
+  //     // If it is a valid key, check for duplicates and if newer file, replace.
+  //     if (IMAGE_KEY_MAP.has(fileName)) {
+  //       const lastModified = item.lastModified.getTime();
+  //       const index = IMAGE_KEY_MAP.get(fileName);
+  //
+  //       if (
+  //         !latestKeys[index] ||
+  //         !latestKeys[index].lastModified ||
+  //         lastModified > latestKeys[index].lastModified
+  //       ) {
+  //         const newKey = { key, lastModified };
+  //         latestKeys[index] = newKey;
+  //       }
+  //     }
+  //   }
+  // });
+
+
+  console.log(latestKeys);
   return latestKeys;
 };
 
@@ -73,11 +140,11 @@ const getLatestKeys = userFiles => {
 //   return signedUris;
 // };
 
-export const getSignedUriArray = async (adminIdentityId, clientIdentityId) => {
+export const getSignedUriArray = async (adminIdentityId, userObject) => {
   setStorageBucket('mani-me-react-native-userfiles-1');
-  const userFiles = await listUserFiles(clientIdentityId);
-  const latestKeys = getLatestKeys(userFiles);
+  const userFiles = await listUserFiles(userObject.userid);
+  const latestKeys = getLatestKeys(userFiles, userObject);
   // const signedUriArray = await getLatestSignedUris(latestKeys, clientIdentityId);
-  const signedUriArray = await presignedImageUri(adminIdentityId, clientIdentityId, latestKeys);
+  const signedUriArray = await presignedImageUri(adminIdentityId, userObject.userid, latestKeys);
   return { latestKeys, signedUriArray };
 };

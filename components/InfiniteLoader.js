@@ -24,8 +24,10 @@ class Workbench extends React.Component {
     let leftFingers, leftThumb, rightFingers, rightThumb, side;
     const measure = this.props.list.getIn([this.props.index, 'userid']);
     const email = this.props.list.getIn([this.props.index, 'email']);
+    const versionSide = this.props.list.getIn([this.props.index, 'versionSide']);
+    const userObject = this.props.list.getIn([this.props.index]);
 
-    const { latestKeys, signedUriArray } = await getSignedUriArray(this.props.user, measure); // user is adminIdentityId, measure is clientIdentityId
+    const { latestKeys, signedUriArray } = await getSignedUriArray(this.props.user, userObject); // user is adminIdentityId, measure is clientIdentityId
     this.setState({ showPortal: true, signedUriArray, latestKeys, measure, email });
   };
   render() {

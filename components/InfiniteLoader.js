@@ -115,7 +115,6 @@ class SelectFitStatus extends React.PureComponent {
     });
   }
 
-
   render() {
     // const locked = this.state.isAdmin ? { backgroundColor: '#ff0000' } : { backgroundColor: '#ff0000' };
     return (

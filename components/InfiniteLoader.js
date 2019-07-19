@@ -6,7 +6,8 @@ import uuid from 'uuid';
 
 import Rotate from './Rotate';
 import { getSignedUriArray } from '../utils/queryString';
-import { updateUserColumn, updateOrderColumn } from '../utils/lambdaFunctions';
+import { createUpdateSSOrder } from '../utils/shipStation';
+import { updateUserColumn, updateOrderColumn, getGroupOrders } from '../utils/lambdaFunctions';
 
 const ML_ROW_ITEM = 2;
 const ROW_ITEM_WIDTH = 200;
@@ -60,9 +61,61 @@ class SelectFitStatus extends React.PureComponent {
       const value = ev.target.value;
       if (value == 'fittingValidated') return;
     }
+    if (this.state.value != 'fittingValidated' && ev.target.value == 'fittingValidated')
+      this.checkGroupOrdersForSS();
     this.setState({ value: ev.target.value });
     updateUserColumn(this.props.userId, this.props.columnName, ev.target.value);
   };
+
+  checkGroupOrdersForSS = async () => {
+    // find grouporders with id not shipped.
+    let userGroupOrders = await getGroupOrders(this.props.userId);
+    // console.log(userGroupOrders.rows);
+    userGroupOrders.rows.map(groupOrder => {
+      // console.log(groupOrder.grouporderstatus);
+      if (groupOrder.grouporderstatus != 'shipped') {
+        this.createUpdateSSWrapper(groupOrder);
+      }
+    })
+  }
+
+  createUpdateSSWrapper = groupOrder => {
+    // then in createUpdateSS... get data from this.props.userData and the passed grouporder and associated shipping address
+    // from grouporder delimit address string
+    const userData = this.props.userData;
+
+    const date = new Date();
+    const isoString = date.toISOString();
+    const firstName = userData && userData.firstname ? userData.firstname : '';
+    const lastName = userData && userData.lastname ? userData.lastname : '';
+    const name = `${firstName} ${lastName}`;
+
+    const addressArray = groupOrder.shippingaddress.split('|');
+    const addressObject = {
+      name,
+      street1: addressArray[1],
+      street2: addressArray[2],
+      city: addressArray[3],
+      state: addressArray[4],
+      postalCode: addressArray[6],
+      country: addressArray[5]
+    };
+
+    createUpdateSSOrder({
+      orderNumber: groupOrder.grouporderid,
+      orderKey: groupOrder.grouporderid,
+      orderDate: isoString,
+      orderStatus: 'awaiting_shipment',
+      customerUsername: userData.userid,
+      customerEmail: userData.email,
+      billTo: {
+        name,
+      },
+      shipTo: addressObject
+    });
+  }
+
+
   render() {
     // const locked = this.state.isAdmin ? { backgroundColor: '#ff0000' } : { backgroundColor: '#ff0000' };
     return (
@@ -183,7 +236,6 @@ export const ListComponent = function({
                 const userId = content['userid'];
                 const value = content[prop] ? content[prop] : '';
                 const columnName = tableProps[i];
-
                 return (
                   <SelectFitStatus
                     selectStyle={selectStyle}
@@ -191,6 +243,7 @@ export const ListComponent = function({
                     userId={userId}
                     value={value}
                     columnName={columnName}
+                    userData={content}
                   />
                 );
               } else if (tableProps[i] == 'orderstatus') {

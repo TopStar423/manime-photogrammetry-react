@@ -13,34 +13,39 @@ import { presignedImageUri } from './lambdaFunctions';
 // IMAGE_KEY_MAP.set('right_fingers', 2);
 // IMAGE_KEY_MAP.set('right_thumb', 3);
 
-const KEY_MAP = [
+export const KEY_MAP = [
   {
     camelCase: 'leftFingers',
     statusCamel: 'statusLeftFingers',
+    statusLower: 'statusleftfingers',
     versionLower: 'versionleftfingers',
     versionCamel: 'versionLeftFingers',
   },
   {
     camelCase: 'leftThumb',
     statusCamel: 'statusLeftThumb',
+    statusLower: 'statusleftthumb',
     versionLower: 'versionleftthumb',
     versionCamel: 'versionLeftThumb',
   },
   {
     camelCase: 'rightFingers',
     statusCamel: 'statusRightFingers',
+    statusLower: 'statusrightfingers',
     versionLower: 'versionrightfingers',
     versionCamel: 'versionRightFingers',
   },
   {
     camelCase: 'rightThumb',
     statusCamel: 'statusRightThumb',
+    statusLower: 'statusrightthumb',
     versionLower: 'versionrightthumb',
     versionCamel: 'versionRightThumb',
   },
   {
     camelCase: 'side',
     statusCamel: 'statusSide',
+    statusLower: 'statusside',
     versionLower: 'versionside',
     versionCamel: 'versionSide',
   }
@@ -118,7 +123,7 @@ const getLatestKeys = (userFiles, userData) => {
   // });
 
 
-  console.log(latestKeys);
+  // console.log(latestKeys);
   return latestKeys;
 };
 

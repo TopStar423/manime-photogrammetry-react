@@ -1,12 +1,51 @@
 import React from 'react';
 import Box from './Box';
 import { StandardButton, StandardInput } from './StyledComponents';
-import { rotateImage } from '../utils/lambdaFunctions';
+import { rotateImage, updateUserColumn, readUser } from '../utils/lambdaFunctions';
+import { KEY_MAP } from '../utils/queryString';
 import uuid from 'uuid';
 
 export default class Rotate extends React.Component {
   constructor(props) {
     super(props);
+    this.state = {};
+  }
+
+  componentDidMount() {
+    this.getUserData();
+  }
+
+  getUserData = async () => {
+    const result = await readUser(this.props.measure);
+    const userObject = result && result.rows && Array.isArray(result.rows) && result.rows.length > 0 ?
+      result.rows[0] : null
+    if (userObject) {
+      const {
+        statusleftfingers,
+        statusleftthumb,
+        statusrightfingers,
+        statusrightthumb,
+        statusside,
+        versionleftfingers,
+        versionleftthumb,
+        versionrightfingers,
+        versionrightthumb,
+        versionside
+      } = userObject;
+
+      this.setState({
+        statusLeftFingers: statusleftfingers,
+        statusLeftThumb: statusleftthumb,
+        statusRightFingers: statusrightfingers,
+        statusRightThumb: statusrightthumb,
+        statusSide: statusside,
+        versionLeftFingers: versionleftfingers,
+        versionLeftThumb: versionleftthumb,
+        versionRightFingers: versionrightfingers,
+        versionRightThumb: versionrightthumb,
+        versionSide: versionside
+      })
+    }
   }
 
   rotateImage = async (key, angle) => {
@@ -50,6 +89,13 @@ export default class Rotate extends React.Component {
     else this.props.onClick();
   };
 
+  setStatus = async (index, imageStatus) => {
+    const columnName = KEY_MAP[index].statusLower;
+    const userId = this.props.measure;
+    await updateUserColumn(userId, columnName, imageStatus);
+    this.getUserData();
+  }
+
   render() {
     return (
       <Box
@@ -79,6 +125,25 @@ export default class Rotate extends React.Component {
               <Box position='absolute' width='100%' height='100%' top='0' zIndex={-100}>
                 <img src={uri} style={{ maxWidth: '100%', maxHeight: '100%' }} />
               </Box>
+
+
+              <Box position='absolute' top='0' right='0' display='flex' flexDirection='column' alignItems='flex-end'>
+                <div>Current Status: {this.state[KEY_MAP[index].statusCamel] ? 'valid' : 'invalid'}</div>
+                <div>Current Version: {this.state[KEY_MAP[index].versionCamel]}</div>
+                <StandardButton
+                  backgroundColor='green'
+                  onClick={() => this.setStatus(index, true)}>
+                  Valid
+                </StandardButton>
+                <StandardButton
+                  backgroundColor='red'
+                  onClick={() => this.setStatus(index, false)}>
+                  Invalid
+                </StandardButton>
+              </Box>
+
+
+
               <Box
                 width='100%'
                 display='flex'

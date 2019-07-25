@@ -160,7 +160,7 @@ export const StandardButton = styled(Button)`
   &:hover {
     background-color: ${props =>
       props.disabled ? '#d1d1d1' : props.backgroundColor ? props.backgroundColor : '#1299dc'};
-    opacity: ${props => (props.backgroundColor ? 0.7 : 1)};
+    opacity: ${props => (props.backgroundColor ? 0.4 : 1)};
   }
   &:active {
     background-color: ${props =>

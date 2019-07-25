@@ -19,7 +19,14 @@ export const RDSLambda = async (method, path, body) => {
   }
 }
 
-export const updateUserColumn = (identityId, columnName, columnValue) => {
+export const readUser = async (identityId) => {
+  let userInit = {
+    headers: { 'Content-Type': 'application/json' }
+  };
+  return await API.get('LambdaRDS', `/users/read/${identityId}`, userInit);
+};
+
+export const updateUserColumn = async (identityId, columnName, columnValue) => {
   let userData = {
     userid: identityId,
     columnname: columnName,
@@ -29,13 +36,7 @@ export const updateUserColumn = (identityId, columnName, columnValue) => {
     body: userData,
     headers: { 'Content-Type': 'application/json' }
   };
-  API.post('LambdaRDS', '/users/update/column', userInit)
-    .then(response => {
-      console.log(response);
-    })
-    .catch(error => {
-      console.log(error);
-    });
+  return await API.post('LambdaRDS', '/users/update/column', userInit);
 };
 
 export const updateOrderColumn = (orderId, columnName, columnValue) => {

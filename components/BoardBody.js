@@ -306,21 +306,10 @@ class BoardJsx extends React.Component {
   }
 
   renderVirtualized = (tableProps, table, tablePropsType, tableId) => {
-    const list = List(this.state.data);
-    if (!list || list.size <= 0) return;
-
-    // return InfiniteLoaderComponent({
-    //   hasNextPage: true,
-    //   isNextPageLoading: false,
-    //   list,
-    //   loadNextPage: () => {},
-    //   tableProps,
-    //   table,
-    //   user: this.props.userData.identityId
-    // });
+    if (!this.state.data || !Array.isArray(this.state.data) || this.state.data.length <= 0) return;
 
     return ListComponent({
-      list,
+      list: this.state.data,
       tableProps,
       table,
       tablePropsType,

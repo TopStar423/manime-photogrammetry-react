@@ -39,6 +39,8 @@ class BoardJsx extends React.Component {
 
   componentDidMount() {
     this._mounted = true;
+    const identityId = this.props.userData ? this.props.userData.identityId : null;
+    if (identityId) this.getData(endpoint, tableName);
   }
 
   componentDidUpdate(prevProps) {

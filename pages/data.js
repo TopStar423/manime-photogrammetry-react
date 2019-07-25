@@ -4,9 +4,7 @@ import fetch from 'isomorphic-unfetch';
 import BoardBody from '../components/BoardBody';
 
 const Data = props => (
-  <Layout before={false}>
-    <BoardBody {...props}></BoardBody>
-  </Layout>
+  <BoardBody {...props}></BoardBody>
 );
 
 Data.getInitialProps = async function(context) {

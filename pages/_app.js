@@ -8,6 +8,7 @@ import { createLogger } from 'redux-logger';
 import rootReducer from '../reducers';
 import Auth from '../components/Auth';
 import { configureAmplify } from '../components/Aws';
+import Layout from '../components/Layout';
 
 function createMiddlewares({ isServer }) {
   let middlewares = [thunkMiddleware];
@@ -61,7 +62,15 @@ class _App extends App {
     const { isAuth } = this.state;
     return (
       <Container>
-        <Provider store={store}>{isAuth ? <Component {...pageProps} /> : <Auth />}</Provider>
+        <Provider store={store}>
+          { isAuth ?
+            <Layout before={false}>
+              <Component {...pageProps} />
+            </Layout>
+            :
+            <Auth />
+          }
+        </Provider>
       </Container>
     );
   }

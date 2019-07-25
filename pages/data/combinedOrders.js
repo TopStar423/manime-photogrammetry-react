@@ -6,9 +6,10 @@ import UserAccess from '../../components/UserAccess';
 import { API, Storage } from 'aws-amplify';
 import uuid from 'uuid';
 import { CSVLink, CSVDownload } from 'react-csv';
-import { InfiniteLoaderComponent, ListComponent } from '../../components/InfiniteLoader';
+import { ListComponent } from '../../components/InfiniteLoader';
 import Portal from '../../components/Portal';
 import { queryAdminDynamoDB, listAdminDynamoDB, addAttributeAdminDynamoDB, deleteAttributeAdminDynamoDB, updateUserColumn, RDSLambda } from '../../utils/lambdaFunctions';
+import { BoardBody, BoardBodyOptions, BoardBodyContainer, BoardBodyContentDescriptions, BoardBodyContents } from '../../components/styled/BoardBody';
 
 import { connect } from 'react-redux';
 import userData from '../../reducers/userData';
@@ -22,55 +23,16 @@ const pathName = '/orders/cms/read/combined';
 const tableName = 'combinedorders';
 const endpoint = 'LambdaRDSClient';
 
-const MX_ROW = 3;
-const ML_ROW_ITEM = 2;
-const ROW_ITEM_WIDTH = 220;
-
-const BoardBody = styled.div`
-  display: flex;
-  flex: 1 0 auto;
-  flex-direction: column;
-  overflow-x: auto;
-  background-color: #fafafa;
-`;
-
-// BoardBodyContents needs table prop
-const BoardBodyContainer = styled(Box)`
-  display: flex;
-  flex-direction: column;
-  flex: 1 0 100%;
-  width: ${(props) => {
-    const numColumns = props.table.length;
-    const width = (props.theme.space[MX_ROW] * 2) + ((props.theme.space[ML_ROW_ITEM] + ROW_ITEM_WIDTH) * numColumns);
-    return width;
-  }}px;
-  background-color: transparent;
-`;
-
-const BoardBodyContents = styled(Box)`
-  display: flex;
-  flex-direction: column;
-  flex: 1 0 auto;
-  height: 1px;
-  min-height: 1px;
-  overflow-y: auto;
-  overflow-x: hidden;
-  width: 100%;
-`;
-
 class BoardJsx extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
       data: [],
       numColumns: 0,
-      selectedField: -1,
-      selectedFieldType: 'display',
-      selectedBoundingRect: {},
       endpoint: '',
-      tableName: '',
       searchValue: '',
-      showRemoved: false
+      showRemoved: false,
+      sortAscending: false
     };
   }
 
@@ -140,7 +102,7 @@ class BoardJsx extends React.Component {
   }
 
   // createRow = () => {
-  //   if (this.props.id == 'nailproducts') {
+  //   if (tableName == 'nailproducts') {
   //     let userData = {
   //       nailproductid: uuid.v1(),
   //     }
@@ -148,7 +110,7 @@ class BoardJsx extends React.Component {
   //         body: userData,
   //         headers: { 'Content-Type': 'application/json' }
   //     }
-  //     API.post(this.state.endpoint, '/nailproducts/create', userInit).then(response => {
+  //     API.post(endpoint, '/nailproducts/create', userInit).then(response => {
   //         console.log(response);
   //     }).catch(error => {
   //         console.log(error.stack);
@@ -158,7 +120,7 @@ class BoardJsx extends React.Component {
 
   // updateField = (id, propertyName, propertyValue) => {
   //   // LAMBDA
-  //   if (this.props.id == 'nailproducts') {
+  //   if (tableName == 'nailproducts') {
   //     let userData = {
   //       nailproductid: id,
   //       columnname: propertyName,
@@ -168,7 +130,7 @@ class BoardJsx extends React.Component {
   //         body: userData,
   //         headers: { 'Content-Type': 'application/json' }
   //     }
-  //     API.post(this.state.endpoint, '/nailproducts/update/column', userInit).then(response => {
+  //     API.post(endpoint, '/nailproducts/update/column', userInit).then(response => {
   //         console.log(response);
   //     }).catch(error => {
   //         console.log(error.stack);
@@ -181,18 +143,22 @@ class BoardJsx extends React.Component {
   }
 
   sortData = item => {
+    const sortDirection = this.state.sortDirection;
+    let sortNumber = 1;
+    if (sortDirection) sortNumber = -1;
+
     const newData = [ ...this.state.data ];
     newData.sort((a, b) => {
       if ( a[item] < b[item]){
-        return -1;
+        return -1 * sortNumber;
       }
       if ( a[item] > b[item] ){
-        return 1;
+        return 1 * sortNumber;
       }
       return 0;
 
     });
-    this.setState({ data: newData });
+    this.setState({ data: newData, sortDirection: !sortDirection });
   }
 
 
@@ -236,30 +202,28 @@ class BoardJsx extends React.Component {
     const date = new Date();
 
     return (
-      <BoardBody width={1}>
-
+      <BoardBody>
         {/* This should be a component that takes child elements in the form of buttons/input/text */}
-        <Box display='flex' flexDirection='row' width='100%' pt={3} pb={2}>
-          <StandardButton ml={3} onClick={() => this.getData(this.state.endpoint, this.state.tableName)}>Refresh</StandardButton>
-          {this.props.id === 'nailproducts' && <Portal buttonText={"New"} type={"AddNailProductModal"} />}
-          {/* <StandardButton ml={3} onClick={this.createRow} disabled={this.props.id == 'nailproducts' ? false : true}>New</StandardButton> */}
+        <BoardBodyOptions>
+          <StandardButton ml={3} onClick={() => this.getData(endpoint, tableName)}>Refresh</StandardButton>
+          {tableName === 'nailproducts' && <Portal buttonText={"New"} type={"AddNailProductModal"} />}
+          {/* <StandardButton ml={3} onClick={this.createRow} disabled={tableName == 'nailproducts' ? false : true}>New</StandardButton> */}
           <StandardButton ml={3} onClick={() => this.setState({ showRemoved: !this.state.showRemoved })}>Toggle Removed</StandardButton>
           <StandardButton ml={3} disabled>Save</StandardButton>
-          <CSVLink data={data} filename={`${this.props.id}-${date.toString()}.csv`}>
+          <CSVLink data={data} filename={`${tableName}-${date.toString()}.csv`}>
             <StandardButton ml={3} style={{ textDecoration: 'none' }}>Save CSV</StandardButton>
           </CSVLink>
-          {this.props.id === 'nailproductstocategory' && <Portal buttonText={"Open Nail Product Category Modal"} type={"NailProductCategoryModal"} />}
+          {tableName === 'nailproductstocategory' && <Portal buttonText={"Open Nail Product Category Modal"} type={"NailProductCategoryModal"} />}
           <StandardInput ml={3} value={this.state.searchValue} onChange={(ev) => this.updateSearchBar(ev.target.value.toLowerCase())}></StandardInput>
-        </Box>
-
+        </BoardBodyOptions>
 
         <BoardBodyContainer table={table}>
-          <div>
+          <BoardBodyContentDescriptions>
             { table.map((item, i) => <div key={i} type='display' style={{ width: '200px', marginLeft: '10px', display: 'inline-block' }} onClick={() => this.sortData(tableProps[i])}>{item}</div>) }
-          </div>
+          </BoardBodyContentDescriptions>
           <BoardBodyContents>
             {
-              this.renderVirtualized(tableProps, table, tablePropsType, this.props.id)
+              this.renderVirtualized(tableProps, table, tablePropsType, tableName)
             }
           </BoardBodyContents>
         </BoardBodyContainer>

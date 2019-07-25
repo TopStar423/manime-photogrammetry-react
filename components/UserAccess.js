@@ -27,9 +27,11 @@ const DndColumn = styled.div`
   }
 `;
 const Item = styled.div`
+  background-color: ${(props) => {
+    return props.selected ? '#d1d1d1' : 'transparent';
+  }};
   padding: 10px;
   margin: 2px;
-  background: #fff;
   border-radius: 2px;
   box-shadow: 0 0 2px #00000080;
   cursor: pointer;
@@ -38,7 +40,6 @@ const Item = styled.div`
 export class UserAccess extends Component {
   constructor(props) {
     super(props);
-
     this.state = {
       selectedAdmin: '',
       users: [],
@@ -158,7 +159,7 @@ export class UserAccess extends Component {
             <DndColumn>
               <h3>Admin</h3>
               {adminList.map((item, i) => (
-                <Item key={item.userId} onClick={() => this.selectAdmin(item.userId)}>
+                <Item key={item.userId} selected={item.userId == this.state.selectedAdmin} onClick={() => this.selectAdmin(item.userId)}>
                   {item.username}
                 </Item>
               ))}

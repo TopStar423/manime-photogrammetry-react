@@ -15,7 +15,11 @@ export const BoardBody = styled.div`
 export const BoardBodyOptions = styled(Box)`
   display: flex;
   flex-direction: row;
-  width: 3000px;
+  width: ${(props) => {
+    const numColumns = props.table.length;
+    const width = (props.theme.space[MX_ROW] * 2) + ((props.theme.space[ML_ROW_ITEM] + ROW_ITEM_WIDTH) * numColumns);
+    return width;
+  }}px;
   padding-top: 32px;
   padding-bottom: 24px;
 `;
@@ -35,7 +39,13 @@ export const BoardBodyContainer = styled(Box)`
 `;
 
 export const BoardBodyContentDescriptions = styled(Box)`
-  width: 3000px;
+  width: ${(props) => {
+    const numColumns = props.table.length;
+    const width = (props.theme.space[MX_ROW] * 2) + ((props.theme.space[ML_ROW_ITEM] + ROW_ITEM_WIDTH) * numColumns);
+    return width;
+  }}px;
+  padding-bottom: 12px;
+  padding-left: 40px;
 `;
 
 export const BoardBodyContents = styled(Box)`
@@ -46,6 +56,10 @@ export const BoardBodyContents = styled(Box)`
   min-height: 1px;
   overflow-y: auto;
   overflow-x: hidden;
-  width: 3000px;
+  width: ${(props) => {
+    const numColumns = props.table.length;
+    const width = (props.theme.space[MX_ROW] * 2) + ((props.theme.space[ML_ROW_ITEM] + ROW_ITEM_WIDTH) * numColumns);
+    return width;
+  }}px;
   overflow-x: auto;
 `;

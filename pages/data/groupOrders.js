@@ -16,12 +16,12 @@ import userData from '../../reducers/userData';
 import { DEFAULT } from '../../actions';
 
 const OPEN_PHOTOGRAMMETRY = 'OPEN_PHOTOGRAMMETRY';
-const USERS_COLUMN_DESCRIPTION = ['', 'User ID', 'First Name', 'Last Name', 'Email', '# Pics', 'Fit Status', 'Total Orders', 'Fitted (Deprecated)', 'Date Created', 'Date Last Login', 'Description', 'Subscription', 'Design Pref 1', 'Design Pref 2', 'Design Pref 3'];
-const USERS_COLUMN_PROPERTIES = ['userid', 'userid', 'firstname', 'lastname', 'email', 'numpics', 'fitstatus','totalorders', 'fitted', 'datecreated', 'datelastlogin', 'description', 'subscription', 'designpref', 'designpref2', 'designpref3'];
-const USERS_COLUMN_PROPERTIES_TYPE = [OPEN_PHOTOGRAMMETRY, 'modal', 'text', 'text', 'text', 'text', 'text', 'text', 'menu', 'time', 'time', 'text', 'text', 'display', 'display', 'display'];
+const GROUP_ORDERS_COLUMN_DESCRIPTION = ['', 'Group Order ID', 'User ID', 'Group Order Status', 'Insurance', 'Shipping Address', 'Subtotal', 'Taxes'];
+const GROUP_ORDERS_COLUMN_PROPERTIES = ['userid', 'grouporderid', 'userid', 'grouporderstatus', 'insurance', 'shippingaddress', 'subtotal', 'taxes'];
+const GROUP_ORDERS_COLUMN_PROPERTIES_TYPE = [OPEN_PHOTOGRAMMETRY, 'modal', 'modal', 'menu', 'text', 'text', 'text', 'text'];
 
-const pathName = '/users/cms/read';
-const tableName = 'users';
+const pathName = '/grouporders/cms/read';
+const tableName = 'grouporders';
 const endpoint = 'LambdaRDSClient';
 
 class BoardJsx extends React.Component {
@@ -194,9 +194,9 @@ class BoardJsx extends React.Component {
   }
 
   render() {
-    const table = USERS_COLUMN_DESCRIPTION;
-    const tableProps = USERS_COLUMN_PROPERTIES;
-    const tablePropsType = USERS_COLUMN_PROPERTIES_TYPE;
+    const table = GROUP_ORDERS_COLUMN_DESCRIPTION;
+    const tableProps = GROUP_ORDERS_COLUMN_PROPERTIES;
+    const tablePropsType = GROUP_ORDERS_COLUMN_PROPERTIES_TYPE;
 
     const data = this.state.data;
     const numAttr = table.length;

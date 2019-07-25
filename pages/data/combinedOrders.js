@@ -202,9 +202,9 @@ class BoardJsx extends React.Component {
     const date = new Date();
 
     return (
-      <BoardBody>
+      <BoardBody table={table}>
         {/* This should be a component that takes child elements in the form of buttons/input/text */}
-        <BoardBodyOptions>
+        <BoardBodyOptions table={table}>
           <StandardButton ml={3} onClick={() => this.getData(endpoint, tableName)}>Refresh</StandardButton>
           {tableName === 'nailproducts' && <Portal buttonText={"New"} type={"AddNailProductModal"} />}
           {/* <StandardButton ml={3} onClick={this.createRow} disabled={tableName == 'nailproducts' ? false : true}>New</StandardButton> */}
@@ -218,10 +218,10 @@ class BoardJsx extends React.Component {
         </BoardBodyOptions>
 
         <BoardBodyContainer table={table}>
-          <BoardBodyContentDescriptions>
+          <BoardBodyContentDescriptions table={table}>
             { table.map((item, i) => <div key={i} type='display' style={{ width: '200px', marginLeft: '10px', display: 'inline-block' }} onClick={() => this.sortData(tableProps[i])}>{item}</div>) }
           </BoardBodyContentDescriptions>
-          <BoardBodyContents>
+          <BoardBodyContents table={table}>
             {
               this.renderVirtualized(tableProps, table, tablePropsType, tableName)
             }

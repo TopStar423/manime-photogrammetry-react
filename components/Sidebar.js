@@ -38,7 +38,7 @@ class Sidebar extends React.Component {
         </Box>
 
         <Box py={1}>
-          <Link as={`/d/combinedorders`} href={`/data?id=combinedorders`}>
+          <Link href={`/data/combinedOrders`}>
             <MenuItem
               py={1}
               px={3}
@@ -49,7 +49,7 @@ class Sidebar extends React.Component {
               COMBINED ORDERS
             </MenuItem>
           </Link>
-          <Link as={`/d/orders`} href={`/data?id=orders`}>
+          <Link href={`/data/orders`}>
             <MenuItem
               py={1}
               px={3}
@@ -60,7 +60,7 @@ class Sidebar extends React.Component {
               ORDERS
             </MenuItem>
           </Link>
-          <Link as={`/d/grouporders`} href={`/data?id=grouporders`}>
+          <Link href={`/data/groupOrders`}>
             <MenuItem
               py={1}
               px={3}
@@ -71,7 +71,7 @@ class Sidebar extends React.Component {
               GROUP ORDERS
             </MenuItem>
           </Link>
-          <Link as={`/d/users`} href={`/data?id=users`}>
+          <Link href={`/data/users`}>
             <MenuItem
               py={1}
               px={3}
@@ -83,7 +83,7 @@ class Sidebar extends React.Component {
             </MenuItem>
           </Link>
 
-          <Link as={`/d/revieworders`} href={`/data?id=revieworders`}>
+          <Link href={`/data/reviewOrders`}>
             <MenuItem
               py={1}
               px={3}
@@ -94,7 +94,7 @@ class Sidebar extends React.Component {
               ORDER REVIEWS
             </MenuItem>
           </Link>
-          <Link as={`/d/shippingaddresses`} href={`/data?id=shippingaddresses`}>
+          <Link href={`/data/shippingAddresses`}>
             <MenuItem
               py={1}
               px={3}
@@ -105,7 +105,7 @@ class Sidebar extends React.Component {
               SHIPPING ADDRESSES
             </MenuItem>
           </Link>
-          <Link as={`/d/payments`} href={`/data?id=payments`}>
+          <Link href={`/data/payments`}>
             <MenuItem
               py={1}
               px={3}
@@ -117,7 +117,7 @@ class Sidebar extends React.Component {
             </MenuItem>
           </Link>
 
-          <Link as={`/d/designers`} href={`/data?id=designers`}>
+          <Link href={`/data/designers`}>
             <MenuItem
               py={1}
               px={3}
@@ -128,7 +128,7 @@ class Sidebar extends React.Component {
               DESIGNERS
             </MenuItem>
           </Link>
-          <Link as={`/d/nailproducts`} href={`/data?id=nailproducts`}>
+          <Link href={`/data/nailProducts`}>
             <MenuItem
               py={1}
               px={3}
@@ -139,7 +139,7 @@ class Sidebar extends React.Component {
               NAIL PRODUCTS
             </MenuItem>
           </Link>
-          <Link as={`/d/categories`} href={`/data?id=categories`}>
+          <Link href={`/data/nailCategories`}>
             <MenuItem
               py={1}
               px={3}
@@ -150,7 +150,7 @@ class Sidebar extends React.Component {
               NAIL CATEGORIES
             </MenuItem>
           </Link>
-          <Link as={`/d/nailproductstocategory`} href={`/data?id=nailproductstocategory`}>
+          <Link href={`/data/nailProductsToCategory`}>
             <MenuItem
               py={1}
               px={3}
@@ -161,7 +161,7 @@ class Sidebar extends React.Component {
               NAIL PRODUCT CATEGORIES
             </MenuItem>
           </Link>
-          <Link as={`/d/useraccess`} href={`/data?id=useraccess`}>
+          <Link href={`/userAccess`}>
             <MenuItem
               py={1}
               px={3}

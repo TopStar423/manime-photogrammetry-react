@@ -15,13 +15,13 @@ import { connect } from 'react-redux';
 import userData from '../../reducers/userData';
 import { DEFAULT } from '../../actions';
 
-const PAYMENTS_COLUMN_DESCRIPTION = ['Payment ID', 'User ID', 'Name', 'Last 4', 'Refunded', 'Paid', 'Address Line 1', 'Address Line 2', 'City', 'Zip Code', 'State', 'Country'];
-const PAYMENTS_COLUMN_PROPERTIES = ['paymentid'];
-const PAYMENTS_COLUMN_PROPERTIES_TYPE = ['modal'];
+const NAIL_PRODUCT_CATEGORIES_COLUMN_DESCRIPTION = ['Nail Product ID', 'Category ID'];
+const NAIL_PRODUCT_CATEGORIES_COLUMN_PROPERTIES = ['nailproductid', 'categoryid'];
+const NAIL_PRODUCT_CATEGORIES_COLUMN_PROPERTIES_TYPE = ['modal', 'modal'];
 
-const pathName = '/payments/read';
-const tableName = 'payments';
-const endpoint = 'LambdaRDSClientNoncritical';
+const pathName = '/nailproductstocategory/read';
+const tableName = 'nailproductstocategory';
+const endpoint = 'LambdaRDSCompany';
 
 class BoardJsx extends React.Component {
   constructor(props) {
@@ -193,9 +193,9 @@ class BoardJsx extends React.Component {
   }
 
   render() {
-    const table = PAYMENTS_COLUMN_DESCRIPTION;
-    const tableProps = PAYMENTS_COLUMN_PROPERTIES;
-    const tablePropsType = PAYMENTS_COLUMN_PROPERTIES_TYPE;
+    const table = NAIL_PRODUCT_CATEGORIES_COLUMN_DESCRIPTION;
+    const tableProps = NAIL_PRODUCT_CATEGORIES_COLUMN_PROPERTIES;
+    const tablePropsType = NAIL_PRODUCT_CATEGORIES_COLUMN_PROPERTIES_TYPE;
 
     const data = this.state.data;
     const numAttr = table.length;

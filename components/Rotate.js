@@ -8,7 +8,13 @@ import uuid from 'uuid';
 export default class Rotate extends React.Component {
   constructor(props) {
     super(props);
-    this.state = {};
+    this.state = {
+      '0': false,
+      '1': false,
+      '2': false,
+      '3': false,
+      '4': false
+    };
   }
 
   componentDidMount() {
@@ -48,9 +54,11 @@ export default class Rotate extends React.Component {
     }
   }
 
-  rotateImage = async (key, angle) => {
+  rotateImageWrapper = async (key, angle, index) => {
+    this.setState({ [index]: true });
     await rotateImage(this.props.measure, angle, key);
     this.props.openWorkbench();
+    this.setState({ [index]: false });
   };
 
   openWorkbench = () => {
@@ -151,11 +159,13 @@ export default class Rotate extends React.Component {
                 justifyContent='space-evenly'
                 mb={2}>
                 <StandardButton
-                  onClick={() => this.rotateImage(this.props.latestKeys[index].key, 90)}>
+                  disabled={this.state[index] == true}
+                  onClick={() => this.rotateImageWrapper(this.props.latestKeys[index].key, 90, index)}>
                   Rotate Left
                 </StandardButton>
                 <StandardButton
-                  onClick={() => this.rotateImage(this.props.latestKeys[index].key, -90)}>
+                  disabled={this.state[index] == true}
+                  onClick={() => this.rotateImageWrapper(this.props.latestKeys[index].key, -90, index)}>
                   Rotate Right
                 </StandardButton>
               </Box>

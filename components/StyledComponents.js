@@ -152,6 +152,7 @@ export const StandardButton = styled(Button)`
   min-width: ${props => (props.minWidth ? props.minWidth : '45px')};
   padding: ${props => (props.padding ? props.padding : '0px 15px')};
   height: 25px;
+  margin: 5px 5px;
   background-color: ${props =>
     props.disabled ? '#d1d1d1' : props.backgroundColor ? props.backgroundColor : '#14aaf5'};
   &:focus {

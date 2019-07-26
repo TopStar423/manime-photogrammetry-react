@@ -139,12 +139,12 @@ export default class Rotate extends React.Component {
                 <div>Current Status: {this.state[KEY_MAP[index].statusCamel] ? 'valid' : 'invalid'}</div>
                 <div>Current Version: {this.state[KEY_MAP[index].versionCamel]}</div>
                 <StandardButton
-                  backgroundColor='green'
+                  backgroundColor={this.state[KEY_MAP[index].statusCamel] ? 'gray' : 'green'}
                   onClick={() => this.setStatus(index, true)}>
                   Valid
                 </StandardButton>
                 <StandardButton
-                  backgroundColor='red'
+                  backgroundColor={this.state[KEY_MAP[index].statusCamel] ? 'red' : 'gray'}
                   onClick={() => this.setStatus(index, false)}>
                   Invalid
                 </StandardButton>

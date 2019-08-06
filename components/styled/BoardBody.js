@@ -56,6 +56,7 @@ export const BoardBodyContents = styled(Box)`
   min-height: 1px;
   overflow-y: auto;
   overflow-x: hidden;
+  direction: rtl;
   width: ${(props) => {
     const numColumns = props.table.length;
     const width = (props.theme.space[MX_ROW] * 2) + ((props.theme.space[ML_ROW_ITEM] + ROW_ITEM_WIDTH) * numColumns);

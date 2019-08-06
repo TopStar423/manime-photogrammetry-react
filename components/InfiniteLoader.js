@@ -198,6 +198,7 @@ export const ListComponent = function({
         overflow: 'hidden',
         boxSizing: 'border-box',
         marginLeft: '8px',
+        textAlign: 'left',
         backgroundColor: !this.state.visible ? '#ff0000' : 'transparent'
       };
 
@@ -210,7 +211,8 @@ export const ListComponent = function({
         marginLeft: '8px',
         backgroundColor: 'rgba(255,0,0,0.3)',
         marginTop: '1px',
-        marginBottom: '1px'
+        marginBottom: '1px',
+        textAlign: 'left',
       };
 
       const toggleText = !this.state.visible ? 'ADD' : 'REMOVE';
@@ -283,7 +285,8 @@ export const ListComponent = function({
   const style = {
     height: '60px',
     width: '100%',
-    display: 'flex'
+    display: 'flex',
+    flexDirection: 'row-reverse'
   };
 
   return list.map((content, index) => {

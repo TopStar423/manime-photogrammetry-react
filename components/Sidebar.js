@@ -83,7 +83,7 @@ class Sidebar extends React.Component {
             </MenuItem>
           </Link>
 
-          <Link href={`/data/reviewOrders`}>
+          <Link href={`/data/orderReviews`}>
             <MenuItem
               py={1}
               px={3}

@@ -10,6 +10,7 @@ import { ListComponent } from '../../components/InfiniteLoader';
 import Portal from '../../components/Portal';
 import { queryAdminDynamoDB, listAdminDynamoDB, addAttributeAdminDynamoDB, deleteAttributeAdminDynamoDB, updateUserColumn, RDSLambda } from '../../utils/lambdaFunctions';
 import { BoardBody, BoardBodyOptions, BoardBodyContainer, BoardBodyContentDescriptions, BoardBodyContents } from '../../components/styled/BoardBody';
+import { ArrowUpward, ArrowDownward } from '@material-ui/icons';
 
 import { connect } from 'react-redux';
 import userData from '../../reducers/userData';
@@ -221,8 +222,15 @@ class BoardJsx extends React.Component {
         </BoardBodyOptions>
 
         <BoardBodyContainer table={table}>
-          <BoardBodyContentDescriptions table={table}>
-            { table.map((item, i) => <div key={i} type='display' style={{ width: '200px', marginLeft: '10px', display: 'inline-block' }} onClick={() => this.sortData(tableProps[i])}>{item}</div>) }
+          <BoardBodyContentDescriptions table={table} ml='100px'>
+            { table.map((item, i) => (
+              <Box display='inline-flex' flexDirection='row'>
+                {i != 0 &&
+                  <ArrowUpward fontSize='small'/>
+                }
+                <div key={i} type='display' style={{ width: '180px', marginLeft: '10px', display: 'inline-block' }} onClick={() => this.sortData(tableProps[i])}>{item}</div>
+              </Box>
+            )) }
           </BoardBodyContentDescriptions>
           <BoardBodyContents table={table}>
             {

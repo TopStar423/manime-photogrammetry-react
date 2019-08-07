@@ -205,6 +205,8 @@ class BoardJsx extends React.Component {
     const numAttr = table.length;
     const date = new Date();
 
+    console.log(data);
+
     return (
       <BoardBody table={table}>
         {/* This should be a component that takes child elements in the form of buttons/input/text */}

@@ -264,7 +264,12 @@ export const ListComponent = function({
               } else if (tablePropsType[i] == 'preview') {
                 return (
                   <div style={{ width: '200px', overflow: 'hidden' }}>
-                    <img src={content['picuri1']} style={{ minWidth: '50%', minHeight: '50%' }} />
+                    { content['picuri1'] ?
+                      <a target="_blank" href={content['picuri1']}>Open image link</a>
+                      :
+                      <div />
+                    }
+                    {/* <img src={content['picuri1']} style={{ minWidth: '50%', minHeight: '50%', maxWidth: '200px', maxHeight: '60px' }} /> */}
                   </div>
                 );
               } else {
@@ -286,7 +291,8 @@ export const ListComponent = function({
     height: '60px',
     width: '100%',
     display: 'flex',
-    flexDirection: 'row-reverse'
+    flexDirection: 'row-reverse',
+    flexShrink: 0
   };
 
   return list.map((content, index) => {

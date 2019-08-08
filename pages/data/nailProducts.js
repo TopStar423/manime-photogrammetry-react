@@ -223,7 +223,7 @@ class BoardJsx extends React.Component {
           <BoardBodyContentDescriptions table={table}>
             { table.map((item, i) => <div key={i} type='display' style={{ width: '200px', marginLeft: '10px', display: 'inline-block' }} onClick={() => this.sortData(tableProps[i])}>{item}</div>) }
           </BoardBodyContentDescriptions>
-          <BoardBodyContents table={table}>
+          <BoardBodyContents table={table} pb={1}>
             {
               this.renderVirtualized(tableProps, table, tablePropsType, tableName)
             }

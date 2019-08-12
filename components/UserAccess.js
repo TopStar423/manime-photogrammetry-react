@@ -18,7 +18,7 @@ const DndContainer = styled.div`
   display: flex;
 `;
 const DndColumn = styled.div`
-  width: 200px;
+  width: 270px;
   margin: 10px;
   padding: 10px;
   border: 1px solid #eee;

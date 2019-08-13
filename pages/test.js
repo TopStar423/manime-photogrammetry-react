@@ -1,5 +1,6 @@
 import React from 'react';
 import { API } from 'aws-amplify';
+import { updateUserColumn } from '../utils/lambdaFunctions';
 
 let pathName = '/users/cms/read';
 const tableName = 'users';
@@ -14,7 +15,7 @@ export default class Test extends React.Component {
   }
 
   throttledApi = rows => {
-    for (let i = 0; i < rows.length; ++i){
+    for (let i = row.length; i < rows.length; ++i){
       setTimeout(() => {
         if (rows[i].visible) {
           const body = {
@@ -22,7 +23,8 @@ export default class Test extends React.Component {
             lastName: rows[i].lastname,
             email: rows[i].email,
             verifiedEmail: true,
-            note: rows[i].userid
+            note: rows[i].userid,
+            accepts_marketing: true
           }
           let user = {
             firstName: rows[i].firstname,
@@ -35,17 +37,18 @@ export default class Test extends React.Component {
             headers: { 'Content-Type': 'application/json' }
           })
           .then(result => {
-
+            updateUserColumn(rows[i].userid, '_leftfingerscurvature', result.id);
           })
           .catch(err => {
+            const errData = err.response ? err.response.data : err.response;
             this.setState({
-              errors: [...this.state.errors, { ...user, err: err.response.data }]
+              errors: [...this.state.errors, { ...user, err: errData }]
             }, () => {
               console.log(this.state.errors);
             })
           });
         }
-      }, i * 1000);
+      }, i * 540);
     }
   }
 
@@ -53,10 +56,10 @@ export default class Test extends React.Component {
     let userInit = {
       headers: { 'Content-Type': 'application/json' }
     }
-    // API.get(endpoint, pathName, userInit).then(response => {
-    //   this.throttledApi(response.rows);
-    // }).catch((err) => {
-    // });
+    API.get(endpoint, pathName, userInit).then(response => {
+      this.throttledApi(response.rows);
+    }).catch((err) => {
+    });
   }
 
   render() {

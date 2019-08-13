@@ -121,14 +121,18 @@ export class UserAccess extends Component {
   };
 
   adminAccessAddClient = async clientId => {
-    return await addAttributeAdminDynamoDB(this.state.selectedAdmin, clientId);
+    const response = await addAttributeAdminDynamoDB(this.state.selectedAdmin, clientId);
+    console.log(response);
+    return response;
   };
 
   adminAccessRemoveClient = async clientId => {
-    return await deleteAttributeAdminDynamoDB(this.state.selectedAdmin, clientId);
+    const response = await deleteAttributeAdminDynamoDB(this.state.selectedAdmin, clientId);
+    console.log(response);
+    return response;
   };
 
-  applyDrag = (arr, dragResult) => {
+  applyDrag = (arr, dragResult, container) => {
     const { removedIndex, addedIndex, payload } = dragResult;
     if (removedIndex === null && addedIndex === null) return arr;
 
@@ -137,12 +141,14 @@ export class UserAccess extends Component {
 
     if (removedIndex !== null) {
       itemToAdd = result.splice(removedIndex, 1)[0];
-      this.adminAccessRemoveClient(itemToAdd.userId);
+      if (container == 'accessList')
+        this.adminAccessRemoveClient(itemToAdd.userId);
     }
 
     if (addedIndex !== null) {
       result.splice(addedIndex, 0, itemToAdd);
-      this.adminAccessAddClient(itemToAdd.userId);
+      if (container == 'accessList')
+        this.adminAccessAddClient(itemToAdd.userId);
     }
 
     return result;
@@ -171,7 +177,7 @@ export class UserAccess extends Component {
               <Container
                 groupName='1'
                 getChildPayload={i => userList[i]}
-                onDrop={e => this.setState({ userList: this.applyDrag(userList, e) })}>
+                onDrop={e => this.setState({ userList: this.applyDrag(userList, e, 'userList') })}>
                 {userList.map(item => (
                   <Draggable key={item.userId}>
                     <Item>{item.email}</Item>
@@ -184,7 +190,7 @@ export class UserAccess extends Component {
               <Container
                 groupName='1'
                 getChildPayload={i => accessList[i]}
-                onDrop={e => this.setState({ accessList: this.applyDrag(accessList, e) })}>
+                onDrop={e => this.setState({ accessList: this.applyDrag(accessList, e, 'accessList') })}>
                 {accessList.map(item => (
                   <Draggable key={item.userId}>
                     <Item>{item.email}</Item>

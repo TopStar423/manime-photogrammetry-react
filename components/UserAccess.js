@@ -22,7 +22,7 @@ const DndColumn = styled.div`
   margin: 10px;
   padding: 10px;
   border: 1px solid #eee;
-  height: 100%;
+  ${'' /* height: 100%; */}
   overflow-y: auto;
   .smooth-dnd-container {
     height: 100%;

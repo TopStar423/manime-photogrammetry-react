@@ -16,16 +16,16 @@ import { DEFAULT } from '../actions';
 
 const DndContainer = styled.div`
   display: flex;
+  height: 100%;
 `;
 const DndColumn = styled.div`
   width: 270px;
   margin: 10px;
   padding: 10px;
   border: 1px solid #eee;
-  ${'' /* height: 100%; */}
+  height: 100%;
   overflow-y: auto;
   .smooth-dnd-container {
-    height: 100%;
   }
 `;
 const Item = styled.div`

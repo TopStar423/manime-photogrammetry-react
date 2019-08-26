@@ -81,13 +81,13 @@ class AuthComponent extends React.Component {
     ev.preventDefault();
 
     Auth.signIn(this.state.email, this.state.password)
-      .then(user => {
-        this.props.setIsAuth(true);
-        Auth.currentCredentials().then(credentials => {
-          this.props.dispatchSetIdentityId(credentials.identityId);
-        });
-      })
-      .catch(err => console.log(err.stack));
+    .then(user => {
+      this.props.setIsAuth(true);
+      Auth.currentCredentials().then(credentials => {
+        this.props.dispatchSetIdentityId(credentials.identityId);
+      });
+    })
+    .catch(err => console.log(err.stack));
   };
 
   render() {

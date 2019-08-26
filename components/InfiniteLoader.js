@@ -54,7 +54,7 @@ class Workbench extends React.Component {
 class SelectFitStatus extends React.PureComponent {
   state = {
     value: this.props.value,
-    isAdmin: this.props.user == 'us-west-2:130355da-2eec-4f35-8092-3eca4d22d8ea'
+    isAdmin: this.props.user == 'us-west-2:130355da-2eec-4f35-8092-3eca4d22d8ea' || this.props.user == 'us-west-2:95a2f104-1308-42e3-bb65-033c4f9a6de4'
   };
   onChange = ev => {
     if (!this.state.isAdmin) {
@@ -229,7 +229,7 @@ export const ListComponent = function({
               }}>
               {list.length - index}
             </div>
-            {tableId == 'users' && user == 'us-west-2:130355da-2eec-4f35-8092-3eca4d22d8ea' && <button onClick={this.clickToggleVisible}>{toggleText}</button>}
+            {tableId == 'users' && (user == 'us-west-2:130355da-2eec-4f35-8092-3eca4d22d8ea' || user == 'us-west-2:95a2f104-1308-42e3-bb65-033c4f9a6de4') && <button onClick={this.clickToggleVisible}>{toggleText}</button>}
             {tableProps.map((prop, i) => {
               if (table[i] == '') {
                 return <Workbench itemStyle={itemStyle} index={index} user={user} content={content}/>;

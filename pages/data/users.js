@@ -68,7 +68,7 @@ class BoardJsx extends React.Component {
     }
     const user = this.props.userData ? this.props.userData.identityId : '';
     // this is the admin account, photogrammetry
-    if (user == 'us-west-2:130355da-2eec-4f35-8092-3eca4d22d8ea') {
+    if (user == 'us-west-2:130355da-2eec-4f35-8092-3eca4d22d8ea' || user == 'us-west-2:95a2f104-1308-42e3-bb65-033c4f9a6de4') {
       API.get(endpoint, pathName, userInit).then(response => {
         if(response && response.rows && this._mounted) {
           this.setState({ data: response.rows });

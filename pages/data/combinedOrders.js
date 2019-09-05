@@ -15,9 +15,10 @@ import { connect } from 'react-redux';
 import userData from '../../reducers/userData';
 import { DEFAULT } from '../../actions';
 
-const COMBINED_ORDERS_COLUMN_DESCRIPTION = ['_Email', 'Nail Description', 'Shipping Address', 'User ID', 'Order ID', 'Group Order ID', 'Nail Product ID', 'Nail Length', 'Nail Shape', 'Order Status', 'Date Created'];
-const COMBINED_ORDERS_COLUMN_PROPERTIES = ['email', 'description', 'shippingaddress', 'userid', 'orderid', 'grouporderid', 'nailproductid', 'naillength', 'nailshape', 'orderstatus', 'datecreated'];
-const COMBINED_ORDERS_COLUMN_PROPERTIES_TYPE = ['text', 'text', 'text', 'modal', 'modal', 'modal', 'modal', 'text', 'text', 'menu', 'time'];
+const OPEN_PHOTOGRAMMETRY = 'OPEN_PHOTOGRAMMETRY';
+const COMBINED_ORDERS_COLUMN_DESCRIPTION = ['', '_Email', 'Nail Description', 'Shipping Address', 'Fit Status', 'User ID', 'Order ID', 'Group Order ID', 'Nail Product ID', 'Order Status', 'Date Created'];
+const COMBINED_ORDERS_COLUMN_PROPERTIES = ['userid', 'email', 'description', 'shippingaddress', 'fitstatus', 'userid', 'orderid', 'grouporderid', 'nailproductid', 'orderstatus', 'datecreated'];
+const COMBINED_ORDERS_COLUMN_PROPERTIES_TYPE = [OPEN_PHOTOGRAMMETRY, 'text', 'text', 'text', 'modal', 'modal', 'modal', 'modal', 'menu', 'time'];
 
 const pathName = '/orders/cms/read/combined';
 const tableName = 'combinedorders';

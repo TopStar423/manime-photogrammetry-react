@@ -316,6 +316,15 @@ export const ListComponent = function({
                     {/* <img src={content['picuri1']} style={{ minWidth: '50%', minHeight: '50%', maxWidth: '200px', maxHeight: '60px' }} /> */}
                   </div>
                 );
+              } else if (tableProps[i] == 'shippingaddress') {
+                const shippingAddress = content['shippingaddress'];
+                const formattedAddress = shippingAddress.split('|').join(' ');
+
+                return (
+                    <CopyToClipboard text={formattedAddress} onCopy={() => {}}>
+                      <div style={itemStyle}>{formattedAddress}</div>
+                    </CopyToClipboard>
+                );
               } else {
                 return (
                   <CopyToClipboard text={content[prop]} onCopy={() => {}}>

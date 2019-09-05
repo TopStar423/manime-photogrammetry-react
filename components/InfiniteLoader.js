@@ -5,9 +5,11 @@ import { CopyToClipboard } from 'react-copy-to-clipboard';
 import uuid from 'uuid';
 
 import Rotate from './Rotate';
+import AdminAccessModal from './AdminAccessModal';
+import { ToggleVisibleButton, AdminAccessButton } from './styled/InfiniteLoader.styled';
 import { getSignedUriArray } from '../utils/queryString';
 import { createUpdateSSOrder } from '../utils/shipStation';
-import { updateUserColumn, updateOrderColumn, getGroupOrders } from '../utils/lambdaFunctions';
+import { updateUserColumn, updateOrderColumn, getGroupOrders, listAdminDynamoDB } from '../utils/lambdaFunctions';
 
 const ML_ROW_ITEM = 2;
 const ROW_ITEM_WIDTH = 200;
@@ -49,6 +51,42 @@ class Workbench extends React.Component {
       </React.Fragment>
     );
   }
+}
+
+class AdminAccess extends React.Component {
+  state = {
+    showPortal: false,
+    adminList: []
+  };
+
+    openAdminAccess = async () => {
+      const adminList = await listAdminDynamoDB();
+        this.setState({
+          showPortal: true,
+          adminList
+        });
+    };
+
+    render() {
+      const { content } = this.props;
+      const { showPortal, adminList } = this.state;
+
+        return (
+            <React.Fragment>
+                <AdminAccessButton onClick={this.openAdminAccess}>
+                    Admin Access
+                </AdminAccessButton>
+                {showPortal &&
+                ReactDOM.createPortal(
+                    <AdminAccessModal
+                        clientId={content.userid}
+                        adminList={adminList}
+                        onClick={() => this.setState({ showPortal: false })} />,
+                    document.getElementById('layout')
+                )}
+            </React.Fragment>
+        );
+    }
 }
 
 class SelectFitStatus extends React.PureComponent {
@@ -192,8 +230,10 @@ export const ListComponent = function({
 
       const itemStyle = {
         padding: '0px',
-        display: 'inline-block',
+        display: 'flex',
+        alignItems: 'center',
         width: '200px',
+        height: '50px',
         whiteSpace: 'nowrap',
         overflow: 'hidden',
         boxSizing: 'border-box',
@@ -229,10 +269,14 @@ export const ListComponent = function({
               }}>
               {list.length - index}
             </div>
-            {tableId == 'users' && (user == 'us-west-2:130355da-2eec-4f35-8092-3eca4d22d8ea' || user == 'us-west-2:95a2f104-1308-42e3-bb65-033c4f9a6de4') && <button onClick={this.clickToggleVisible}>{toggleText}</button>}
+            {tableId == 'users' && (user == 'us-west-2:130355da-2eec-4f35-8092-3eca4d22d8ea' || user == 'us-west-2:95a2f104-1308-42e3-bb65-033c4f9a6de4') && <ToggleVisibleButton onClick={this.clickToggleVisible}>{toggleText}</ToggleVisibleButton>}
             {tableProps.map((prop, i) => {
               if (table[i] == '') {
-                return <Workbench itemStyle={itemStyle} index={index} user={user} content={content}/>;
+                if (tableProps[i] === 'adminaccess') {
+                  return <AdminAccess content={content} />;
+                } else {
+                  return <Workbench itemStyle={itemStyle} index={index} user={user} content={content}/>;
+                }
               } else if (tableProps[i] == 'fitstatus') {
                 const userId = content['userid'];
                 const value = content[prop] ? content[prop] : '';
@@ -292,7 +336,8 @@ export const ListComponent = function({
     width: '100%',
     display: 'flex',
     flexDirection: 'row-reverse',
-    flexShrink: 0
+    flexShrink: 0,
+    alignItems: 'center'
   };
 
   return list.map((content, index) => {

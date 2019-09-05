@@ -17,9 +17,10 @@ import userData from '../../reducers/userData';
 import { DEFAULT } from '../../actions';
 
 const OPEN_PHOTOGRAMMETRY = 'OPEN_PHOTOGRAMMETRY';
-const USERS_COLUMN_DESCRIPTION = ['', 'User ID', 'First Name', 'Last Name', 'Email', '# Pics', 'Fit Status', 'Total Orders', 'Fitted (Deprecated)', 'Date Created', 'Date Last Login', 'Description', 'Subscription', 'Design Pref 1', 'Design Pref 2', 'Design Pref 3'];
-const USERS_COLUMN_PROPERTIES = ['userid', 'userid', 'firstname', 'lastname', 'email', 'numpics', 'fitstatus','totalorders', 'fitted', 'datecreated', 'datelastlogin', 'description', 'subscription', 'designpref', 'designpref2', 'designpref3'];
-const USERS_COLUMN_PROPERTIES_TYPE = [OPEN_PHOTOGRAMMETRY, 'modal', 'text', 'text', 'text', 'text', 'text', 'text', 'menu', 'time', 'time', 'text', 'text', 'display', 'display', 'display'];
+const ADD_ADMIN_ACCESS = 'ADD_ADMIN_ACCESS';
+const USERS_COLUMN_DESCRIPTION = ['', '', 'User ID', 'First Name', 'Last Name', 'Email', '# Pics', 'Fit Status', 'Total Orders', 'Fitted (Deprecated)', 'Date Created', 'Date Last Login', 'Description', 'Subscription', 'Design Pref 1', 'Design Pref 2', 'Design Pref 3'];
+const USERS_COLUMN_PROPERTIES = ['userid', 'adminaccess', 'userid', 'firstname', 'lastname', 'email', 'numpics', 'fitstatus','totalorders', 'fitted', 'datecreated', 'datelastlogin', 'description', 'subscription', 'designpref', 'designpref2', 'designpref3'];
+const USERS_COLUMN_PROPERTIES_TYPE = [OPEN_PHOTOGRAMMETRY, ADD_ADMIN_ACCESS, 'modal', 'text', 'text', 'text', 'text', 'text', 'text', 'menu', 'time', 'time', 'text', 'text', 'display', 'display', 'display'];
 
 let pathName = '/users/cms/read';
 const tableName = 'users';

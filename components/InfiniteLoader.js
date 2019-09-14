@@ -29,15 +29,20 @@ class Workbench extends React.Component {
     const email = this.props.content['email'];
     const versionSide = this.props.content['versionSide'];
     const userObject = this.props.content;
+    if (!userObject.userid) {
+      userObject.userid = userObject.userId;
+    }
 
     const { latestKeys, signedUriArray } = await getSignedUriArray(this.props.user, userObject); // user is adminIdentityId, measure is clientIdentityId
     this.setState({ showPortal: true, signedUriArray, latestKeys, measure, email });
   };
   render() {
+    const title = this.props.title ? this.props.title : 'Open Photogrammetry Workbench';
+
     return (
       <React.Fragment>
         <button style={this.props.itemStyle} onClick={this.openWorkbench}>
-          Open Photogrammetry Workbench
+          {title}
         </button>
         {this.state.showPortal &&
           ReactDOM.createPortal(
@@ -73,13 +78,13 @@ class AdminAccess extends React.Component {
 
         return (
             <React.Fragment>
-                <AdminAccessButton onClick={this.openAdminAccess}>
+                <AdminAccessButton  style={this.props.itemStyle} onClick={this.openAdminAccess}>
                     Admin Access
                 </AdminAccessButton>
                 {showPortal &&
                 ReactDOM.createPortal(
                     <AdminAccessModal
-                        clientId={content.userid}
+                        clientId={content.userid || content.userId}
                         adminList={adminList}
                         onClick={() => this.setState({ showPortal: false })} />,
                     document.getElementById('layout')
@@ -232,6 +237,7 @@ export const ListComponent = function({
         padding: '0px',
         display: 'flex',
         alignItems: 'center',
+        justifyContent: 'flex-end',
         width: '200px',
         height: '50px',
         whiteSpace: 'nowrap',
@@ -271,9 +277,11 @@ export const ListComponent = function({
             </div>
             {tableId == 'users' && (user == 'us-west-2:130355da-2eec-4f35-8092-3eca4d22d8ea' || user == 'us-west-2:95a2f104-1308-42e3-bb65-033c4f9a6de4') && <ToggleVisibleButton onClick={this.clickToggleVisible}>{toggleText}</ToggleVisibleButton>}
             {tableProps.map((prop, i) => {
-              if (table[i] == '') {
+              if (table[i] == '' || table[i] == '3D Model' || table[i] == 'Modeler') {
                 if (tableProps[i] === 'adminaccess') {
-                  return <AdminAccess content={content} />;
+                  return <AdminAccess itemStyle={itemStyle} content={content} />;
+                } else if (tableProps[i] === '3dmodel') {
+                  return <Workbench itemStyle={itemStyle} index={index} user={user} content={content} title='3D' />;
                 } else {
                   return <Workbench itemStyle={itemStyle} index={index} user={user} content={content}/>;
                 }

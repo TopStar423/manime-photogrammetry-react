@@ -64,3 +64,22 @@ export const BoardBodyContents = styled(Box)`
   }}px;
   overflow-x: auto;
 `;
+
+export const AnalyticsContainer = styled.div`
+    display: flex;
+`;
+
+export const AnalyticsHeader = styled.h3`
+    font-size: 20px;
+    font-weight: 700;
+    text-transform: uppercase;
+`;
+
+export const AnalyticsContents = styled.div`
+    display: flex;
+`;
+
+export const AnalyticsItem = styled.div`
+    display: flex;
+    justify-content: space-between;
+`;

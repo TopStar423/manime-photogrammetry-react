@@ -32,12 +32,23 @@ class Sidebar extends React.Component {
       <Container minWidth={[150, 200]} height='100%' bg='blacks.11' fontFamily='sansSerif'>
         <Box px={2} p={2} width={['100px', '120px']}>
           <img
-            src='https://s3-us-west-2.amazonaws.com/mani-me-app/manimelogo.png'
+            src='https://mani-me-app.s3-us-west-2.amazonaws.com/white-logo-length.png'
             style={{ width: '100%', height: 'auto' }}
           />
         </Box>
 
         <Box py={1}>
+          <Link href={`/data/production`}>
+            <MenuItem
+                py={1}
+                px={3}
+                color='whites.11'
+                fontSize={0}
+                onClick={() => this.selectLink('production')}
+                bg={this.state.selectedLink == 'production' ? '#313131' : 'transparent'}>
+              PRODUCTION
+            </MenuItem>
+          </Link>
           <Link href={`/data/combinedOrders`}>
             <MenuItem
               py={1}

@@ -319,8 +319,8 @@ export const ListComponent = function({
                 } else {
                   return <Workbench itemStyle={itemStyle} index={index} user={user} content={content}/>;
                 }
-              } else if (tableProps[i] == 'fitstatus') {
-                const userId = content['userid'];
+              } else if (tableProps[i] == 'fitstatus' || tableProps[i] == 'fitStatus') {
+                const userId = content['userid'] || content['userId'];
                 const value = content[prop] ? content[prop] : '';
                 const columnName = tableProps[i];
                 return (

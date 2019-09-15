@@ -29,7 +29,7 @@ import { DEFAULT } from '../../actions';
 const OPEN_PHOTOGRAMMETRY = 'OPEN_PHOTOGRAMMETRY';
 const ADD_ADMIN_ACCESS = 'ADD_ADMIN_ACCESS';
 const PRODUCTION_COLUMN_DESCRIPTION = ['Order #', 'Order Status', 'Email', 'Full Name', 'Order Date', 'Product', 'Payment', '3D Model', 'Modeler', 'Fit Status', 'Shipping Info', 'Shopify status'];
-const PRODUCTION_COLUMN_PROPERTIES = ['orderid', 'orderstatusout', 'email', 'fullname', 'date', 'product', 'payment', '3dmodel', 'adminaccess', 'fitstatus', 'shippingaddress', 'shopifystatus'];
+const PRODUCTION_COLUMN_PROPERTIES = ['orderid', 'orderstatusout', 'email', 'fullname', 'date', 'product', 'payment', '3dmodel', 'adminaccess', 'fitStatus', 'shippingaddress', 'shopifystatus'];
 const PRODUCTION_COLUMN_PROPERTIES_TYPE = ['modal', 'menu', 'text', 'text', 'time', 'modal', 'text', OPEN_PHOTOGRAMMETRY, ADD_ADMIN_ACCESS, 'text', 'text', 'text'];
 
 let pathName = '/orders/production/read';
@@ -166,6 +166,7 @@ class BoardJsx extends React.Component {
                     }
 
                     unfulfilled.total = unfulfilled.toBePrinted + unfulfilled.invalidPics + unfulfilled.invalidShippingInfo + unfulfilled.toBeModeled + unfulfilled.toBeReviewed
+
                     this.setState({
                         data,
                         unfulfilled,

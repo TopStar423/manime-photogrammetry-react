@@ -12,7 +12,7 @@ const MenuItem = styled(Box)`
 `;
 
 const Container = styled(Box)`
-  background-color: #101214;
+  background-color: #2c4349;
 `;
 
 class Sidebar extends React.Component {
@@ -42,7 +42,7 @@ class Sidebar extends React.Component {
             <MenuItem
                 py={1}
                 px={3}
-                color='whites.11'
+                color='#fcf9f7'
                 fontSize={0}
                 onClick={() => this.selectLink('production')}
                 bg={this.state.selectedLink == 'production' ? '#313131' : 'transparent'}>
@@ -53,7 +53,7 @@ class Sidebar extends React.Component {
             <MenuItem
               py={1}
               px={3}
-              color='whites.11'
+              color='#fcf9f7'
               fontSize={0}
               onClick={() => this.selectLink('combinedorders')}
               bg={this.state.selectedLink == 'combinedorders' ? '#313131' : 'transparent'}>
@@ -64,7 +64,7 @@ class Sidebar extends React.Component {
             <MenuItem
               py={1}
               px={3}
-              color='whites.11'
+              color='#fcf9f7'
               fontSize={0}
               onClick={() => this.selectLink('orders')}
               bg={this.state.selectedLink == 'orders' ? '#313131' : 'transparent'}>
@@ -75,7 +75,7 @@ class Sidebar extends React.Component {
             <MenuItem
               py={1}
               px={3}
-              color='whites.11'
+              color='#fcf9f7'
               fontSize={0}
               onClick={() => this.selectLink('grouporders')}
               bg={this.state.selectedLink == 'grouporders' ? '#313131' : 'transparent'}>
@@ -86,7 +86,7 @@ class Sidebar extends React.Component {
             <MenuItem
               py={1}
               px={3}
-              color='whites.11'
+              color='#fcf9f7'
               fontSize={0}
               onClick={() => this.selectLink('users')}
               bg={this.state.selectedLink == 'users' ? '#313131' : 'transparent'}>
@@ -98,7 +98,7 @@ class Sidebar extends React.Component {
             <MenuItem
               py={1}
               px={3}
-              color='whites.11'
+              color='#fcf9f7'
               fontSize={0}
               onClick={() => this.selectLink('revieworders')}
               bg={this.state.selectedLink == 'revieworders' ? '#313131' : 'transparent'}>
@@ -109,7 +109,7 @@ class Sidebar extends React.Component {
             <MenuItem
               py={1}
               px={3}
-              color='whites.11'
+              color='#fcf9f7'
               fontSize={0}
               onClick={() => this.selectLink('shippingaddresses')}
               bg={this.state.selectedLink == 'shippingaddresses' ? '#313131' : 'transparent'}>
@@ -120,7 +120,7 @@ class Sidebar extends React.Component {
             <MenuItem
               py={1}
               px={3}
-              color='whites.11'
+              color='#fcf9f7'
               fontSize={0}
               onClick={() => this.selectLink('payments')}
               bg={this.state.selectedLink == 'payments' ? '#313131' : 'transparent'}>
@@ -132,7 +132,7 @@ class Sidebar extends React.Component {
             <MenuItem
               py={1}
               px={3}
-              color='whites.11'
+              color='#fcf9f7'
               fontSize={0}
               onClick={() => this.selectLink('designers')}
               bg={this.state.selectedLink == 'designers' ? '#313131' : 'transparent'}>
@@ -143,7 +143,7 @@ class Sidebar extends React.Component {
             <MenuItem
               py={1}
               px={3}
-              color='whites.11'
+              color='#fcf9f7'
               fontSize={0}
               onClick={() => this.selectLink('nailproducts')}
               bg={this.state.selectedLink == 'nailproducts' ? '#313131' : 'transparent'}>
@@ -154,7 +154,7 @@ class Sidebar extends React.Component {
             <MenuItem
               py={1}
               px={3}
-              color='whites.11'
+              color='#fcf9f7'
               fontSize={0}
               onClick={() => this.selectLink('categories')}
               bg={this.state.selectedLink == 'categories' ? '#313131' : 'transparent'}>
@@ -165,7 +165,7 @@ class Sidebar extends React.Component {
             <MenuItem
               py={1}
               px={3}
-              color='whites.11'
+              color='#fcf9f7'
               fontSize={0}
               onClick={() => this.selectLink('nailproductstocategory')}
               bg={this.state.selectedLink == 'nailproductstocategory' ? '#313131' : 'transparent'}>
@@ -176,7 +176,7 @@ class Sidebar extends React.Component {
             <MenuItem
               py={1}
               px={3}
-              color='whites.11'
+              color='#fcf9f7'
               fontSize={0}
               onClick={() => this.selectLink('useraccess')}
               bg={this.state.selectedLink == 'useraccess' ? '#313131' : 'transparent'}>

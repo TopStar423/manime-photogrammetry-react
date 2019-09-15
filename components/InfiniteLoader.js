@@ -59,34 +59,52 @@ class Workbench extends React.Component {
 }
 
 class AdminAccess extends React.Component {
-  state = {
-    showPortal: false,
-    adminList: []
+  constructor(props) {
+    super(props);
+
+    this.state = {
+      showPortal: false,
+      adminList: [],
+      admins: ''
+    };
+    this.handleAdminAccessChange = this.handleAdminAccessChange.bind(this);
+  }
+
+  openAdminAccess = async () => {
+    const adminList = await listAdminDynamoDB();
+      this.setState({
+        showPortal: true,
+        adminList
+      });
   };
 
-    openAdminAccess = async () => {
-      const adminList = await listAdminDynamoDB();
-        this.setState({
-          showPortal: true,
-          adminList
-        });
-    };
+  handleAdminAccessChange = admins => {
+    this.setState({
+      showPortal: false,
+      admins
+    })
+  };
 
-    render() {
+  componentDidMount() {
+    const { content } = this.props;
+    this.setState({ admins: content.admins });
+  }
+
+  render() {
       const { content } = this.props;
-      const { showPortal, adminList } = this.state;
+      const { showPortal, adminList, admins } = this.state;
 
         return (
             <React.Fragment>
                 <AdminAccessButton  style={this.props.itemStyle} onClick={this.openAdminAccess}>
-                    Admin Access
+                    {admins}
                 </AdminAccessButton>
                 {showPortal &&
                 ReactDOM.createPortal(
                     <AdminAccessModal
                         clientId={content.userid || content.userId}
                         adminList={adminList}
-                        onClick={() => this.setState({ showPortal: false })} />,
+                        onUpdateAdminAccess={admins => this.handleAdminAccessChange(admins)}/>,
                     document.getElementById('layout')
                 )}
             </React.Fragment>
@@ -240,12 +258,28 @@ export const ListComponent = function({
         justifyContent: 'flex-end',
         width: '200px',
         height: '50px',
-        whiteSpace: 'nowrap',
         overflow: 'hidden',
         boxSizing: 'border-box',
         marginLeft: '8px',
         textAlign: 'left',
         backgroundColor: !this.state.visible ? '#ff0000' : 'transparent'
+      };
+
+      const modelStyle = {
+        padding: '0px',
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+        width: '80px',
+        height: '50px',
+        boxSizing: 'border-box',
+        marginLeft: '8px',
+        backgroundColor: '#f8bfa0',
+        borderRadius: '5px',
+        marginRight: '130px',
+        color: '#fff',
+        fontSize: '16px',
+        fontWeight: 700
       };
 
       const selectStyle = {
@@ -281,7 +315,7 @@ export const ListComponent = function({
                 if (tableProps[i] === 'adminaccess') {
                   return <AdminAccess itemStyle={itemStyle} content={content} />;
                 } else if (tableProps[i] === '3dmodel') {
-                  return <Workbench itemStyle={itemStyle} index={index} user={user} content={content} title='3D' />;
+                  return <Workbench itemStyle={modelStyle} index={index} user={user} content={content} title='3D' />;
                 } else {
                   return <Workbench itemStyle={itemStyle} index={index} user={user} content={content}/>;
                 }
@@ -333,6 +367,12 @@ export const ListComponent = function({
                       <div style={itemStyle}>{formattedAddress}</div>
                     </CopyToClipboard>
                 );
+              } else if (tableProps[i] == 'orderstatusout') {
+                return (
+                    <CopyToClipboard text={content['orderstatusout']} onCopy={() => {}}>
+                      <div style={{...itemStyle, fontWeight: 700, textTransform: 'uppercase'}}>{content['orderstatusout']}</div>
+                    </CopyToClipboard>
+                );
               } else {
                 return (
                   <CopyToClipboard text={content[prop]} onCopy={() => {}}>
@@ -348,16 +388,18 @@ export const ListComponent = function({
   }
 
   const numColumns = tableProps.length;
-  const style = {
-    height: '60px',
-    width: '100%',
-    display: 'flex',
-    flexDirection: 'row-reverse',
-    flexShrink: 0,
-    alignItems: 'center'
-  };
 
   return list.map((content, index) => {
+    const style = {
+      height: '60px',
+      width: '100%',
+      display: 'flex',
+      flexDirection: 'row-reverse',
+      flexShrink: 0,
+      alignItems: 'center',
+      background: content.fulfillmentStatus === 'unfulfilled' ? '#fbc1c1' : 'transparent'
+    };
+
     return <RowRenderer index={index} key={uuid.v1()} style={style} content={content} />;
     // return rowRenderer({ index, key: uuid.v1(), style, content: item });
   });

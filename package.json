@@ -37,6 +37,7 @@
     "react-copy-to-clipboard": "^5.0.1",
     "react-csv": "^1.1.1",
     "react-dom": "^16.6.3",
+    "react-loading": "^2.0.3",
     "react-redux": "^6.0.0",
     "react-scroll": "^1.7.10",
     "react-smooth-dnd": "^0.11.0",

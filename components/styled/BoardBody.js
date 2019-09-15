@@ -67,19 +67,37 @@ export const BoardBodyContents = styled(Box)`
 
 export const AnalyticsContainer = styled.div`
     display: flex;
+    flex-direction: column;
+    width: 30%;
+    padding: 20px 30px;
 `;
 
 export const AnalyticsHeader = styled.h3`
-    font-size: 20px;
+    font-size: 16px;
     font-weight: 700;
     text-transform: uppercase;
 `;
 
 export const AnalyticsContents = styled.div`
     display: flex;
+    flex-direction: column;
 `;
 
 export const AnalyticsItem = styled.div`
     display: flex;
     justify-content: space-between;
+    padding: 5px 0;
+`;
+
+export const AnalyticsTotal = styled.div`
+    font-weight: 700;
+    background-color: #f7bfa0;
+`;
+
+export const LoadingContainer = styled.div`
+    width: 100%;
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
 `;

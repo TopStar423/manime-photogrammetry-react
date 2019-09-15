@@ -5,8 +5,9 @@ import { StandardButton, StandardInput } from '../../components/StyledComponents
 import { API, Storage } from 'aws-amplify';
 import uuid from 'uuid';
 import { CSVLink, CSVDownload } from 'react-csv';
+import ReactLoading from "react-loading";
 import { ListComponent } from '../../components/InfiniteLoader';
-import { updateUserColumn, RDSLambda } from '../../utils/lambdaFunctions';
+import {updateUserColumn, RDSLambda, listAdminDynamoDB} from '../../utils/lambdaFunctions';
 import {
     BoardBody,
     BoardBodyOptions,
@@ -16,7 +17,9 @@ import {
     AnalyticsContainer,
     AnalyticsHeader,
     AnalyticsContents,
-    AnalyticsItem
+    AnalyticsItem,
+    AnalyticsTotal,
+    LoadingContainer
 } from '../../components/styled/BoardBody';
 
 import { connect } from 'react-redux';
@@ -26,7 +29,7 @@ import { DEFAULT } from '../../actions';
 const OPEN_PHOTOGRAMMETRY = 'OPEN_PHOTOGRAMMETRY';
 const ADD_ADMIN_ACCESS = 'ADD_ADMIN_ACCESS';
 const PRODUCTION_COLUMN_DESCRIPTION = ['Order #', 'Order Status', 'Email', 'Full Name', 'Order Date', 'Product', 'Payment', '3D Model', 'Modeler', 'Fit Status', 'Shipping Info', 'Shopify status'];
-const PRODUCTION_COLUMN_PROPERTIES = ['orderid', 'orderstatus', 'email', 'fullname', 'date', 'product', 'payment', '3dmodel', 'adminaccess', 'fitstatus', 'shippingaddress', 'shopifystatus'];
+const PRODUCTION_COLUMN_PROPERTIES = ['orderid', 'orderstatusout', 'email', 'fullname', 'date', 'product', 'payment', '3dmodel', 'adminaccess', 'fitstatus', 'shippingaddress', 'shopifystatus'];
 const PRODUCTION_COLUMN_PROPERTIES_TYPE = ['modal', 'menu', 'text', 'text', 'time', 'modal', 'text', OPEN_PHOTOGRAMMETRY, ADD_ADMIN_ACCESS, 'text', 'text', 'text'];
 
 let pathName = '/orders/production/read';
@@ -45,7 +48,8 @@ class BoardJsx extends React.Component {
             endpoint: '',
             searchValue: '',
             showRemoved: false,
-            sortAscending: false
+            sortAscending: false,
+            isLoading: false
         };
     }
 
@@ -71,20 +75,40 @@ class BoardJsx extends React.Component {
         this.setState({
             endpoint,
             tableName,
-            data: []
+            data: [],
+            unfulfilled: {
+                total: 0,
+                toBePrinted: 0,
+                invalidPics: 0,
+                invalidShippingInfo: 0,
+                toBeModeled: 0,
+                toBeReviewed: 0
+            },
+            adminList,
+            isLoading: true
         });
 
         let userInit = {
             headers: { 'Content-Type': 'application/json' }
         }
         const user = this.props.userData ? this.props.userData.identityId : '';
+
+        const adminList = await listAdminDynamoDB();
+
         // this is the admin account, photogrammetry
         if (user == 'us-west-2:130355da-2eec-4f35-8092-3eca4d22d8ea') {
             try {
                 const response = await RDSLambda('get', pathName);
                 const data = [];
                 if(response && this._mounted) {
-                    console.log('res: ', response);
+                    const unfulfilled = {
+                        total: 0,
+                        toBePrinted: 0,
+                        invalidPics: 0,
+                        invalidShippingInfo: 0,
+                        toBeModeled: 0,
+                        toBeReviewed: 0,
+                    };
                     for (const resItem of response) {
                         const dateCreated = new Date(resItem.dateCreated);
                         let dd = dateCreated.getDate();
@@ -106,10 +130,47 @@ class BoardJsx extends React.Component {
                             payment: '$' + resItem.GroupOrder.orderTotal,
                             shippingaddress: resItem.GroupOrder.shippingAddress,
                             ...resItem.GroupOrder.User,
+                            orderstatusout: '',
+                            fulfillmentStatus: 'unfulfilled',
+                            admins: ''
+                        };
+
+                        if (!item.shippingaddress || item.shippingaddress.length === 0) {
+                            unfulfilled.invalidShippingInfo++;
+                            item.orderstatusout = 'Invalid Shipping Information';
+                        } else if (!item.statusLeftFingers || !item.statusLeftThumb || !item.statusRightFingers || !item.statusRightThumb || !item.statusSide) {
+                            unfulfilled.invalidPics++;
+                            item.orderstatusout = 'Invalid pictures';
+                        } else if (!item.fitStatus !== 'fittingValidated' || ! item.fitStatus !== 'fittedByDesigner') {
+                            unfulfilled.toBeModeled++;
+                            item.orderstatusout = 'To be modeled';
+                        } else if(item.fitStatus !== 'fittedByDesigner') {
+                            unfulfilled.toBeReviewed++;
+                            item.orderstatusout = 'To be reviewed';
+                        } else if(item.fitStatus !== 'fittingValidated') {
+                            unfulfilled.toBePrinted++;
+                            item.orderstatusout = 'To be printed';
+                        } else {
+                            item.fulfillmentStatus = 'fulfilled';
                         }
+
+                        const admins = [];
+                        adminList.map((admin, index) => {
+                            if (Object.values(admin).indexOf(item.userId) > -1) {
+                                admins.push(admin.username);
+                            }
+                        });
+                        item.admins = admins.join(', ');
+
                         data.push(item);
                     }
-                    this.setState({ data: data });
+
+                    unfulfilled.total = unfulfilled.toBePrinted + unfulfilled.invalidPics + unfulfilled.invalidShippingInfo + unfulfilled.toBeModeled + unfulfilled.toBeReviewed
+                    this.setState({
+                        data,
+                        unfulfilled,
+                        isLoading: false
+                    });
                 }
             } catch (err) {
                 console.log('error: ', err);
@@ -194,63 +255,75 @@ class BoardJsx extends React.Component {
         const tableProps = PRODUCTION_COLUMN_PROPERTIES;
         const tablePropsType = PRODUCTION_COLUMN_PROPERTIES_TYPE;
 
-        const data = this.state.data;
+        const { data, unfulfilled, adminList, isLoading } = this.state;
         const numAttr = table.length;
         const date = new Date();
 
         return (
-            <BoardBody table={table}>
-                {/* This should be a component that takes child elements in the form of buttons/input/text */}
-                <BoardBodyOptions table={table}>
-                    <StandardButton ml={3} onClick={() => this.getData(endpoint, tableName)}>Refresh</StandardButton>
-                    <CSVLink data={data} filename={`${tableName}-${date.toString()}.csv`} style={{ textDecoration:  'none' }}>
-                        <StandardButton ml={3}>Save CSV</StandardButton>
-                    </CSVLink>
-                    <StandardInput ml={3} value={this.state.searchValue} onChange={(ev) => this.updateSearchBar(ev.target.value.toLowerCase())}></StandardInput>
-                </BoardBodyOptions>
+            <React.Fragment>
+                {isLoading ? (
+                    <LoadingContainer>
+                        <ReactLoading type="spinningBubbles" color="#000" />
+                    </LoadingContainer>
+                ) : (
+                    <BoardBody table={table}>
+                        {/* This should be a component that takes child elements in the form of buttons/input/text */}
+                        <BoardBodyOptions table={table}>
+                            <StandardButton ml={3} onClick={() => this.getData(endpoint, tableName)}>Refresh</StandardButton>
+                            <CSVLink data={data} filename={`${tableName}-${date.toString()}.csv`} style={{ textDecoration:  'none' }}>
+                                <StandardButton ml={3}>Save CSV</StandardButton>
+                            </CSVLink>
+                            <StandardInput ml={3} value={this.state.searchValue} onChange={(ev) => this.updateSearchBar(ev.target.value.toLowerCase())}></StandardInput>
+                        </BoardBodyOptions>
 
-                <BoardBodyContainer table={table}>
-                    <AnalyticsContainer>
-                        <AnalyticsHeader>Unfulfilled orders tracker</AnalyticsHeader>
-                        <AnalyticsContents>
-                            <AnalyticsItem>
-                                <span>Total Unfulfilled</span>
-                                <span>33</span>
-                            </AnalyticsItem>
-                            <AnalyticsItem>
-                                <span># to be printed</span>
-                                <span>33</span>
-                            </AnalyticsItem>
-                            <AnalyticsItem>
-                                <span># with invalid pics</span>
-                                <span>33</span>
-                            </AnalyticsItem>
-                            <AnalyticsItem>
-                                <span># with invalid shopping info</span>
-                                <span>33</span>
-                            </AnalyticsItem>
-                            <AnalyticsItem>
-                                <span># to be modelled</span>
-                                <span>33</span>
-                            </AnalyticsItem>
-                            <AnalyticsItem>
-                                <span># to be reviewed and saved</span>
-                                <span>33</span>
-                            </AnalyticsItem>
-                        </AnalyticsContents>
-                    </AnalyticsContainer>
-                    <BoardBodyContentDescriptions table={table}>
-                        { table.map((item, i) => <div key={i} type='display' style={{ width: '200px', marginLeft: '10px', display: 'inline-block' }} onClick={() => this.sortData(tableProps[i])}>{item}</div>) }
-                    </BoardBodyContentDescriptions>
-                    <BoardBodyContents table={table}>
-                        {
-                            this.renderVirtualized(tableProps, table, tablePropsType, tableName)
-                        }
-                    </BoardBodyContents>
-                </BoardBodyContainer>
+                        <BoardBodyContainer table={table}>
+                            {unfulfilled &&
+                            <AnalyticsContainer>
+                                <AnalyticsHeader>Unfulfilled orders tracker</AnalyticsHeader>
+                                <AnalyticsContents>
+                                    <AnalyticsTotal>
+                                        <AnalyticsItem>
+                                            <span>Total Unfulfilled</span>
+                                            <span>{unfulfilled.total}</span>
+                                        </AnalyticsItem>
+                                    </AnalyticsTotal>
+                                    <AnalyticsItem>
+                                        <span># to be printed</span>
+                                        <span>{unfulfilled.toBePrinted}</span>
+                                    </AnalyticsItem>
+                                    <AnalyticsItem>
+                                        <span># with invalid pics</span>
+                                        <span>{unfulfilled.invalidPics}</span>
+                                    </AnalyticsItem>
+                                    <AnalyticsItem>
+                                        <span># with invalid shopping info</span>
+                                        <span>{unfulfilled.invalidShippingInfo}</span>
+                                    </AnalyticsItem>
+                                    <AnalyticsItem>
+                                        <span># to be modeled</span>
+                                        <span>{unfulfilled.toBeModeled}</span>
+                                    </AnalyticsItem>
+                                    <AnalyticsItem>
+                                        <span># to be reviewed and saved</span>
+                                        <span>{unfulfilled.toBeReviewed}</span>
+                                    </AnalyticsItem>
+                                </AnalyticsContents>
+                            </AnalyticsContainer>
+                            }
+                            <BoardBodyContentDescriptions table={table}>
+                                { table.map((item, i) => <div key={i} type='display' style={{ width: '200px', marginLeft: '10px', display: 'inline-block', fontWeight: 700 }} onClick={() => this.sortData(tableProps[i])}>{item}</div>) }
+                            </BoardBodyContentDescriptions>
+                            <BoardBodyContents table={table}>
+                                {
+                                    this.renderVirtualized(tableProps, table, tablePropsType, tableName)
+                                }
+                            </BoardBodyContents>
+                        </BoardBodyContainer>
 
 
-            </BoardBody>
+                    </BoardBody>
+                )}
+            </React.Fragment>
         );
     }
 };

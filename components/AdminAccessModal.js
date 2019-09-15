@@ -38,17 +38,21 @@ export default class AdminAccessModal extends Component {
         if (this.modal.contains(e.target)) {
             return;
         } else {
-            const { adminList, clientId } = this.props;
+            const { adminList, clientId, onUpdateAdminAccess } = this.props;
             const { adminChecked } = this.state;
+            const adminsGroup = [];
             adminChecked.map(async (checked, index) => {
                 if (checked) {
                     await addAttributeAdminDynamoDB(adminList[index].userId, clientId);
+                    adminsGroup.push(adminList[index].username);
                 } else {
                     await deleteAttributeAdminDynamoDB(adminList[index].userId, clientId);
                 }
+                if (index === adminChecked.length - 1) {
+                    const admins = adminsGroup.join(', ');
+                    onUpdateAdminAccess(admins);
+                }
             });
-
-            this.props.onClick();
         }
     };
 

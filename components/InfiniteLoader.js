@@ -397,9 +397,8 @@ export const ListComponent = function({
       flexDirection: 'row-reverse',
       flexShrink: 0,
       alignItems: 'center',
-      background: content.fulfillmentStatus === 'unfulfilled' ? '#fbc1c1' : 'transparent'
+      background: content.bgColor
     };
-
     return <RowRenderer index={index} key={uuid.v1()} style={style} content={content} />;
     // return rowRenderer({ index, key: uuid.v1(), style, content: item });
   });

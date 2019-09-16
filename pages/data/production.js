@@ -1,4 +1,5 @@
 import styled, { ThemeProvider } from 'styled-components';
+import Select from 'react-select';
 import { theme } from '../../utils/theme';
 import Box from '../../components/Box';
 import { StandardButton, StandardInput } from '../../components/StyledComponents';
@@ -36,8 +37,14 @@ let pathName = '/orders/production/read';
 const tableName = 'orders';
 const endpoint = 'RDSLambda';
 
-let userPathName = '/users/cms/read';
-let userTableName = 'users';
+const orderStatusOptions = [
+    { value: 'allstatus', label: 'Status' },
+    { value: 'invalidshippinginfo', label: 'Invalid Shipping Info' },
+    { value: 'invalidpictures', label: 'Invalid Pictures' },
+    { value: 'tobemodeled', label: 'To Be Modeled' },
+    { value: 'tobereviewed', label: 'To Be Reviewed' },
+    { value: 'tobeprinted', label: 'To Be Printed' }
+]
 
 class BoardJsx extends React.Component {
     constructor(props) {
@@ -51,6 +58,34 @@ class BoardJsx extends React.Component {
             sortAscending: false,
             isLoading: false
         };
+
+        this.orderSelectOptionStyle = {
+            container: () => ({
+                width: '90%',
+                position: 'relative',
+            }),
+            singleValue: () => ({
+                color: '#000',
+                textOverflow: 'ellipsis',
+                whiteSpace: 'nowrap',
+                overflow: 'hidden'
+            }),
+            valueContainer: () => ({
+                display: 'flex',
+                alignItems: 'center',
+                flexWrap: 'nowrap',
+                width: '80%'
+            }),
+            control: () => ({
+                border: 'none',
+                display: 'flex'
+            }),
+            indicatorSeparator: () => ({
+                display: 'none'
+            })
+        }
+
+        this.handleOrderStatusSelect = this.handleOrderStatusSelect.bind(this);
     }
 
     componentDidMount() {
@@ -76,6 +111,7 @@ class BoardJsx extends React.Component {
             endpoint,
             tableName,
             data: [],
+            filteredData: [],
             unfulfilled: {
                 total: 0,
                 toBePrinted: 0,
@@ -85,6 +121,7 @@ class BoardJsx extends React.Component {
                 toBeReviewed: 0
             },
             adminList,
+            selectedOrderStatus: orderStatusOptions[0],
             isLoading: true
         });
 
@@ -110,7 +147,7 @@ class BoardJsx extends React.Component {
                         toBeReviewed: 0,
                     };
                     for (const resItem of response) {
-                        const dateCreated = new Date(resItem.dateCreated);
+                        const dateCreated = new Date(resItem.GroupOrder.dateCreated);
                         let dd = dateCreated.getDate();
                         let mm = dateCreated.getMonth() + 1;
                         const yyyy = dateCreated.getFullYear();
@@ -122,6 +159,9 @@ class BoardJsx extends React.Component {
                         }
                         const date = yyyy + '/' + mm + '/' + dd;
 
+                        const now = new Date();
+                        const timeDiff = now.getTime() - dateCreated.getTime();
+
                         const item = {
                             orderid: resItem.orderId,
                             email: resItem.GroupOrder.User.email,
@@ -131,25 +171,32 @@ class BoardJsx extends React.Component {
                             shippingaddress: resItem.GroupOrder.shippingAddress,
                             ...resItem.GroupOrder.User,
                             orderstatusout: '',
+                            orderstatusValue: '',
                             fulfillmentStatus: 'unfulfilled',
-                            admins: ''
+                            admins: '',
+                            bgColor: timeDiff > (1000*60*60*24) ? '#fbc1c1' : 'transparent'
                         };
 
                         if (!item.shippingaddress || item.shippingaddress.length === 0) {
                             unfulfilled.invalidShippingInfo++;
-                            item.orderstatusout = 'Invalid Shipping Information';
+                            item.orderstatusout = 'Invalid Shipping Info';
+                            item.orderstatusValue = 'invalidshippinginfo';
                         } else if (!item.statusLeftFingers || !item.statusLeftThumb || !item.statusRightFingers || !item.statusRightThumb || !item.statusSide) {
                             unfulfilled.invalidPics++;
                             item.orderstatusout = 'Invalid pictures';
+                            item.orderstatusValue = 'invalidpictures';
                         } else if (!item.fitStatus !== 'fittingValidated' || ! item.fitStatus !== 'fittedByDesigner') {
                             unfulfilled.toBeModeled++;
                             item.orderstatusout = 'To be modeled';
+                            item.orderstatusValue = 'tobemodeled';
                         } else if(item.fitStatus !== 'fittedByDesigner') {
                             unfulfilled.toBeReviewed++;
                             item.orderstatusout = 'To be reviewed';
+                            item.orderstatusValue = 'tobereviewed';
                         } else if(item.fitStatus !== 'fittingValidated') {
                             unfulfilled.toBePrinted++;
                             item.orderstatusout = 'To be printed';
+                            item.orderstatusValue = 'tobeprinted';
                         } else {
                             item.fulfillmentStatus = 'fulfilled';
                         }
@@ -162,13 +209,17 @@ class BoardJsx extends React.Component {
                         });
                         item.admins = admins.join(', ');
 
-                        data.push(item);
+                        if (item.fulfillmentStatus !== 'fulfilled') {
+                            data.push(item);
+                        }
                     }
 
                     unfulfilled.total = unfulfilled.toBePrinted + unfulfilled.invalidPics + unfulfilled.invalidShippingInfo + unfulfilled.toBeModeled + unfulfilled.toBeReviewed
 
+
                     this.setState({
                         data,
+                        filteredData: data,
                         unfulfilled,
                         isLoading: false
                     });
@@ -236,11 +287,31 @@ class BoardJsx extends React.Component {
         }
     }
 
+    handleOrderStatusSelect = selectedOrderStatus => {
+        const { data } = this.state;
+        let filteredData = [];
+
+        if (selectedOrderStatus.value === this.state.selectedOrderStatus) {
+            return;
+        }
+
+        if (selectedOrderStatus.value === 'allstatus') {
+            filteredData = data;
+        } else {
+            filteredData = data.filter(item => item.orderstatusValue === selectedOrderStatus.value)
+        }
+
+        this.setState({
+            selectedOrderStatus,
+            filteredData
+        });
+    };
+
     renderVirtualized = (tableProps, table, tablePropsType, tableId) => {
-        if (!this.state.data || !Array.isArray(this.state.data) || this.state.data.length <= 0) return;
+        if (!this.state.filteredData || !Array.isArray(this.state.filteredData) || this.state.filteredData.length <= 0) return;
 
         return ListComponent({
-            list: this.state.data,
+            list: this.state.filteredData,
             tableProps,
             table,
             tablePropsType,
@@ -256,7 +327,7 @@ class BoardJsx extends React.Component {
         const tableProps = PRODUCTION_COLUMN_PROPERTIES;
         const tablePropsType = PRODUCTION_COLUMN_PROPERTIES_TYPE;
 
-        const { data, unfulfilled, adminList, isLoading } = this.state;
+        const { data, unfulfilled, adminList, selectedOrderStatus, isLoading } = this.state;
         const numAttr = table.length;
         const date = new Date();
 
@@ -312,7 +383,22 @@ class BoardJsx extends React.Component {
                             </AnalyticsContainer>
                             }
                             <BoardBodyContentDescriptions table={table}>
-                                { table.map((item, i) => <div key={i} type='display' style={{ width: '200px', marginLeft: '10px', display: 'inline-block', fontWeight: 700 }} onClick={() => this.sortData(tableProps[i])}>{item}</div>) }
+                                { table.map((item, i) => {
+                                    if (item === 'Order Status') {
+                                        return (
+                                            <div style={{ width: '200px', marginLeft: '10px', display: 'inline-block', fontWeight: 700 }}>
+                                                <Select
+                                                    value={selectedOrderStatus}
+                                                    onChange={this.handleOrderStatusSelect}
+                                                    options={orderStatusOptions}
+                                                    styles={this.orderSelectOptionStyle}
+                                                />
+                                            </div>
+                                        )
+                                    } else {
+                                        return <div key={i} type='display' style={{ width: '200px', marginLeft: '10px', display: 'inline-block', fontWeight: 700 }} onClick={() => this.sortData(tableProps[i])}>{item}</div>
+                                    }
+                                }) }
                             </BoardBodyContentDescriptions>
                             <BoardBodyContents table={table}>
                                 {

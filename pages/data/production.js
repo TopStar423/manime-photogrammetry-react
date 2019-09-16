@@ -167,6 +167,7 @@ class BoardJsx extends React.Component {
                             email: resItem.GroupOrder.User.email,
                             fullname: resItem.GroupOrder.User.firstName + ' ' + resItem.GroupOrder.User.lastName,
                             date: date,
+                            dateTime: dateCreated.getTime(),
                             payment: '$' + resItem.GroupOrder.orderTotal,
                             shippingaddress: resItem.GroupOrder.shippingAddress,
                             ...resItem.GroupOrder.User,
@@ -215,7 +216,9 @@ class BoardJsx extends React.Component {
                     }
 
                     unfulfilled.total = unfulfilled.toBePrinted + unfulfilled.invalidPics + unfulfilled.invalidShippingInfo + unfulfilled.toBeModeled + unfulfilled.toBeReviewed
-
+                    data.sort((data1, data2) => {
+                        return data2.dateTime - data1.dateTime
+                    });
 
                     this.setState({
                         data,

@@ -146,7 +146,7 @@ class BoardJsx extends React.Component {
                         toBeModeled: 0,
                         toBeReviewed: 0,
                     };
-                    console.log('response: ', response);
+                    
                     for (const resItem of response) {
                         const dateCreated = new Date(resItem.GroupOrder.dateCreated);
                         let dd = dateCreated.getDate();

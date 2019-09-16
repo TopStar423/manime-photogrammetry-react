@@ -102,7 +102,7 @@ class AdminAccess extends React.Component {
                 {showPortal &&
                 ReactDOM.createPortal(
                     <AdminAccessModal
-                        clientId={content.userid || content.userId}
+                        clientId={content.userid}
                         adminList={adminList}
                         onUpdateAdminAccess={admins => this.handleAdminAccessChange(admins)}/>,
                     document.getElementById('layout')
@@ -320,7 +320,7 @@ export const ListComponent = function({
                   return <Workbench itemStyle={itemStyle} index={index} user={user} content={content}/>;
                 }
               } else if (tableProps[i] == 'fitstatus' || tableProps[i] == 'fitStatus') {
-                const userId = content['userid'] || content['userId'];
+                const userId = content['userid'];
                 const value = content[prop] ? content[prop] : '';
                 const columnName = tableProps[i];
                 return (

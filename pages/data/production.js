@@ -268,7 +268,7 @@ class BoardJsx extends React.Component {
         let sortNumber = 1;
         if (sortDirection) sortNumber = -1;
 
-        const newData = [ ...this.state.data ];
+        const newData = [ ...this.state.filteredData ];
         newData.sort((a, b) => {
             if ( a[item] < b[item]){
                 return -1 * sortNumber;
@@ -279,7 +279,7 @@ class BoardJsx extends React.Component {
             return 0;
 
         });
-        this.setState({ data: newData, sortDirection: !sortDirection });
+        this.setState({ filteredData: newData, sortDirection: !sortDirection });
     }
 
 

@@ -68,11 +68,33 @@ class BoardJsx extends React.Component {
       headers: { 'Content-Type': 'application/json' }
     }
     const user = this.props.userData ? this.props.userData.identityId : '';
+
+    const adminList = await listAdminDynamoDB();
+
     // this is the admin account, photogrammetry
     if (user == 'us-west-2:130355da-2eec-4f35-8092-3eca4d22d8ea' || user == 'us-west-2:95a2f104-1308-42e3-bb65-033c4f9a6de4') {
       API.get(endpoint, pathName, userInit).then(response => {
         if(response && response.rows && this._mounted) {
-          this.setState({ data: response.rows });
+          const res = response.rows;
+          const data = [];
+
+          for (const resItem of res) {
+            const item = {
+              ...resItem,
+              admins: ''
+            };
+
+            const admins = [];
+            adminList.map((admin, index) => {
+              if (Object.values(admin).indexOf(item.userid) > -1) {
+                admins.push(admin.username);
+              }
+            });
+            item.admins = admins.join(', ');
+
+            data.push(item);
+          }
+          this.setState({ data });
           // console.log(response.rows)
         }
       }).catch((err) => {

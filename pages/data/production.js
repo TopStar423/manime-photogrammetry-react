@@ -120,7 +120,6 @@ class BoardJsx extends React.Component {
                 toBeModeled: 0,
                 toBeReviewed: 0
             },
-            adminList,
             selectedOrderStatus: orderStatusOptions[0],
             isLoading: true
         });
@@ -332,7 +331,7 @@ class BoardJsx extends React.Component {
         const tableProps = PRODUCTION_COLUMN_PROPERTIES;
         const tablePropsType = PRODUCTION_COLUMN_PROPERTIES_TYPE;
 
-        const { data, unfulfilled, adminList, selectedOrderStatus, isLoading } = this.state;
+        const { data, unfulfilled, selectedOrderStatus, isLoading } = this.state;
         const numAttr = table.length;
         const date = new Date();
 

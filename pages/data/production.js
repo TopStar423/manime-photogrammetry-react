@@ -291,6 +291,16 @@ class BoardJsx extends React.Component {
         }
     }
 
+    updateListAdminData = (userid, admins) => {
+        const { filteredData } = this.state;
+        for (const item of filteredData) {
+            if (item.userid === userid) {
+                item.admins = admins;
+            }
+        }
+        this.setState({ filteredData });
+    };
+
     handleOrderStatusSelect = selectedOrderStatus => {
         const { data } = this.state;
         let filteredData = [];
@@ -322,7 +332,8 @@ class BoardJsx extends React.Component {
             user: this.props.userData.identityId,
             tableId,
             showRemoved: this.state.showRemoved,
-            toggleVisible: this.toggleVisible
+            toggleVisible: this.toggleVisible,
+            updateListAdminData: this.updateListAdminData
         });
     }
 

@@ -1,4 +1,5 @@
 import styled, { ThemeProvider } from 'styled-components';
+import Select from 'react-select';
 import { theme } from '../../utils/theme';
 import Box from '../../components/Box';
 import { StandardButton, StandardInput } from '../../components/StyledComponents';
@@ -9,12 +10,20 @@ import { CSVLink, CSVDownload } from 'react-csv';
 import { ListComponent } from '../../components/InfiniteLoader';
 import Portal from '../../components/Portal';
 import { queryAdminDynamoDB, listAdminDynamoDB, addAttributeAdminDynamoDB, deleteAttributeAdminDynamoDB, updateUserColumn, RDSLambda } from '../../utils/lambdaFunctions';
-import { BoardBody, BoardBodyOptions, BoardBodyContainer, BoardBodyContentDescriptions, BoardBodyContents } from '../../components/styled/BoardBody';
+import {
+  BoardBody,
+  BoardBodyOptions,
+  BoardBodyContainer,
+  BoardBodyContentDescriptions,
+  BoardBodyContents,
+  LoadingContainer
+} from '../../components/styled/BoardBody';
 import { ArrowUpward, ArrowDownward } from '@material-ui/icons';
 
 import { connect } from 'react-redux';
 import userData from '../../reducers/userData';
 import { DEFAULT } from '../../actions';
+import ReactLoading from "react-loading";
 
 const OPEN_PHOTOGRAMMETRY = 'OPEN_PHOTOGRAMMETRY';
 const ADD_ADMIN_ACCESS = 'ADD_ADMIN_ACCESS';
@@ -35,7 +44,8 @@ class BoardJsx extends React.Component {
       endpoint: '',
       searchValue: '',
       showRemoved: false,
-      sortAscending: false
+      sortAscending: false,
+      isLoading: false
     };
   }
 
@@ -61,7 +71,8 @@ class BoardJsx extends React.Component {
     this.setState({
       endpoint,
       tableName,
-      data: []
+      data: [],
+      isLoading: true
     });
 
     let userInit = {
@@ -94,7 +105,10 @@ class BoardJsx extends React.Component {
 
             data.push(item);
           }
-          this.setState({ data });
+          this.setState({
+            data,
+            isLoading: false
+          });
           // console.log(response.rows)
         }
       }).catch((err) => {
@@ -204,6 +218,16 @@ class BoardJsx extends React.Component {
     }
   }
 
+  updateListAdminData = (userid, admins) => {
+    const { data } = this.state;
+    for (const item of data) {
+      if (item.userid === userid) {
+        item.admins = admins;
+      }
+    }
+    this.setState({ data });
+  };
+
   renderVirtualized = (tableProps, table, tablePropsType, tableId) => {
     if (!this.state.data || !Array.isArray(this.state.data) || this.state.data.length <= 0) return;
 
@@ -215,7 +239,8 @@ class BoardJsx extends React.Component {
       user: this.props.userData.identityId,
       tableId,
       showRemoved: this.state.showRemoved,
-      toggleVisible: this.toggleVisible
+      toggleVisible: this.toggleVisible,
+      updateListAdminData: this.updateListAdminData
     });
   }
 
@@ -224,48 +249,52 @@ class BoardJsx extends React.Component {
     const tableProps = USERS_COLUMN_PROPERTIES;
     const tablePropsType = USERS_COLUMN_PROPERTIES_TYPE;
 
-    const data = this.state.data;
+    const { data, isLoading } = this.state;
     const numAttr = table.length;
     const date = new Date();
 
-    console.log(data);
-
     return (
-      <BoardBody table={table}>
-        {/* This should be a component that takes child elements in the form of buttons/input/text */}
-        <BoardBodyOptions table={table}>
-          <StandardButton ml={3} onClick={() => this.getData(endpoint, tableName)}>Refresh</StandardButton>
-          {tableName === 'nailproducts' && <Portal buttonText={"New"} type={"AddNailProductModal"} />}
-          {/* <StandardButton ml={3} onClick={this.createRow} disabled={tableName == 'nailproducts' ? false : true}>New</StandardButton> */}
-          <StandardButton ml={3} onClick={() => this.setState({ showRemoved: !this.state.showRemoved })}>Toggle Removed</StandardButton>
-          <StandardButton ml={3} disabled>Save</StandardButton>
-          <CSVLink data={data} filename={`${tableName}-${date.toString()}.csv`}>
-            <StandardButton ml={3} style={{ textDecoration: 'none' }}>Save CSV</StandardButton>
-          </CSVLink>
-          {tableName === 'nailproductstocategory' && <Portal buttonText={"Open Nail Product Category Modal"} type={"NailProductCategoryModal"} />}
-          <StandardInput ml={3} value={this.state.searchValue} onChange={(ev) => this.updateSearchBar(ev.target.value.toLowerCase())}></StandardInput>
-        </BoardBodyOptions>
+        <React.Fragment>
+          {isLoading ? (
+              <LoadingContainer>
+                  <ReactLoading type="spinningBubbles" color="#000" />
+              </LoadingContainer>
+          ): (
+              <BoardBody table={table}>
+                {/* This should be a component that takes child elements in the form of buttons/input/text */}
+                <BoardBodyOptions table={table}>
+                  <StandardButton ml={3} onClick={() => this.getData(endpoint, tableName)}>Refresh</StandardButton>
+                  {tableName === 'nailproducts' && <Portal buttonText={"New"} type={"AddNailProductModal"} />}
+                  {/* <StandardButton ml={3} onClick={this.createRow} disabled={tableName == 'nailproducts' ? false : true}>New</StandardButton> */}
+                  <StandardButton ml={3} onClick={() => this.setState({ showRemoved: !this.state.showRemoved })}>Toggle Removed</StandardButton>
+                  <StandardButton ml={3} disabled>Save</StandardButton>
+                  <CSVLink data={data} filename={`${tableName}-${date.toString()}.csv`}>
+                    <StandardButton ml={3} style={{ textDecoration: 'none' }}>Save CSV</StandardButton>
+                  </CSVLink>
+                  {tableName === 'nailproductstocategory' && <Portal buttonText={"Open Nail Product Category Modal"} type={"NailProductCategoryModal"} />}
+                  <StandardInput ml={3} value={this.state.searchValue} onChange={(ev) => this.updateSearchBar(ev.target.value.toLowerCase())}></StandardInput>
+                </BoardBodyOptions>
 
-        <BoardBodyContainer table={table}>
-          <BoardBodyContentDescriptions table={table} ml='100px'>
-            { table.map((item, i) => (
-              <Box display='inline-flex' flexDirection='row'>
-                {i != 0 &&
-                  <ArrowUpward fontSize='small'/>
-                }
-                <div key={i} type='display' style={{ width: '180px', marginLeft: '10px', display: 'inline-block' }} onClick={() => this.sortData(tableProps[i])}>{item}</div>
-              </Box>
-            )) }
-          </BoardBodyContentDescriptions>
-          <BoardBodyContents table={table}>
-            {
-              this.renderVirtualized(tableProps, table, tablePropsType, tableName)
-            }
-          </BoardBodyContents>
-        </BoardBodyContainer>
-
-
-      </BoardBody>
+                <BoardBodyContainer table={table}>
+                  <BoardBodyContentDescriptions table={table} ml='100px'>
+                    { table.map((item, i) => (
+                        <Box display='inline-flex' flexDirection='row'>
+                          {i != 0 &&
+                          <ArrowUpward fontSize='small'/>
+                          }
+                          <div key={i} type='display' style={{ width: '180px', marginLeft: '10px', display: 'inline-block' }} onClick={() => this.sortData(tableProps[i])}>{item}</div>
+                        </Box>
+                    )) }
+                  </BoardBodyContentDescriptions>
+                  <BoardBodyContents table={table}>
+                    {
+                      this.renderVirtualized(tableProps, table, tablePropsType, tableName)
+                    }
+                  </BoardBodyContents>
+                </BoardBodyContainer>
+              </BoardBody>
+          )}
+        </React.Fragment>
     );
   }
 };

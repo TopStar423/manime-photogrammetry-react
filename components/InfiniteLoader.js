@@ -79,10 +79,12 @@ class AdminAccess extends React.Component {
   };
 
   handleAdminAccessChange = admins => {
+    const { content, updateAdminData } = this.props;
     this.setState({
       showPortal: false,
       admins
-    })
+    });
+    updateAdminData(content.userid, admins);
   };
 
   componentDidMount() {
@@ -220,7 +222,8 @@ export const ListComponent = function({
   user,
   tableId,
   showRemoved,
-  toggleVisible
+  toggleVisible,
+  updateListAdminData
 }) {
   class RowRenderer extends React.Component {
     constructor(props) {
@@ -240,6 +243,10 @@ export const ListComponent = function({
         'visible',
         !this.props.content['visible']
       );
+    };
+
+    handleAdminDataUpdate = (userid, admins) => {
+      this.props.handleAdminDataUpdate(userid, admins);
     };
 
     render() {
@@ -313,7 +320,11 @@ export const ListComponent = function({
             {tableProps.map((prop, i) => {
               if (table[i] == '' || table[i] == '3D Model' || table[i] == 'Modeler') {
                 if (tableProps[i] === 'adminaccess') {
-                  return <AdminAccess itemStyle={itemStyle} content={content} />;
+                  return <AdminAccess
+                      itemStyle={itemStyle}
+                      content={content}
+                      updateAdminData={(userid, admins) => this.handleAdminDataUpdate(userid, admins)}
+                  />;
                 } else if (tableProps[i] === '3dmodel') {
                   return <Workbench itemStyle={modelStyle} index={index} user={user} content={content} title='3D' />;
                 } else {
@@ -399,7 +410,13 @@ export const ListComponent = function({
       alignItems: 'center',
       background: content.bgColor
     };
-    return <RowRenderer index={index} key={uuid.v1()} style={style} content={content} />;
+    return <RowRenderer
+        index={index}
+        key={uuid.v1()}
+        style={style}
+        content={content}
+        handleAdminDataUpdate={(userid, admins) => updateListAdminData(userid, admins)}
+    />;
     // return rowRenderer({ index, key: uuid.v1(), style, content: item });
   });
 };

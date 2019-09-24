@@ -121,7 +121,7 @@ class BoardJsx extends React.Component {
                 toBeReviewed: 0
             },
             selectedOrderStatus: orderStatusOptions[0],
-            isLoading: true
+            isLoading: false
         });
 
         let userInit = {
@@ -233,6 +233,7 @@ class BoardJsx extends React.Component {
                 // console.log(err.stack);
             }
         } else {
+            console.log('tableName: ', tableName);
             if (tableName != 'users') return;
             // get the array of ids that this user can see from rds. dynamodb might be good
             // one user id -> many user ids
@@ -244,6 +245,8 @@ class BoardJsx extends React.Component {
                 console.log(err);
             });
 
+            console.log('dynamodbobj: ', dynamoDBObject);
+
             for (const key in dynamoDBObject) {
                 const value = dynamoDBObject[key];
                 if (key == user) continue;
@@ -251,7 +254,10 @@ class BoardJsx extends React.Component {
 
                 API.get(endpoint, pathName, userInit).then(response => {
                     if(response && this._mounted) {
-                        this.setState({ data: [...this.state.data, ...response] });
+                        this.setState({
+                            data: [...this.state.data, ...response],
+                            isLoading: false
+                        });
                     }
                 }).catch((err) => {
                     console.log(err);

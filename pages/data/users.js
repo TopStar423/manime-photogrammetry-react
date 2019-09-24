@@ -45,7 +45,7 @@ class BoardJsx extends React.Component {
       searchValue: '',
       showRemoved: false,
       sortAscending: false,
-      isLoading: false
+      isLoading: true
     };
   }
 
@@ -133,7 +133,29 @@ class BoardJsx extends React.Component {
 
         API.get(endpoint, pathName, userInit).then(response => {
           if(response && response.rows && this._mounted) {
-            this.setState({ data: [...this.state.data, ...response.rows] });
+            const res = [...this.state.data, ...response.rows];
+            const data = [];
+
+            for (const resItem of res) {
+              const item = {
+                ...resItem,
+                admins: ''
+              };
+
+              const admins = [];
+              adminList.map((admin, index) => {
+                if (Object.values(admin).indexOf(item.userid) > -1) {
+                  admins.push(admin.username);
+                }
+              });
+              item.admins = admins.join(', ');
+
+              data.push(item);
+            }
+            this.setState({
+              data,
+              isLoading: false
+            });
           }
         }).catch((err) => {
           console.log(err);

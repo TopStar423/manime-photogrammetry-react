@@ -415,7 +415,7 @@ export const ListComponent = function({
         key={uuid.v1()}
         style={style}
         content={content}
-        handleAdminDataUpdate={(userid, admins) => updateListAdminData(userid, admins)}
+        handleAdminDataUpdate={(userid, admins) => updateListAdminData ? updateListAdminData(userid, admins) : null}
     />;
     // return rowRenderer({ index, key: uuid.v1(), style, content: item });
   });

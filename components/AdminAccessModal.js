@@ -38,28 +38,25 @@ export default class AdminAccessModal extends Component {
         if (this.modal.contains(e.target)) {
             return;
         } else {
-            const { adminList, clientId, onUpdateAdminAccess } = this.props;
+            const { adminList, onUpdateAdminAccess } = this.props;
             const { adminChecked } = this.state;
 
-            const allPromise = adminChecked.map((checked, index) => {
-                if (checked) {
-                    return addAttributeAdminDynamoDB(adminList[index].userId, clientId);
-                } else {
-                    return deleteAttributeAdminDynamoDB(adminList[index].userId, clientId);
-                }
-            })
-
-            Promise.all(allPromise).then(values => {
-                const adminsGroup = adminList.filter((admin, index) => adminChecked[index] === true);
-                onUpdateAdminAccess(adminsGroup.map(admin => admin.username).join(', '));
-            })
+            const adminsGroup = adminList.filter((admin, index) => adminChecked[index] === true);
+            onUpdateAdminAccess(adminsGroup.map(admin => admin.username).join(', '));
         }
     };
 
     handleEnablePermission = async (index) => {
+        const { adminList, clientId } = this.props;
         const { adminChecked } = this.state;
 
         adminChecked[index] = !adminChecked[index];
+
+        if (adminChecked[index]) {
+            addAttributeAdminDynamoDB(adminList[index].userId, clientId);
+        } else {
+            deleteAttributeAdminDynamoDB(adminList[index].userId, clientId);
+        }
 
         this.setState({ adminChecked });
     };

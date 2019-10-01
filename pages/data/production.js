@@ -29,7 +29,7 @@ import { DEFAULT } from '../../actions';
 
 const OPEN_PHOTOGRAMMETRY = 'OPEN_PHOTOGRAMMETRY';
 const ADD_ADMIN_ACCESS = 'ADD_ADMIN_ACCESS';
-const PRODUCTION_COLUMN_DESCRIPTION = ['Order #', 'Order Status', 'Email', 'Full Name', 'Order Date', 'Product', 'Payment', '3D Model', 'Modeler', 'Fit Status', 'Shipping Info', 'Shopify status'];
+const PRODUCTION_COLUMN_DESCRIPTION = ['Shopify Order #', 'Order Status', 'Email', 'Full Name', 'Order Date', 'Product', 'Payment', '3D Model', 'Modeler', 'Fit Status', 'Shipping Info', 'Shopify status'];
 const PRODUCTION_COLUMN_PROPERTIES = ['orderid', 'orderstatusout', 'email', 'fullname', 'date', 'product', 'payment', '3dmodel', 'adminaccess', 'fitStatus', 'shippingaddress', 'shopifystatus'];
 const PRODUCTION_COLUMN_PROPERTIES_TYPE = ['modal', 'menu', 'text', 'text', 'time', 'modal', 'text', OPEN_PHOTOGRAMMETRY, ADD_ADMIN_ACCESS, 'text', 'text', 'text'];
 
@@ -145,7 +145,7 @@ class BoardJsx extends React.Component {
                         toBeModeled: 0,
                         toBeReviewed: 0,
                     };
-                    
+
                     for (const resItem of response) {
                         const dateCreated = new Date(resItem.GroupOrder.dateCreated);
                         let dd = dateCreated.getDate();
@@ -162,8 +162,9 @@ class BoardJsx extends React.Component {
                         const now = new Date();
                         const timeDiff = now.getTime() - dateCreated.getTime();
 
+                        // console.log(resItem);
                         const item = {
-                            orderid: resItem.orderId,
+                            orderid: resItem.GroupOrder.groupOrderId,
                             email: resItem.GroupOrder.User.email,
                             fullname: resItem.GroupOrder.User.firstName + ' ' + resItem.GroupOrder.User.lastName,
                             date: date,
@@ -174,7 +175,7 @@ class BoardJsx extends React.Component {
                             userid: resItem.GroupOrder.userid,
                             orderstatusout: '',
                             orderstatusValue: '',
-                            fulfillmentStatus: 'unfulfilled',
+                            fulfillmentStatus: resItem.fulfillmentStatus,
                             admins: '',
                             bgColor: timeDiff > (1000*60*60*24) ? '#fbc1c1' : 'transparent'
                         };
@@ -213,6 +214,8 @@ class BoardJsx extends React.Component {
 
                         if (item.fulfillmentStatus !== 'fulfilled') {
                             data.push(item);
+                        } else {
+                          console.log(item);
                         }
                     }
 

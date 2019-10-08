@@ -29,9 +29,9 @@ import { DEFAULT } from '../../actions';
 
 const OPEN_PHOTOGRAMMETRY = 'OPEN_PHOTOGRAMMETRY';
 const ADD_ADMIN_ACCESS = 'ADD_ADMIN_ACCESS';
-const PRODUCTION_COLUMN_DESCRIPTION = ['Shopify Order #', 'Order Status', 'Email', 'Full Name', 'Order Date', 'Product', 'Payment', '3D Model', 'Modeler', 'Fit Status', 'Shipping Info', 'Shopify status'];
-const PRODUCTION_COLUMN_PROPERTIES = ['orderid', 'orderstatusout', 'email', 'fullname', 'date', 'product', 'payment', '3dmodel', 'adminaccess', 'fitStatus', 'shippingaddress', 'shopifystatus'];
-const PRODUCTION_COLUMN_PROPERTIES_TYPE = ['modal', 'menu', 'text', 'text', 'time', 'modal', 'text', OPEN_PHOTOGRAMMETRY, ADD_ADMIN_ACCESS, 'text', 'text', 'text'];
+const PRODUCTION_COLUMN_DESCRIPTION = ['Shopify Order #', 'Shopify Order # (Short)', 'Order Status', 'Email', 'Full Name', 'Order Date', 'Product', 'Payment', '3D Model', 'Modeler', 'Fit Status', 'Shipping Info', 'Shopify status'];
+const PRODUCTION_COLUMN_PROPERTIES = ['orderid', 'shopifyordernumber', 'orderstatusout', 'email', 'fullname', 'date', 'product', 'payment', '3dmodel', 'adminaccess', 'fitStatus', 'shippingaddress', 'shopifystatus'];
+const PRODUCTION_COLUMN_PROPERTIES_TYPE = ['modal', 'text', 'menu', 'text', 'text', 'time', 'modal', 'text', OPEN_PHOTOGRAMMETRY, ADD_ADMIN_ACCESS, 'text', 'text', 'text'];
 
 let pathName = '/orders/production/read';
 const tableName = 'orders';
@@ -162,15 +162,17 @@ class BoardJsx extends React.Component {
                         const now = new Date();
                         const timeDiff = now.getTime() - dateCreated.getTime();
 
-                        // console.log(resItem);
+                        console.log(resItem);
                         const item = {
                             orderid: resItem.GroupOrder.groupOrderId,
                             email: resItem.GroupOrder.User.email,
                             fullname: resItem.GroupOrder.User.firstName + ' ' + resItem.GroupOrder.User.lastName,
                             date: date,
                             dateTime: dateCreated.getTime(),
+                            product: resItem.shopifySku,
                             payment: '$' + resItem.GroupOrder.orderTotal,
                             shippingaddress: resItem.GroupOrder.shippingAddress,
+                            shopifyordernumber: resItem.GroupOrder.shopifyOrderNumber,
                             ...resItem.GroupOrder.User,
                             userid: resItem.GroupOrder.userid,
                             orderstatusout: '',

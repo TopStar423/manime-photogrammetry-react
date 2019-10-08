@@ -162,7 +162,7 @@ class BoardJsx extends React.Component {
                         const now = new Date();
                         const timeDiff = now.getTime() - dateCreated.getTime();
 
-                        console.log(resItem);
+                        // console.log(resItem);
                         const item = {
                             orderid: resItem.GroupOrder.groupOrderId,
                             email: resItem.GroupOrder.User.email,

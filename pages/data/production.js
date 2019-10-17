@@ -162,10 +162,6 @@ class BoardJsx extends React.Component {
                         const now = new Date();
                         const timeDiff = now.getTime() - dateCreated.getTime();
 
-                        if (resItem.GroupOrder.shopifyOrderNumber == '1664') {
-                            console.log('resItem: ', resItem);
-                        }
-
                         const item = {
                             orderid: resItem.GroupOrder.groupOrderId,
                             email: resItem.GroupOrder.User.email,
@@ -191,14 +187,6 @@ class BoardJsx extends React.Component {
                             unfulfilled.invalidShippingInfo++;
                             item.orderstatusout = 'Invalid Shipping Info';
                             item.orderstatusValue = 'invalidshippinginfo';
-                        } else if (!item.statusLeftFingers || !item.statusLeftThumb || !item.statusRightFingers || !item.statusRightThumb || !item.statusSide) {
-                            unfulfilled.invalidPics++;
-                            item.orderstatusout = 'Invalid pictures';
-                            item.orderstatusValue = 'invalidpictures';
-                        } else if (item.fitStatus !== 'fittingValidated' && item.fitStatus !== 'fittedByDesigner') {
-                            unfulfilled.toBeModeled++;
-                            item.orderstatusout = 'To be modeled';
-                            item.orderstatusValue = 'tobemodeled';
                         } else if(item.fitStatus === 'fittedByDesigner') {
                             unfulfilled.toBeReviewed++;
                             item.orderstatusout = 'To be reviewed';
@@ -207,6 +195,14 @@ class BoardJsx extends React.Component {
                             unfulfilled.toBePrinted++;
                             item.orderstatusout = 'To be printed';
                             item.orderstatusValue = 'tobeprinted';
+                        } else if (!item.statusLeftFingers || !item.statusLeftThumb || !item.statusRightFingers || !item.statusRightThumb || !item.statusSide) {
+                            unfulfilled.invalidPics++;
+                            item.orderstatusout = 'Invalid pictures';
+                            item.orderstatusValue = 'invalidpictures';
+                        } else {
+                            unfulfilled.toBeModeled++;
+                            item.orderstatusout = 'To be modeled';
+                            item.orderstatusValue = 'tobemodeled';
                         }
 
                         const admins = [];

@@ -29,9 +29,9 @@ import { DEFAULT } from '../../actions';
 
 const OPEN_PHOTOGRAMMETRY = 'OPEN_PHOTOGRAMMETRY';
 const ADD_ADMIN_ACCESS = 'ADD_ADMIN_ACCESS';
-const PRODUCTION_COLUMN_DESCRIPTION = ['Shopify Order #', 'Shopify Order # (Short)', 'Order Status', 'Email', 'Full Name', 'Order Date', 'Product', 'Payment', '3D Model', 'Modeler', 'Fit Status', 'Shipping Info', 'Shopify status'];
-const PRODUCTION_COLUMN_PROPERTIES = ['orderid', 'shopifyordernumber', 'orderstatusout', 'email', 'fullname', 'date', 'product', 'payment', '3dmodel', 'adminaccess', 'fitStatus', 'shippingaddress', 'shopifystatus'];
-const PRODUCTION_COLUMN_PROPERTIES_TYPE = ['modal', 'text', 'menu', 'text', 'text', 'time', 'modal', 'text', OPEN_PHOTOGRAMMETRY, ADD_ADMIN_ACCESS, 'text', 'text', 'text'];
+const PRODUCTION_COLUMN_DESCRIPTION = ['Shopify Order #', 'Order Status', '3D Model', 'Email', 'Full Name', 'Product', 'Modeler', 'Fit Status', 'Payment', 'Order Date', 'Shipping Info', 'Shopify Order # (Long)', 'Shopify status'];
+const PRODUCTION_COLUMN_PROPERTIES = ['shopifyordernumber', 'orderstatusout', '3dmodel', 'email', 'fullname', 'product', 'adminaccess', 'fitStatus', 'payment', 'date', 'shippingaddress', 'orderid', 'shopifystatus'];
+const PRODUCTION_COLUMN_PROPERTIES_TYPE = ['text', 'menu', OPEN_PHOTOGRAMMETRY, 'text', 'text', 'modal', ADD_ADMIN_ACCESS, 'text', 'text', 'time', 'text', 'modal', 'text'];
 
 let pathName = '/orders/production/read';
 const tableName = 'orders';
@@ -121,7 +121,7 @@ class BoardJsx extends React.Component {
                 toBeReviewed: 0
             },
             selectedOrderStatus: orderStatusOptions[0],
-            isLoading: false
+            isLoading: true
         });
 
         let userInit = {
@@ -162,7 +162,10 @@ class BoardJsx extends React.Component {
                         const now = new Date();
                         const timeDiff = now.getTime() - dateCreated.getTime();
 
-                        // console.log(resItem);
+                        if (resItem.GroupOrder.shopifyOrderNumber == '1664') {
+                            console.log('resItem: ', resItem);
+                        }
+
                         const item = {
                             orderid: resItem.GroupOrder.groupOrderId,
                             email: resItem.GroupOrder.User.email,
@@ -182,6 +185,8 @@ class BoardJsx extends React.Component {
                             bgColor: timeDiff > (1000*60*60*24) ? '#fbc1c1' : 'transparent'
                         };
 
+                        // console.log('item: ', item);
+
                         if (!item.shippingaddress || item.shippingaddress.length === 0) {
                             unfulfilled.invalidShippingInfo++;
                             item.orderstatusout = 'Invalid Shipping Info';
@@ -190,20 +195,18 @@ class BoardJsx extends React.Component {
                             unfulfilled.invalidPics++;
                             item.orderstatusout = 'Invalid pictures';
                             item.orderstatusValue = 'invalidpictures';
-                        } else if (!item.fitStatus !== 'fittingValidated' || ! item.fitStatus !== 'fittedByDesigner') {
+                        } else if (item.fitStatus !== 'fittingValidated' && item.fitStatus !== 'fittedByDesigner') {
                             unfulfilled.toBeModeled++;
                             item.orderstatusout = 'To be modeled';
                             item.orderstatusValue = 'tobemodeled';
-                        } else if(item.fitStatus !== 'fittedByDesigner') {
+                        } else if(item.fitStatus === 'fittedByDesigner') {
                             unfulfilled.toBeReviewed++;
                             item.orderstatusout = 'To be reviewed';
                             item.orderstatusValue = 'tobereviewed';
-                        } else if(item.fitStatus !== 'fittingValidated') {
+                        } else if(item.fitStatus === 'fittingValidated') {
                             unfulfilled.toBePrinted++;
                             item.orderstatusout = 'To be printed';
                             item.orderstatusValue = 'tobeprinted';
-                        } else {
-                            item.fulfillmentStatus = 'fulfilled';
                         }
 
                         const admins = [];
@@ -217,7 +220,7 @@ class BoardJsx extends React.Component {
                         if (item.fulfillmentStatus !== 'fulfilled') {
                             data.push(item);
                         } else {
-                          console.log(item);
+                          // console.log(item);
                         }
                     }
 
@@ -412,7 +415,7 @@ class BoardJsx extends React.Component {
                                 { table.map((item, i) => {
                                     if (item === 'Order Status') {
                                         return (
-                                            <div style={{ width: '200px', marginLeft: '10px', display: 'inline-block', fontWeight: 700 }}>
+                                            <div style={{ width: '160px', marginLeft: '10px', display: 'inline-block', fontWeight: 700 }}>
                                                 <Select
                                                     value={selectedOrderStatus}
                                                     onChange={this.handleOrderStatusSelect}
@@ -422,7 +425,7 @@ class BoardJsx extends React.Component {
                                             </div>
                                         )
                                     } else {
-                                        return <div key={i} type='display' style={{ width: '200px', marginLeft: '10px', display: 'inline-block', fontWeight: 700 }} onClick={() => this.sortData(tableProps[i])}>{item}</div>
+                                        return <div key={i} type='display' style={{ width: '120px', marginLeft: '10px', display: 'inline-block', fontWeight: 700 }} onClick={() => this.sortData(tableProps[i])}>{item}</div>
                                     }
                                 }) }
                             </BoardBodyContentDescriptions>

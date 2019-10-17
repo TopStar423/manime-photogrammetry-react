@@ -263,7 +263,22 @@ export const ListComponent = function({
         display: 'flex',
         alignItems: 'center',
         justifyContent: 'flex-end',
-        width: '200px',
+        width: '120px',
+        height: '50px',
+        overflow: 'hidden',
+        boxSizing: 'border-box',
+        marginLeft: '8px',
+        textAlign: 'left',
+        backgroundColor: !this.state.visible ? '#ff0000' : 'transparent',
+        wordBreak: 'break-all'
+      };
+
+      const orderStatusStyle = {
+        padding: '0px',
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'flex-end',
+        width: '160px',
         height: '50px',
         overflow: 'hidden',
         boxSizing: 'border-box',
@@ -283,7 +298,7 @@ export const ListComponent = function({
         marginLeft: '8px',
         backgroundColor: '#f8bfa0',
         borderRadius: '5px',
-        marginRight: '130px',
+        marginRight: '40px',
         color: '#fff',
         fontSize: '16px',
         fontWeight: 700
@@ -291,7 +306,7 @@ export const ListComponent = function({
 
       const selectStyle = {
         display: 'inline-block',
-        width: '200px',
+        width: '120px',
         whiteSpace: 'nowrap',
         overflow: 'hidden',
         boxSizing: 'border-box',
@@ -381,7 +396,7 @@ export const ListComponent = function({
               } else if (tableProps[i] == 'orderstatusout') {
                 return (
                     <CopyToClipboard text={content['orderstatusout']} onCopy={() => {}}>
-                      <div style={{...itemStyle, fontWeight: 700, textTransform: 'uppercase'}}>{content['orderstatusout']}</div>
+                      <div style={{...orderStatusStyle, fontWeight: 700, textTransform: 'uppercase'}}>{content['orderstatusout']}</div>
                     </CopyToClipboard>
                 );
               } else {

@@ -68,8 +68,9 @@ export const BoardBodyContents = styled(Box)`
 export const AnalyticsContainer = styled.div`
     display: flex;
     flex-direction: column;
-    width: 30%;
-    padding: 20px 30px;
+    width: 25%;
+    padding: 10px 20px;
+    margin-top: -25px;
 `;
 
 export const AnalyticsHeader = styled.h3`

@@ -386,7 +386,7 @@ export const ListComponent = function({
                 );
               } else if (tableProps[i] == 'shippingaddress') {
                 const shippingAddress = content['shippingaddress'];
-                const formattedAddress = shippingAddress.split('|').join(' ');
+                const formattedAddress = typeof shippingAddress == 'string' ? shippingAddress.split('|').join(' ') : '';
 
                 return (
                     <CopyToClipboard text={formattedAddress} onCopy={() => {}}>

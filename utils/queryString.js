@@ -127,10 +127,10 @@ const getLatestKeys = (userFiles, userData) => {
   return latestKeys;
 };
 
-// const getUserFile = async (s3Key, identityId) => {
-//   const result = await Storage.get(s3Key, { level: 'private', identityId }, { expires: 60 * 10 });
-//   return result;
-// };
+export const getUserFile = async (s3Key, identityId) => {
+  const result = await Storage.get(s3Key, { level: 'private', identityId }, { expires: 60 * 10 });
+  return result;
+};
 //
 // // get this from a lambda function (adminIdentityId, userIdentityId, latestKeys), these two functions
 // const getLatestSignedUris = async (latestKeys, identityId) => {

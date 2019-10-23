@@ -2,8 +2,9 @@ import React from 'react';
 import Box from './Box';
 import { StandardButton, StandardInput } from './StyledComponents';
 import { rotateImage, updateUserColumn, readUser } from '../utils/lambdaFunctions';
-import { KEY_MAP } from '../utils/queryString';
+import { KEY_MAP, getUserFile } from '../utils/queryString';
 import uuid from 'uuid';
+import axios from 'axios';
 
 export default class Rotate extends React.Component {
   constructor(props) {
@@ -19,6 +20,105 @@ export default class Rotate extends React.Component {
 
   componentDidMount() {
     this.getUserData();
+
+
+    console.log(this.props.signedUriArray);
+
+
+
+    let blob = null;
+    let xhr = new XMLHttpRequest();
+    xhr.open("GET", this.props.signedUriArray[0]);
+    xhr.responseType = "blob";
+    xhr.onload = function()
+    {
+      blob = xhr.response;//xhr.response is now a blob object
+
+      blob.lastModifiedDate = new Date();
+      blob.name = 'leftFingers.jpg';
+
+      console.log('232323');
+      var bodyFormData = new FormData();
+      bodyFormData.append('LT', blob);
+      bodyFormData.append('RT', blob);
+      bodyFormData.append('4L', blob);
+      bodyFormData.append('4R', blob);
+      bodyFormData.append('uid', 'us-west-2:f3a73d5d-dced-4cdd-b157-32e58622e5d4');
+      bodyFormData.append('resend', 0);
+      axios({
+        method: 'post',
+        url: `https://ml.manime.co/json`,
+        config: { headers: { 'Content-Type': 'multipart/form-data' }},
+        data: bodyFormData
+      }).then(result => {
+        console.log(result);
+      })
+
+      // const reader = new FileReader();
+      // reader.addEventListener('load', () => {
+      //
+      //   // let buffer = e.srcElement.result;//arraybuffer object
+      //
+      //   console.log('232323');
+      //   var bodyFormData = new FormData();
+      //   bodyFormData.append('LT', reader.result);
+      //   bodyFormData.append('RT', reader.result);
+      //   bodyFormData.append('4L', reader.result);
+      //   bodyFormData.append('4R', reader.result);
+      //   bodyFormData.append('uid', 'us-west-2:f3a73d5d-dced-4cdd-b157-32e58622e5d4');
+      //   bodyFormData.append('resend', 0);
+      //   axios({
+      //     method: 'post',
+      //     url: `https://ml.manime.co/json`,
+      //     config: { headers: { 'Content-Type': 'multipart/form-data' }},
+      //     data: bodyFormData
+      //   }).then(result => {
+      //     console.log(result);
+      //   })
+      //
+      //
+      //   // this.setState(
+      //   //   {
+      //   //     [imageState]: reader.result, loading: false // [loadingState]: false
+      //   //   }
+      //   // );
+      // });
+      // reader.readAsDataURL(blob);
+
+      // let myReader = new FileReader();
+      // myReader.readAsArrayBuffer(blob)
+      // myReader.addEventListener("loadend", function(e)
+      // {
+      //    let buffer = e.srcElement.result;//arraybuffer object
+      //
+      //    console.log('232323');
+      //    var bodyFormData = new FormData();
+      //    bodyFormData.append('LT', buffer);
+      //    bodyFormData.append('RT', buffer);
+      //    bodyFormData.append('4L', buffer);
+      //    bodyFormData.append('4R', buffer);
+      //    bodyFormData.append('uid', 'us-west-2:f3a73d5d-dced-4cdd-b157-32e58622e5d4');
+      //    bodyFormData.append('resend', 0);
+      //    axios({
+      //      method: 'post',
+      //      url: `https://ml.manime.co/json`,
+      //      config: { headers: {'Content-Type': 'multipart/form-data' }},
+      //      data: bodyFormData
+      //    }).then(result => {
+      //      console.log(result);
+      //    })
+      //
+      // });
+    }
+    xhr.send();
+
+
+
+
+
+
+
+
   }
 
   getUserData = async () => {
@@ -123,6 +223,7 @@ export default class Rotate extends React.Component {
           flexDirection='row'
           flexWrap='wrap'
           zIndex={100}>
+
           {this.props.signedUriArray.map((uri, index) => (
             <Box
               flex='0 1 50%'

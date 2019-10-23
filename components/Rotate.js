@@ -59,10 +59,10 @@ export default class Rotate extends React.Component {
       .then(result => {
 
         var bodyFormData = new FormData();
-        bodyFormData.append('LT', result[0]);
-        bodyFormData.append('RT', result[1]);
-        bodyFormData.append('4L', result[2]);
-        bodyFormData.append('4R', result[3]);
+        bodyFormData.append('LT', result[1]);
+        bodyFormData.append('RT', result[3]);
+        bodyFormData.append('4L', result[0]);
+        bodyFormData.append('4R', result[2]);
         bodyFormData.append('uid', this.props.measure);
         bodyFormData.append('resend', 1);
         axios({

@@ -41,7 +41,7 @@ export default class Rotate extends React.Component {
       const imageFilePromise = new Promise(function(resolve, reject) {
         let blob = null;
         let xhr = new XMLHttpRequest();
-        xhr.open("GET", signedUriArray[i]);
+        xhr.open("GET", `https://cors-anywhere.herokuapp.com/${signedUriArray[i]}`);
         xhr.responseType = "blob";
         xhr.onload = function()
         {

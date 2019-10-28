@@ -399,6 +399,18 @@ export const ListComponent = function({
                       <div style={{...orderStatusStyle, fontWeight: 700, textTransform: 'uppercase'}}>{content['orderstatusout']}</div>
                     </CopyToClipboard>
                 );
+              } else if (tableProps[i] == 'orderqdata') {
+                return (
+                    <button style={{width: '120px', marginLeft: '10px'}}>Show</button>
+                )
+              } else if (tableProps[i] == 'orderfdata') {
+                return (
+                    <button style={{width: '120px', marginLeft: '10px'}}>Show</button>
+                )
+              } else if (tableProps[i] == 'orderpicuri') {
+                return (
+                    <button style={{width: '120px', marginLeft: '10px'}}>Show</button>
+                )
               } else {
                 return (
                   <CopyToClipboard text={content[prop]} onCopy={() => {}}>

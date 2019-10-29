@@ -6,6 +6,9 @@ import uuid from 'uuid';
 
 import Rotate from './Rotate';
 import AdminAccessModal from './AdminAccessModal';
+import OrderReviewFData from './OrderReviewFData';
+import OrderReviewQData from './OrderReviewQData';
+import OrderReviewPicUri from './OrderReviewPicUri';
 import { ToggleVisibleButton, AdminAccessButton } from './styled/InfiniteLoader.styled';
 import { getSignedUriArray } from '../utils/queryString';
 import { createUpdateSSOrder } from '../utils/shipStation';
@@ -401,15 +404,15 @@ export const ListComponent = function({
                 );
               } else if (tableProps[i] == 'orderqdata') {
                 return (
-                    <button style={{width: '120px', marginLeft: '10px'}}>Show</button>
+                    <OrderReviewQData data={content} />
                 )
               } else if (tableProps[i] == 'orderfdata') {
                 return (
-                    <button style={{width: '120px', marginLeft: '10px'}}>Show</button>
+                    <OrderReviewFData data={content} />
                 )
               } else if (tableProps[i] == 'orderpicuri') {
                 return (
-                    <button style={{width: '120px', marginLeft: '10px'}}>Show</button>
+                    <OrderReviewPicUri data={content} />
                 )
               } else {
                 return (

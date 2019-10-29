@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import Box from '../Box';
+import { WordBreakP } from '../styled/OrderReviewModal.styled';
 
 export default class OrderReviewQDataModal extends Component {
     constructor(props) {
@@ -42,8 +43,8 @@ export default class OrderReviewQDataModal extends Component {
                     zIndex={100}>
                     {qDatakey.map(keys => (
                         <div style={{borderBottom: '1px solid #ddd', margin: '5px 0'}}>
-                            <p>{keys[0]}: {data[keys[1]]}</p>
-                            <p>{keys[2]}: {data[keys[3]]}</p>
+                            <WordBreakP>{keys[0]}: {data[keys[1]]}</WordBreakP>
+                            <WordBreakP>{keys[2]}: {data[keys[3]]}</WordBreakP>
                         </div>
                     ))}
                 </Box>

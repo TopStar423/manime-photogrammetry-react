@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import Box from '../Box';
+import { WordBreakP } from '../styled/OrderReviewModal.styled';
 
 export default class OrderReviewFDataModal extends Component {
     constructor(props) {
@@ -50,15 +51,15 @@ export default class OrderReviewFDataModal extends Component {
                     {fDatakey.map(keys => (
                         <div style={{borderBottom: '1px solid #ddd', margin: '5px 0'}}>
                             <h2>{keys[0]}</h2>
-                            <p>Q1: {data[keys[1]]}</p>
-                            <p>Q1 Response: {data[keys[2]]}</p>
-                            <p>Q2: {data[keys[3]]}</p>
-                            <p>Q2 Response: {data[keys[4]]}</p>
-                            <p>Q3: {data[keys[5]]}</p>
-                            <p>Q3 Response: {data[keys[6]]}</p>
-                            <p>PicUri 1: {data[keys[7]]}</p>
-                            <p>PicUri 2: {data[keys[8]]}</p>
-                            <p>PicUri 3: {data[keys[9]]}</p>
+                            <WordBreakP>Q1: {data[keys[1]]}</WordBreakP>
+                            <WordBreakP>Q1 Response: {data[keys[2]]}</WordBreakP>
+                            <WordBreakP>Q2: {data[keys[3]]}</WordBreakP>
+                            <WordBreakP>Q2 Response: {data[keys[4]]}</WordBreakP>
+                            <WordBreakP>Q3: {data[keys[5]]}</WordBreakP>
+                            <WordBreakP>Q3 Response: {data[keys[6]]}</WordBreakP>
+                            <WordBreakP>PicUri 1: {data[keys[7]]}</WordBreakP>
+                            <WordBreakP>PicUri 2: {data[keys[8]]}</WordBreakP>
+                            <WordBreakP>PicUri 3: {data[keys[9]]}</WordBreakP>
                         </div>
                     ))}
                 </Box>

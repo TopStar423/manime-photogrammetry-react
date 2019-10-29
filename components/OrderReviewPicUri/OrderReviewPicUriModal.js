@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import Box from '../Box';
+import { WordBreakP } from '../styled/OrderReviewModal.styled';
 
 export default class OrderReviewPicUriModal extends Component {
     constructor(props) {
@@ -44,7 +45,7 @@ export default class OrderReviewPicUriModal extends Component {
                     zIndex={100}>
                     {picUrikey.map(keys => (
                         <div style={{borderBottom: '1px solid #ddd', margin: '5px 0'}}>
-                            <p>{keys[0]}: {data[keys[1]]}</p>
+                            <WordBreakP>{keys[0]}: {data[keys[1]]}</WordBreakP>
                         </div>
                     ))}
                 </Box>

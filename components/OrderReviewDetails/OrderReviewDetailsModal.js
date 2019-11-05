@@ -69,8 +69,8 @@ export default class OrderReviewDetailsModal extends Component {
                                     'Na'
                                 ) : (
                                     <React.Fragment>
-                                        <OrderReviewPicture imageKey={data.picUri1 || 'revieworder/c7ceeb40-f832-11e8-ae6e-ff8724e0fb43/picUri1.jpg'} />
-                                        <OrderReviewPicture imageKey={data.picUri2 || 'revieworder/c7ceeb40-f832-11e8-ae6e-ff8724e0fb43/picUri1.jpg'} />
+                                        <OrderReviewPicture imageKey={data.picUri1} />
+                                        <OrderReviewPicture imageKey={data.picUri2} />
                                         <OrderReviewPicture imageKey={data.picUri3} />
                                         <OrderReviewPicture imageKey={data.picUri3} />
                                         <OrderReviewPicture imageKey={data.picUri3} />

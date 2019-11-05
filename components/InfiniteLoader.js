@@ -416,6 +416,7 @@ export const ListComponent = function({
                     <OrderReviewSelectStatus
                         selectStyle={selectStyle}
                         userId={content['userId']}
+                        fit={content['reviewStatus']}
                         value={content['reviewOrderStatus']}
                     />
                 )

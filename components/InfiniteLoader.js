@@ -6,9 +6,8 @@ import uuid from 'uuid';
 
 import Rotate from './Rotate';
 import AdminAccessModal from './AdminAccessModal';
-import OrderReviewFData from './OrderReviewFData';
-import OrderReviewQData from './OrderReviewQData';
-import OrderReviewPicUri from './OrderReviewPicUri';
+import OrderReviewDetails from './OrderReviewDetails';
+import OrderReviewSelectStatus from './OrderReviewSelectStatus';
 import { ToggleVisibleButton, AdminAccessButton } from './styled/InfiniteLoader.styled';
 import { getSignedUriArray } from '../utils/queryString';
 import { createUpdateSSOrder } from '../utils/shipStation';
@@ -348,6 +347,12 @@ export const ListComponent = function({
                 } else {
                   return <Workbench itemStyle={itemStyle} index={index} user={user} content={content}/>;
                 }
+              } else if (tableProps[i] == 'userId') {
+                return (
+                    <CopyToClipboard text={content['userId']} onCopy={() => {}}>
+                      <div style={{...itemStyle, fontSize: '12px'}}>{content['userId']}</div>
+                    </CopyToClipboard>
+                );
               } else if (tableProps[i] == 'fitstatus' || tableProps[i] == 'fitStatus') {
                 const userId = content['userid'];
                 const value = content[prop] ? content[prop] : '';
@@ -402,17 +407,17 @@ export const ListComponent = function({
                       <div style={{...orderStatusStyle, fontWeight: 700, textTransform: 'uppercase'}}>{content['orderstatusout']}</div>
                     </CopyToClipboard>
                 );
-              } else if (tableProps[i] == 'orderqdata') {
+              } else if (tableProps[i] == 'reviewDetails') {
                 return (
-                    <OrderReviewQData data={content} />
+                    <OrderReviewDetails data={content} />
                 )
-              } else if (tableProps[i] == 'orderfdata') {
+              } else if (tableProps[i] == 'reviewOrderStatus') {
                 return (
-                    <OrderReviewFData data={content} />
-                )
-              } else if (tableProps[i] == 'orderpicuri') {
-                return (
-                    <OrderReviewPicUri data={content} />
+                    <OrderReviewSelectStatus
+                        selectStyle={selectStyle}
+                        userId={content['userId']}
+                        value={content['reviewOrderStatus']}
+                    />
                 )
               } else {
                 return (

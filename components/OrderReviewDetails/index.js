@@ -1,8 +1,8 @@
 import React, { Component } from 'react';
 import ReactDOM from 'react-dom';
-import OrderReviewPicUriModal from './OrderReviewPicUriModal';
+import OrderReviewDetailsModal from './OrderReviewDetailsModal';
 
-export default class OrderReviewPicUri extends Component {
+export default class OrderReviewDetails extends Component {
     constructor(props) {
         super(props);
 
@@ -11,19 +11,22 @@ export default class OrderReviewPicUri extends Component {
         };
 
         this.buttonStyle = {
-            width: '120px',
+            width: '100px',
             marginLeft: '10px',
-            height: '30px'
+            marginRight: '20px',
+            height: '30px',
+            borderRadius: '8px'
         };
 
-        this.openOrderReviewPicUri = this.openOrderReviewPicUri.bind(this);
+        this.openOrderReviewDetails = this.openOrderReviewDetails.bind(this);
+        this.closeOrderReviewDetails = this.closeOrderReviewDetails.bind(this);
     }
 
-    openOrderReviewPicUri = () => {
+    openOrderReviewDetails = () => {
         this.setState({ showPortal: true })
     };
 
-    closeOrderReviewPicUri = () => {
+    closeOrderReviewDetails = () => {
         this.setState({ showPortal: false })
     };
 
@@ -35,18 +38,17 @@ export default class OrderReviewPicUri extends Component {
             <React.Fragment>
                 <button
                     style={this.buttonStyle}
-                    onClick={this.openOrderReviewPicUri}>
-                    Show
+                    onClick={this.openOrderReviewDetails}>
+                    Details
                 </button>
                 {showPortal &&
                 ReactDOM.createPortal(
-                    <OrderReviewPicUriModal
+                    <OrderReviewDetailsModal
                         data={data}
-                        onCloseModal={this.closeOrderReviewPicUri}
+                        onCloseModal={this.closeOrderReviewDetails}
                     />,
                     document.getElementById('layout')
-                )
-                }
+                )}
             </React.Fragment>
         )
     }

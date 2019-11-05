@@ -38,7 +38,7 @@ class BoardJsx extends Component {
 
         this.tableStyle = {
             width: '120px',
-            marginLeft: '10px',
+            marginLeft: '8px',
             display: 'inline-block'
         };
     }
@@ -71,8 +71,34 @@ class BoardJsx extends Component {
             //this is the admin account, photogrammetry
             if (user === adminUser) {
                 const response = await API.get(endpoint, pathName, userInit);
-                if (response && response.rows && this._mounted) {
-                    this.setState({ data: response.rows });
+                console.log('response: ', response);
+                if (response && this._mounted) {
+                    const data = [];
+                    response.map(item => {
+                        const buf = {
+                            ...item,
+                            reviewStatus: item.reviewStatus ? item.reviewStatus : 'na',
+                            reviewSomeAll: item.q2Response,
+                            reviewAll: item.q3Response ? item.q3Response : 'na',
+                            reviewAllDescription: item.q1Response,
+                            f0Q1Response: item.f0Q1Response ? f0Q1Response : 'na',
+                            f1Q1Response: item.f1Q1Response ? f1Q1Response : 'na',
+                            f2Q1Response: item.f2Q1Response ? f2Q1Response : 'na',
+                            f3Q1Response: item.f3Q1Response ? f3Q1Response : 'na',
+                            f4Q1Response: item.f4Q1Response ? f4Q1Response : 'na',
+                            f5Q1Response: item.f5Q1Response ? f5Q1Response : 'na',
+                            f6Q1Response: item.f6Q1Response ? f6Q1Response : 'na',
+                            f7Q1Response: item.f7Q1Response ? f7Q1Response : 'na',
+                            f8Q1Response: item.f8Q1Response ? f8Q1Response : 'na',
+                            f9Q1Response: item.f9Q1Response ? f9Q1Response : 'na',
+                            shopifyOrderNumber: item.GroupOrder.shopifyOrderNumber,
+                            userId: item.GroupOrder.User.userId,
+                            email: item.GroupOrder.User.email
+                        };
+                        data.push(buf);
+                    });
+
+                    this.setState({ data });
                 }
             } else {
                 let dynamoDBObject = {};
@@ -84,8 +110,8 @@ class BoardJsx extends Component {
                     const value = dynamoDBObject[key];
                     if (key !== user) {
                         const response = await API.get(endpoint, `/${tableName}/read/${value}`, userInit);
-                        if (response && response.rows && this._mounted) {
-                            data = [...data, ...response.row];
+                        if (response && this._mounted) {
+                            data = [...data, ...response];
                         }
                     }
                 }

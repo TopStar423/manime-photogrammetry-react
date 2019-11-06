@@ -4,6 +4,10 @@ export default class OrderReviewSelectStatus extends React.PureComponent {
     constructor(props) {
         super(props);
 
+        this.state = {
+            value: ''
+        }
+
         this.handleChangeStatus = this.handleChangeStatus.bind(this);
     }
 
@@ -12,9 +16,9 @@ export default class OrderReviewSelectStatus extends React.PureComponent {
     };
 
     componentDidMount() {
-        const { fit } = this.props;
-        const value = fit === 'Good' ? 'Done' : this.props.value;
-        this.setState({ value });
+        const { fit, value } = this.props;
+        const statusValue = fit === 'Good' ? 'Done' : value;
+        this.setState({ value: statusValue });
     }
 
     render() {

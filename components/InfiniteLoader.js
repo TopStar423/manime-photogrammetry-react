@@ -415,9 +415,10 @@ export const ListComponent = function({
                 return (
                     <OrderReviewSelectStatus
                         selectStyle={selectStyle}
-                        userId={content['userId']}
+                        reviewId={content['reviewId']}
                         fit={content['reviewStatus']}
-                        value={content['reviewOrderStatus']}
+                        value={content[prop]}
+                        columnName={prop}
                     />
                 )
               } else {

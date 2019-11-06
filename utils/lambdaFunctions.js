@@ -39,6 +39,19 @@ export const updateUserColumn = async (identityId, columnName, columnValue) => {
   return await API.post('LambdaRDS', '/users/update/column', userInit);
 };
 
+export const updateReviewColumn = async (reviewId, columnName, columnValue) => {
+  let reviewData = {
+    reviewId: reviewId,
+    columnName: columnName,
+    columnValue: columnValue
+  };
+  let reviewInit = {
+    body: reviewData,
+    headers: { 'Content-Type': 'application/json' }
+  };
+  return await API.post('LambdaRDSDev', '/revieworders/update/column', reviewInit);
+};
+
 export const updateOrderColumn = (orderId, columnName, columnValue) => {
   let orderData = {
     orderId,

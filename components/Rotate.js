@@ -149,6 +149,37 @@ export default class Rotate extends React.Component {
     }
   };
 
+  openWorkbenchBeta = () => {
+    const { signedUriArray, measure, email } = this.props;
+    const uri = `http://34.223.255.41/_v4G/workbench/mmw.php?measure=${measure}&user=${email}&nailLength=3&shape=square&texture=test`;
+
+    const currentWindow = uuid.v1();
+
+    var form = document.createElement('form');
+    form.target = currentWindow;
+    form.method = 'POST';
+    form.action = uri;
+
+    const keys = ['leftFingers', 'leftThumb', 'rightFingers', 'rightThumb', 'side'];
+    keys.map((key, i) => {
+      var input = document.createElement('input');
+      input.type = 'text';
+      input.name = key;
+      input.value = signedUriArray[i];
+      form.appendChild(input);
+      document.body.appendChild(form);
+    });
+
+    var win = window.open('', currentWindow);
+    win.focus();
+
+    if (win) {
+      form.submit();
+    } else {
+      alert('You must allow popups for this map to work.');
+    }
+  };
+
   onClick = e => {
     if (this.modal.contains(e.target)) return;
     else this.props.onClick();
@@ -246,6 +277,16 @@ export default class Rotate extends React.Component {
             mb={2}
             mt={2}>
             <StandardButton onClick={this.generateAutoModel}>Generate ML/CV Model</StandardButton>
+          </Box>
+
+          <Box
+            width='100%'
+            display='flex'
+            flexDirection='row'
+            justifyContent='center'
+            mb={2}
+            mt={2}>
+            <StandardButton onClick={this.openWorkbenchBeta}>DEVELOPMENT ONLY</StandardButton>
           </Box>
         </Box>
       </Box>

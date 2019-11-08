@@ -8,6 +8,7 @@ import Rotate from './Rotate';
 import AdminAccessModal from './AdminAccessModal';
 import OrderReviewDetails from './OrderReviewDetails';
 import OrderReviewSelectStatus from './OrderReviewSelectStatus';
+import ReviewComments from './ReviewComments';
 import { ToggleVisibleButton, AdminAccessButton } from './styled/InfiniteLoader.styled';
 import { getSignedUriArray } from '../utils/queryString';
 import { createUpdateSSOrder } from '../utils/shipStation';
@@ -419,6 +420,14 @@ export const ListComponent = function({
                         fit={content['reviewStatus']}
                         value={content[prop]}
                         columnName={prop}
+                    />
+                )
+              } else if (tableProps[i] == 'reviewComments') {
+                return (
+                    <ReviewComments
+                      reviewId={content['reviewId']}
+                      columnName={prop}
+                      comments={content[prop]}
                     />
                 )
               } else {

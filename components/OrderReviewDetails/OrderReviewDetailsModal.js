@@ -2,12 +2,14 @@ import React, { Component } from 'react';
 import Box from '../Box';
 import OrderReviewPicture from './OrderReviewPicture';
 import {
+    DetailsTable,
     TableHeader,
     TableIndex,
     TableType,
     TableDescription,
     TablePictures,
-    TableItem
+    TableItem,
+    MainInfo
 } from '../styled/OrderReviewModal.styled';
 
 export default class OrderReviewDetailsModal extends Component {
@@ -42,18 +44,18 @@ export default class OrderReviewDetailsModal extends Component {
                     ref={ref => (this.modal = ref)}
                     width={700}
                     height={800}
-                    p={10}
+                    p={20}
                     bg='#ffffff'
                     display='flex'
                     flexDirection='column'
                     overflow='auto'
                     zIndex={100}>
-                    <div className="info">
+                    <MainInfo>
                         <p className="user-id">User id: { data.userId }</p>
                         <p className="email">Email: { data.email }</p>
                         <p className="order-id">Order #: { data.shopifyOrderNumber }</p>
-                    </div>
-                    <div className="details-table">
+                    </MainInfo>
+                    <DetailsTable>
                         <TableHeader>
                             <TableIndex></TableIndex>
                             <TableType>Type</TableType>
@@ -238,7 +240,7 @@ export default class OrderReviewDetailsModal extends Component {
                                 )}
                             </TablePictures>
                         </TableItem>
-                    </div>
+                    </DetailsTable>
                 </Box>
             </Box>
         )

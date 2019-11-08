@@ -38,7 +38,7 @@ export const ORDER_REVIEWS_COLUMN_PROPERTIES = [
     'f7Q1Response',
     'f8Q1Response',
     'f9Q1Response',
-    'comments'];
+    'reviewComments'];
 export const ORDER_REVIEWS_COLUMN_PROPERTIES_TYPE = [
     'text',
     'text',

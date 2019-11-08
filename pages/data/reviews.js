@@ -91,6 +91,7 @@ class BoardJsx extends Component {
                             f7Q1Response: item.f7Q1Response ? f7Q1Response : 'na',
                             f8Q1Response: item.f8Q1Response ? f8Q1Response : 'na',
                             f9Q1Response: item.f9Q1Response ? f9Q1Response : 'na',
+                            reviewComments: item.comments,
                             shopifyOrderNumber: item.GroupOrder.shopifyOrderNumber,
                             userId: item.GroupOrder.User.userId,
                             email: item.GroupOrder.User.email

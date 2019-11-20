@@ -1,50 +1,32 @@
-import styled, { ThemeProvider } from 'styled-components';
+import { connect } from 'react-redux';
 import Select from 'react-select';
-import { theme } from '../../utils/theme';
-import Box from '../../components/Box';
-import { StandardButton, StandardInput } from '../../components/StyledComponents';
-import { API, Storage } from 'aws-amplify';
-import uuid from 'uuid';
-import { CSVLink, CSVDownload } from 'react-csv';
 import ReactLoading from "react-loading";
-import { ListComponent } from '../../components/InfiniteLoader';
-import {updateUserColumn, RDSLambda, listAdminDynamoDB} from '../../utils/lambdaFunctions';
+import { API } from 'aws-amplify';
+
+import BoardBodyOptionsComponent from './BoardBodyOptions';
+import Analytics from './Analytics';
+import { ListComponent } from '../../../components/InfiniteLoader';
+import { updateUserColumn, RDSLambda, listAdminDynamoDB } from '../../../utils/lambdaFunctions';
 import {
     BoardBody,
-    BoardBodyOptions,
     BoardBodyContainer,
     BoardBodyContentDescriptions,
     BoardBodyContents,
-    AnalyticsContainer,
-    AnalyticsHeader,
-    AnalyticsContents,
-    AnalyticsItem,
-    AnalyticsTotal,
     LoadingContainer
-} from '../../components/styled/BoardBody';
+} from '../../../components/styled/BoardBody';
+import {
+    PRODUCTION_COLUMN_DESCRIPTION,
+    PRODUCTION_COLUMN_PROPERTIES,
+    PRODUCTION_COLUMN_PROPERTIES_TYPE,
+    pathName,
+    tableName,
+    endpoint,
+    orderStatusOptions
+} from '../../../static/constants/production';
 
-import { connect } from 'react-redux';
-import userData from '../../reducers/userData';
-import { DEFAULT } from '../../actions';
-
-const OPEN_PHOTOGRAMMETRY = 'OPEN_PHOTOGRAMMETRY';
-const ADD_ADMIN_ACCESS = 'ADD_ADMIN_ACCESS';
-const PRODUCTION_COLUMN_DESCRIPTION = ['Shopify Order #', 'Order Status', '3D Model', 'Email', 'Full Name', 'Product', 'Modeler', 'Fit Status', 'Payment', 'Order Date', 'Shipping Info', 'Shopify Order # (Long)', 'Shopify status'];
-const PRODUCTION_COLUMN_PROPERTIES = ['shopifyordernumber', 'orderstatusout', '3dmodel', 'email', 'fullname', 'product', 'adminaccess', 'fitStatus', 'payment', 'date', 'shippingaddress', 'orderid', 'shopifystatus'];
-const PRODUCTION_COLUMN_PROPERTIES_TYPE = ['text', 'menu', OPEN_PHOTOGRAMMETRY, 'text', 'text', 'modal', ADD_ADMIN_ACCESS, 'text', 'text', 'time', 'text', 'modal', 'text'];
-
-let pathName = '/orders/production/read';
-const tableName = 'orders';
-const endpoint = 'RDSLambda';
-
-const orderStatusOptions = [
-    { value: 'allstatus', label: 'Status' },
-    { value: 'invalidshippinginfo', label: 'Invalid Shipping Info' },
-    { value: 'invalidpictures', label: 'Invalid Pictures' },
-    { value: 'tobemodeled', label: 'To Be Modeled' },
-    { value: 'tobereviewed', label: 'To Be Reviewed' },
-    { value: 'tobeprinted', label: 'To Be Printed' }
-]
+import { adminUser } from '../../../config';
+import userData from '../../../reducers/userData';
+import { DEFAULT } from '../../../actions';
 
 class BoardJsx extends React.Component {
     constructor(props) {
@@ -83,7 +65,7 @@ class BoardJsx extends React.Component {
             indicatorSeparator: () => ({
                 display: 'none'
             })
-        }
+        };
 
         this.handleOrderStatusSelect = this.handleOrderStatusSelect.bind(this);
     }
@@ -126,13 +108,13 @@ class BoardJsx extends React.Component {
 
         let userInit = {
             headers: { 'Content-Type': 'application/json' }
-        }
+        };
         const user = this.props.userData ? this.props.userData.identityId : '';
 
         const adminList = await listAdminDynamoDB();
 
         // this is the admin account, photogrammetry
-        if (user == 'us-west-2:130355da-2eec-4f35-8092-3eca4d22d8ea') {
+        if (user === adminUser) {
             try {
                 const response = await RDSLambda('get', pathName);
                 const data = [];
@@ -181,8 +163,6 @@ class BoardJsx extends React.Component {
                             bgColor: timeDiff > (1000*60*60*24) ? '#fbc1c1' : 'transparent'
                         };
 
-                        // console.log('item: ', item);
-
                         if (!item.shippingaddress || item.shippingaddress.length === 0) {
                             unfulfilled.invalidShippingInfo++;
                             item.orderstatusout = 'Invalid Shipping Info';
@@ -215,8 +195,6 @@ class BoardJsx extends React.Component {
 
                         if (item.fulfillmentStatus !== 'fulfilled') {
                             data.push(item);
-                        } else {
-                          // console.log(item);
                         }
                     }
 
@@ -237,7 +215,6 @@ class BoardJsx extends React.Component {
                 // console.log(err.stack);
             }
         } else {
-            console.log('tableName: ', tableName);
             if (tableName != 'users') return;
             // get the array of ids that this user can see from rds. dynamodb might be good
             // one user id -> many user ids
@@ -248,8 +225,6 @@ class BoardJsx extends React.Component {
             }).catch((err) => {
                 console.log(err);
             });
-
-            console.log('dynamodbobj: ', dynamoDBObject);
 
             for (const key in dynamoDBObject) {
                 const value = dynamoDBObject[key];
@@ -268,11 +243,11 @@ class BoardJsx extends React.Component {
                 });
             }
         }
-    }
+    };
 
     updateSearchBar = (searchValue) => {
         this.setState({ searchValue });
-    }
+    };
 
     sortData = item => {
         const sortDirection = this.state.sortDirection;
@@ -291,7 +266,7 @@ class BoardJsx extends React.Component {
 
         });
         this.setState({ filteredData: newData, sortDirection: !sortDirection });
-    }
+    };
 
 
 
@@ -299,7 +274,7 @@ class BoardJsx extends React.Component {
         if (tableId == 'users') {
             updateUserColumn(uuid, columnName, columnValue);
         }
-    }
+    };
 
     updateListAdminData = (userid, admins) => {
         const { filteredData } = this.state;
@@ -345,16 +320,55 @@ class BoardJsx extends React.Component {
             toggleVisible: this.toggleVisible,
             updateListAdminData: this.updateListAdminData
         });
-    }
+    };
+
+    renderBoardBodyContentDescriptions = (table, tableProps) => {
+        const { selectedOrderStatus } = this.state;
+        const generalStyle = {
+            width: '120px',
+            marginLeft: '10px',
+            display: 'inline-block',
+            fontWeight: 700
+        };
+        const orderStatusStyle = {
+            width: '160px',
+            marginLeft: '10px',
+            display: 'inline-block',
+            fontWeight: 700
+        };
+
+        return table.map((item, i) => {
+            if (item === 'Order Status') {
+                return (
+                    <div style={orderStatusStyle}>
+                        <Select
+                            value={selectedOrderStatus}
+                            onChange={this.handleOrderStatusSelect}
+                            options={orderStatusOptions}
+                            styles={this.orderSelectOptionStyle}
+                        />
+                    </div>
+                )
+            } else {
+                return (
+                    <div
+                        key={i}
+                        type='display'
+                        style={generalStyle}
+                        onClick={() => this.sortData(tableProps[i])}>
+                        {item}
+                    </div>
+                )
+            }
+        })
+    };
 
     render() {
         const table = PRODUCTION_COLUMN_DESCRIPTION;
         const tableProps = PRODUCTION_COLUMN_PROPERTIES;
         const tablePropsType = PRODUCTION_COLUMN_PROPERTIES_TYPE;
 
-        const { data, unfulfilled, selectedOrderStatus, isLoading } = this.state;
-        const numAttr = table.length;
-        const date = new Date();
+        const { data, unfulfilled, searchValue, isLoading } = this.state;
 
         return (
             <React.Fragment>
@@ -364,66 +378,20 @@ class BoardJsx extends React.Component {
                     </LoadingContainer>
                 ) : (
                     <BoardBody table={table}>
-                        {/* This should be a component that takes child elements in the form of buttons/input/text */}
-                        <BoardBodyOptions table={table}>
-                            <StandardButton ml={3} onClick={() => this.getData(endpoint, tableName)}>Refresh</StandardButton>
-                            <CSVLink data={data} filename={`${tableName}-${date.toString()}.csv`} style={{ textDecoration:  'none' }}>
-                                <StandardButton ml={3}>Save CSV</StandardButton>
-                            </CSVLink>
-                            <StandardInput ml={3} value={this.state.searchValue} onChange={(ev) => this.updateSearchBar(ev.target.value.toLowerCase())}></StandardInput>
-                        </BoardBodyOptions>
+                        <BoardBodyOptionsComponent
+                            data={data}
+                            table={table}
+                            searchValue={searchValue}
+                            getData={this.getData}
+                            updateSearchBar={this.updateSearchBar}
+                        />
 
                         <BoardBodyContainer table={table}>
                             {unfulfilled &&
-                            <AnalyticsContainer>
-                                <AnalyticsHeader>Unfulfilled orders tracker</AnalyticsHeader>
-                                <AnalyticsContents>
-                                    <AnalyticsTotal>
-                                        <AnalyticsItem>
-                                            <span>Total Unfulfilled</span>
-                                            <span>{unfulfilled.total}</span>
-                                        </AnalyticsItem>
-                                    </AnalyticsTotal>
-                                    <AnalyticsItem>
-                                        <span># to be printed</span>
-                                        <span>{unfulfilled.toBePrinted}</span>
-                                    </AnalyticsItem>
-                                    <AnalyticsItem>
-                                        <span># with invalid pics</span>
-                                        <span>{unfulfilled.invalidPics}</span>
-                                    </AnalyticsItem>
-                                    <AnalyticsItem>
-                                        <span># with invalid shopping info</span>
-                                        <span>{unfulfilled.invalidShippingInfo}</span>
-                                    </AnalyticsItem>
-                                    <AnalyticsItem>
-                                        <span># to be modeled</span>
-                                        <span>{unfulfilled.toBeModeled}</span>
-                                    </AnalyticsItem>
-                                    <AnalyticsItem>
-                                        <span># to be reviewed and saved</span>
-                                        <span>{unfulfilled.toBeReviewed}</span>
-                                    </AnalyticsItem>
-                                </AnalyticsContents>
-                            </AnalyticsContainer>
+                                <Analytics unfulfilled={unfulfilled} />
                             }
                             <BoardBodyContentDescriptions table={table}>
-                                { table.map((item, i) => {
-                                    if (item === 'Order Status') {
-                                        return (
-                                            <div style={{ width: '160px', marginLeft: '10px', display: 'inline-block', fontWeight: 700 }}>
-                                                <Select
-                                                    value={selectedOrderStatus}
-                                                    onChange={this.handleOrderStatusSelect}
-                                                    options={orderStatusOptions}
-                                                    styles={this.orderSelectOptionStyle}
-                                                />
-                                            </div>
-                                        )
-                                    } else {
-                                        return <div key={i} type='display' style={{ width: '120px', marginLeft: '10px', display: 'inline-block', fontWeight: 700 }} onClick={() => this.sortData(tableProps[i])}>{item}</div>
-                                    }
-                                }) }
+                                { this.renderBoardBodyContentDescriptions(table, tableProps) }
                             </BoardBodyContentDescriptions>
                             <BoardBodyContents table={table}>
                                 {
@@ -431,8 +399,6 @@ class BoardJsx extends React.Component {
                                 }
                             </BoardBodyContents>
                         </BoardBodyContainer>
-
-
                     </BoardBody>
                 )}
             </React.Fragment>
@@ -442,7 +408,7 @@ class BoardJsx extends React.Component {
 
 const mapStateToProps = state => ({
     userData: userData(state.userData, { type: 'DEFAULT' })
-})
+});
 
 export default connect(
     mapStateToProps,

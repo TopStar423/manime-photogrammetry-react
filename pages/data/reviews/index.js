@@ -1,21 +1,19 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { API } from 'aws-amplify';
-import { CSVLink } from 'react-csv';
 
-import { StandardButton, StandardInput } from '../../components/StyledComponents';
+import BoardBodyOptionsComponent from './BoardBodyOptions';
 import {
     BoardBody,
-    BoardBodyOptions,
     BoardBodyContainer,
     BoardBodyContentDescriptions,
     BoardBodyContents
-} from '../../components/styled/BoardBody';
-import { ListComponent } from "../../components/InfiniteLoader";
+} from '../../../components/styled/BoardBody';
+import { ListComponent } from "../../../components/InfiniteLoader";
 
-import userData from '../../reducers/userData';
-import { DEFAULT } from '../../actions';
-import { adminUser } from '../../config';
+import userData from '../../../reducers/userData';
+import { DEFAULT } from '../../../actions';
+import { adminUser } from '../../../config';
 import {
     ORDER_REVIEWS_COLUMN_DESCRIPTION,
     ORDER_REVIEWS_COLUMN_PROPERTIES,
@@ -23,7 +21,7 @@ import {
     pathName,
     tableName,
     endpoint
-} from '../../static/constants/reviewOrders';
+} from '../../../static/constants/reviewOrders';
 
 class BoardJsx extends Component {
     constructor(props) {
@@ -46,14 +44,14 @@ class BoardJsx extends Component {
     componentDidMount() {
         this._mounted = true;
         const identityId = this.props.userData ? this.props.userData.identityId : null;
-        if (identityId) this.getData(endpoint, tableName);
+        if (identityId) this.getData();
     }
 
     componentDidUpdate(prevProps) {
         const prevIdentityId = prevProps.userData ? prevProps.userData.identityId : null;
         const identityId = this.props.userData ? this.props.userData.identityId : null;
-        if (prevIdentityId != identityId) {
-            this.getData(endpoint, tableName);
+        if (prevIdentityId !== identityId) {
+            this.getData();
         }
     }
 
@@ -71,7 +69,6 @@ class BoardJsx extends Component {
             //this is the admin account, photogrammetry
             if (user === adminUser) {
                 const response = await API.get(endpoint, pathName, userInit);
-                console.log('response: ', response);
                 if (response && this._mounted) {
                     const data = [];
                     response.map(item => {
@@ -81,16 +78,16 @@ class BoardJsx extends Component {
                             reviewSomeAll: item.q2Response,
                             reviewAll: item.q3Response ? item.q3Response : 'na',
                             reviewAllDescription: item.q1Response,
-                            f0Q1Response: item.f0Q1Response ? f0Q1Response : 'na',
-                            f1Q1Response: item.f1Q1Response ? f1Q1Response : 'na',
-                            f2Q1Response: item.f2Q1Response ? f2Q1Response : 'na',
-                            f3Q1Response: item.f3Q1Response ? f3Q1Response : 'na',
-                            f4Q1Response: item.f4Q1Response ? f4Q1Response : 'na',
-                            f5Q1Response: item.f5Q1Response ? f5Q1Response : 'na',
-                            f6Q1Response: item.f6Q1Response ? f6Q1Response : 'na',
-                            f7Q1Response: item.f7Q1Response ? f7Q1Response : 'na',
-                            f8Q1Response: item.f8Q1Response ? f8Q1Response : 'na',
-                            f9Q1Response: item.f9Q1Response ? f9Q1Response : 'na',
+                            f0Q1Response: item.f0Q1Response ? item.f0Q1Response : 'na',
+                            f1Q1Response: item.f1Q1Response ? item.f1Q1Response : 'na',
+                            f2Q1Response: item.f2Q1Response ? item.f2Q1Response : 'na',
+                            f3Q1Response: item.f3Q1Response ? item.f3Q1Response : 'na',
+                            f4Q1Response: item.f4Q1Response ? item.f4Q1Response : 'na',
+                            f5Q1Response: item.f5Q1Response ? item.f5Q1Response : 'na',
+                            f6Q1Response: item.f6Q1Response ? item.f6Q1Response : 'na',
+                            f7Q1Response: item.f7Q1Response ? item.f7Q1Response : 'na',
+                            f8Q1Response: item.f8Q1Response ? item.f8Q1Response : 'na',
+                            f9Q1Response: item.f9Q1Response ? item.f9Q1Response : 'na',
                             reviewComments: item.comments,
                             shopifyOrderNumber: item.GroupOrder.shopifyOrderNumber,
                             userId: item.GroupOrder.User.userId,
@@ -139,7 +136,7 @@ class BoardJsx extends Component {
                 return -1 * sortNumber;
             }
             if ( a[item] > b[item] ){
-                return 1 * sortNumber;
+                return sortNumber;
             }
             return 0;
         });
@@ -148,6 +145,24 @@ class BoardJsx extends Component {
             data: newData,
             sortDirection: !sortDirection
         });
+    };
+
+    toggleRemoved = () => {
+        const { showRemoved } = this.state;
+        this.setState({ showRemoved: !showRemoved });
+    };
+
+    renderBoardBodyContentDescriptions = (table, tableProps) => {
+        return table.map((item, i) =>
+            <div
+                key={i}
+                type='display'
+                style={this.tableStyle}
+                onClick={() => this.sortData(tableProps[i])}
+            >
+                {item}
+            </div>
+        )
     };
 
     renderVirtualized = (tableProps, table, tablePropsType, tableId) => {
@@ -171,52 +186,25 @@ class BoardJsx extends Component {
         const tableProps = ORDER_REVIEWS_COLUMN_PROPERTIES;
         const tablePropsType = ORDER_REVIEWS_COLUMN_PROPERTIES_TYPE;
 
-        const { data, showRemoved, searchValue } = this.state;
-        const numAttr = table.length;
-        const date = new Date();
+        const { data, searchValue } = this.state;
 
         return (
             <BoardBody table={table}>
-                <BoardBodyOptions table={table}>
-                    <StandardButton
-                        ml={3}
-                        onClick={() => this.getData()}
-                    >
-                        Refresh
-                    </StandardButton>
-                    <StandardButton
-                        ml={3}
-                        onClick={() => this.setState({ showRemoved: !showRemoved })}
-                    >
-                        Toggle Removed
-                    </StandardButton>
-                    <StandardButton ml={3} disabled>Save</StandardButton>
-                    <CSVLink data={data} filename={`${tableName}-${date.toString()}.csv`}>
-                        <StandardButton ml={3} style={{ textDecoration: 'none' }}>Save CSV</StandardButton>
-                    </CSVLink>
-                    <StandardInput
-                        ml={3}
-                        value={searchValue}
-                        onChange={(ev) => this.updateSearchBar(ev.target.value.toLowerCase())} />
-                </BoardBodyOptions>
+                <BoardBodyOptionsComponent
+                    table={table}
+                    data={data}
+                    searchValue={searchValue}
+                    toggleRemoved={this.toggleRemoved}
+                    getData={this.getData}
+                    updateSearchBar={this.updateSearchBar}
+                />
 
                 <BoardBodyContainer table={table}>
                     <BoardBodyContentDescriptions table={table}>
-                        { table.map((item, i) =>
-                            <div
-                                key={i}
-                                type='display'
-                                style={this.tableStyle}
-                                onClick={() => this.sortData(tableProps[i])}
-                            >
-                                {item}
-                            </div>
-                        )}
+                        { this.renderBoardBodyContentDescriptions(table, tableProps) }
                     </BoardBodyContentDescriptions>
                     <BoardBodyContents table={table}>
-                        {
-                            this.renderVirtualized(tableProps, table, tablePropsType, tableName)
-                        }
+                        { this.renderVirtualized(tableProps, table, tablePropsType, tableName) }
                     </BoardBodyContents>
                 </BoardBodyContainer>
             </BoardBody>
